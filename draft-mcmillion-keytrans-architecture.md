@@ -8,17 +8,17 @@ number:
 date:
 consensus: true
 v: 3
-area: SEC
-workgroup: keytrans
+area: "Security"
+workgroup: "Key Transparency"
 keyword:
  - key transparency
 venue:
-  group: WG
-  type: Working Group
-  mail: WG@example.com
-  arch: https://example.com/WG
-  github: USER/REPO
-  latest: https://example.com/LATEST
+  group: "Key Transparency"
+  type: "Working Group"
+  mail: "keytrans@ietf.org"
+  arch: "https://mailarchive.ietf.org/arch/browse/keytrans/"
+  github: "Bren2010/draft-kt-arch"
+  latest: "https://Bren2010.github.io/draft-kt-arch/draft-mcmillion-keytrans-architecture.html"
 
 author:
  -
