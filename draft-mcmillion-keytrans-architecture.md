@@ -19,22 +19,19 @@
 # Change the file extension to match the format (.xml for XML, etc...)
 #
 ###
-title: "TODO - Your title"
-abbrev: "TODO - Abbreviation"
+title: "Key Transparency Architecture"
 category: info
 
 docname: draft-todo-yourname-protocol-latest
-submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
+submissiontype: IETF
 number:
 date:
 consensus: true
 v: 3
-area: AREA
-workgroup: WG Working Group
+area: SEC
+workgroup: keytrans
 keyword:
- - next generation
- - unicorn
- - sparkling distributed ledger
+ - key transparency
 venue:
   group: WG
   type: Working Group
@@ -45,9 +42,8 @@ venue:
 
 author:
  -
-    fullname: Your Name Here
-    organization: Your Organization Here
-    email: your.email@example.com
+    fullname: Brendan McMillion
+    email: brendanmcmillion@gmail.com
 
 normative:
 
