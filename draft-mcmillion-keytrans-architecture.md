@@ -50,6 +50,32 @@ TODO Introduction
 
 {::boilerplate bcp14-tagged}
 
+**End-to-end Encrypted Communication Service:**
+: A communications service that allows end-users to engage in text, voice,
+  video, or other forms of communication over the Internet, that uses public key
+  cryptography to ensure that communications are only accessible to their
+  intended recipients.
+
+**End-user Device:**
+: The device at the final point in a digital communication, which may either
+  send or receive encrypted data in an end-to-end encrypted communication
+  service.
+
+**End-user Identity:**
+: A unique and user-visible identity associated with an account (and therefore,
+  one or more end-user devices) in an end-to-end encrypted communication
+  service. In the case where an end-user explicitly requests to communicate with
+  (or is informed they are communicating with) an end-user uniquely identified
+  by the name "Alice", the end-user identity is the string "Alice".
+
+**Service Provider:**
+: The primary organization that provides the infrastructure and software
+  resources necessary to operate an end-to-end encrypted communication service.
+
+**Authentication Service:**
+: A specialized service capable of securely attesting to the information (such
+  as public keys) associated with a given end-user identity. The authentication
+  service is run either entirely or partially by the Service Provider.
 
 # Security Considerations
 
