@@ -18,7 +18,7 @@ venue:
   mail: "keytrans@ietf.org"
   arch: "https://mailarchive.ietf.org/arch/browse/keytrans/"
   github: "Bren2010/draft-kt-arch"
-  latest: "https://Bren2010.github.io/draft-kt-arch/draft-mcmillion-keytrans-architecture.html"
+  latest: "https://bren2010.github.io/draft-kt-arch/draft-mcmillion-keytrans-architecture.html"
 
 author:
  -
@@ -32,7 +32,11 @@ informative:
 
 --- abstract
 
-TODO Abstract
+This document defines the terminology and interaction patterns involved in the
+deployment of Key Transparency (KT) in a general secure group messaging
+infrastructure, and specifies the security properties that the protocol
+provides. It also gives more general, non-prescriptive guidance on how to
+securely apply KT to a number of common applications.
 
 
 --- middle
