@@ -103,6 +103,13 @@ genuinely need to see them.
   (or is informed they are communicating with) an end-user uniquely identified
   by the name "Alice", the end-user identity is the string "Alice".
 
+**User / Account:**
+: A single end-user of an end-to-end encrypted communication service, which may
+  be represented by several end-user identities and end-user devices. For
+  example, a user may be represented simultaneously by multiple identities
+  (email, phone number, username) and interact with the service on multiple
+  devices (phone, laptop).
+
 **Service Provider:**
 : The primary organization that provides the infrastructure and software
   resources necessary to operate an end-to-end encrypted communication service.
@@ -117,20 +124,22 @@ genuinely need to see them.
 
 From a networking perspective, KT follows a client-server architecture with a
 central *Transparency Log*, acting as a server, which holds the authoritative
-copy of all information and exposes endpoints that allow clients to query or
-modify stored data. Clients coordinate with each other through the server by
+copy of all information and exposes endpoints that allow users to query or
+modify stored data. Users coordinate with each other through the server by
 uploading their own public keys and/or downloading the public keys of other
-clients. Clients are expected to maintain relatively little state, limited only
+users. Users are expected to maintain relatively little state, limited only
 to what is required to interact with the log and ensure that it is behaving
 honestly.
 
 From an application perspective, KT works as a versioned key-value database.
-Clients insert key-value pairs into the database where, for example, the key is
-their username and the value is their public key. Clients can update a key by
+Users insert key-value pairs into the database where, for example, the key is
+their username and the value is their public key. Users can update a key by
 inserting a new version with new data. They can also look up the most recent
-version of a key or any past version. From this point forward, "key" will refer
-to a lookup key in a key-value database and "public key" or "private key" will
-be specified if otherwise.
+version of a key or any past version. Users are considered to **own** a key if,
+in the normal operation of the application, they should be the only one making
+changes to it. From this point forward, "key" will refer to a lookup key in a
+key-value database and "public key" or "private key" will be specified if
+otherwise.
 
 KT does not require the use of a specific transport protocol. This is intended
 to allow applications to layer KT on top of whatever transport protocol their
@@ -144,23 +153,42 @@ limit. Applications SHOULD prevent users from modifying keys that they don't
 own. The exact mechanism for rejecting requests, and possibly explaining the
 reason for rejection, is left to the application.
 
-# Client Operations
+# User Interactions
 
-TODO: Diagram showing a key update request over an application-provided
-transport layer getting accepted / rejected
+As discussed in {{protocol-overview}}, KT follows a client-server architecture.
+This means that all user interaction is directly with the Service Provider. The
+operations that can be executed by a user are as follows:
 
-- Explain monitoring: it proves that a previous lookup wasn't hidden from the
-database history, not that a key hasn't changed
+1. **Search:** Performs a lookup on a specific key in the most recent version of
+   the log. Users may request either a specific version of the key, or the
+   most recent version available. If the key-version pair exists, the server
+   returns the corresponding value and a proof of inclusion.
+2. **Update:** Adds a new key-value pair to the log, for which the server
+   returns a proof of inclusion. Note that this means that new values are added
+   to the log immediately and are not queued for later insertion with a batch of
+   other values.
+3. **Monitor:** While Search and Update are run by the user as necessary,
+   monitoring is done in the background on a recurring basis. It both checks
+   that the log is continuing to behave honestly (all previously returned keys
+   remain in the tree) and that no changes have been made to keys owned by the
+   user without the user's knowledge.
+
+These operations are executed over an application-provided transport layer,
+where the transport layer enforces access control by blocking queries which are
+not allowed:
+
+TODO diagram showing a search request over an application-provided transport
+layer getting accepted / rejected
 
 ## Out-of-Band Communication
 
 It is sometimes possible for a Transparency Log to present forked views of data
 to different users. This means that, from an individual user's perspective, a
 log may appear to be operating correctly in the sense that all of a user's
-requests succeed and proofs verify correctly. However, the Transparency Log has presented a view
-to the user that's not globally consistent with what it has shown other users.
-As such, the log may be able to associate data with keys without the key owner's
-awareness.
+requests succeed and proofs verify correctly. However, the Transparency Log has
+presented a view to the user that's not globally consistent with what it has
+shown other users. As such, the log may be able to associate data with keys
+without the key owner's awareness.
 
 The protocol is designed such that users always remember the last `TreeHead`
 that they observed when querying the log, and require subsequent queries to
@@ -243,24 +271,24 @@ TODO
 
 # Security Guarantees
 
-A client that correctly verifies a proof from the Transparency Log (and does any
+A user that correctly verifies a proof from the Transparency Log (and does any
 required monitoring afterwards) receives a guarantee that the Transparency Log
 operator executed the key-value lookup correctly, and in a way that's globally
-consistent with what it has shown all other clients. That is, when a client
-searches for a key, they're guaranteed that the result they receive represents
-the same result that any other client searching for the same key would've seen.
-When a client modifies a key, they're guaranteed that other clients will see the
-modification the next time they search for the key.
+consistent with what it has shown all other users. That is, when a user searches
+for a key, they're guaranteed that the result they receive represents the same
+result that any other user searching for the same key would've seen. When a user
+modifies a key, they're guaranteed that other users will see the modification
+the next time they search for the key.
 
 If the Transparency Log operator does not execute a key-value lookup correctly,
 then either:
 
-1. The client will detect the error immediately and reject the proof, or
-2. The client will permanently enter an invalid state.
+1. The user will detect the error immediately and reject the proof, or
+2. The user will permanently enter an invalid state.
 
-Depending on the exact reason that the client enters an invalid state, it will
+Depending on the exact reason that the user enters an invalid state, it will
 either be detected by background monitoring or the next time that out-of-band
-communication is available. Importantly, this means that clients must stay
+communication is available. Importantly, this means that users must stay
 online for some fixed amount of time after entering an invalid state for it to
 be successfully detected.
 
@@ -270,9 +298,9 @@ Transparency Log relies on:
 
 - Third-Party Management and Third-Party Auditing require an assumption that the
   service operator and the third-party manager/auditor do not collude
-  to trick clients into accepting malicious results.
-- Contact Monitoring requires an assumption that the client that owns a key and
-  all clients that look up the key do the necessary monitoring afterwards.
+  to trick users into accepting malicious results.
+- Contact Monitoring requires an assumption that the user that owns a key and
+  all users that look up the key do the necessary monitoring afterwards.
 
 ## Privacy Guarantees
 
@@ -288,7 +316,7 @@ the user obtains a valid search proof for the exact key and version stored at
 that log entry.
 
 Applications are primarily able to manage the privacy of their data in KT by
-enforcing access control policies on the basic operations performed by clients,
+enforcing access control policies on the basic operations performed by users,
 as discussed in {{protocol-overview}}. For example if two users aren't friends,
 an application can block these users from searching for each other's lookup
 keys. This prevents the two users from learning about each other's existence. If
