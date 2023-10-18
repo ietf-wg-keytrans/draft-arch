@@ -241,7 +241,7 @@ TODO
 TODO
 
 
-## Security Guarantees
+# Security Guarantees
 
 A client that correctly verifies a proof from the Transparency Log (and does any
 required monitoring afterwards) receives a guarantee that the Transparency Log
@@ -274,6 +274,33 @@ Transparency Log relies on:
 - Contact Monitoring requires an assumption that the client that owns a key and
   all clients that look up the key do the necessary monitoring afterwards.
 
+## Privacy Guarantees
+
+For applications deploying KT, service operators expect to be able to control
+when sensitive information is revealed. In particular, an operator can often
+only reveal that a user is a member of their service, and information about that
+user's account, to that user's friends or contacts.
+
+KT only allows users to learn whether or not a lookup key exists in the
+Transparency Log if the user obtains a valid search proof for that key.
+Similarly, KT only allows users to learn about the contents of a log entry if
+the user obtains a valid search proof for the exact key and version stored at
+that log entry.
+
+Applications are primarily able to manage the privacy of their data in KT by
+enforcing access control policies on the basic operations performed by clients,
+as discussed in {{protocol-overview}}. For example if two users aren't friends,
+an application can block these users from searching for each other's lookup
+keys. This prevents the two users from learning about each other's existence. If
+the users were previously friends but no longer are, the application can prevent
+the users from searching for each other's keys and learning the contents of any
+subsequent account updates.
+
+TODO specify the rest of the privacy guarantees of the finished protocol
+
+<!-- Operators may also wish to conceal when individual users perform a given task
+like rotate their public key or add a new device to their account, or even
+conceal the exact number of users their application has overall. -->
 
 # IANA Considerations
 
