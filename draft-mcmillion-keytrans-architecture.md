@@ -254,22 +254,39 @@ keys of regular contacts).
 | Contact Monitoring     | No                       | Yes           |
 | Third-Party Auditing   | Yes                      | No            |
 | Third-Party Management | Yes                      | No            |
+{: title="Comparison of deployment modes" }
 
 ## Contact Monitoring
 
 TODO diagram showing user request going to service operator, followed by
 monitoring queries later.
 
-## Third-Party Management
-
-TODO diagram showing user request going to service operator, immediately being
-proxied to manager with operator signature.
-
 ## Third-Party Auditing
+
+With the Third-Party Auditing deployment mode, the service operator obtains
+signatures from a lightweight third-party auditor attesting to the fact that the
+service operator is constructing the tree correctly. These signatures are
+provided to users along with the responses for their queries.
+
+The third-party auditor is expected to run asynchronously, downloading and
+authenticating a log's contents in the background, so as not to become a
+bottleneck for the service operator.
 
 TODO diagram showing a user request going to a service operator and a response
 with an auditor signature coming back. Batched changes going to auditor in
 background.
+
+## Third-Party Management
+
+With the Third-Party Management deployment mode, a third party is responsible
+for the majority of the work of storing and operating the log, while the service
+operator serves mainly to enforce access control and authenticate the addition
+of new entries to the log. All user queries are initially sent by users directly
+to the service operator, and the service operator proxies them to the
+third-party manager if they pass access control.
+
+TODO diagram showing user request going to service operator, immediately being
+proxied to manager with operator signature.
 
 
 # Security Guarantees
