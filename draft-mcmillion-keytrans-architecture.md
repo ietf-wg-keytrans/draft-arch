@@ -110,14 +110,14 @@ genuinely need to see them.
   (email, phone number, username) and interact with the service on multiple
   devices (phone, laptop).
 
-**Service Provider:**
+**Service Operator:**
 : The primary organization that provides the infrastructure and software
   resources necessary to operate an end-to-end encrypted communication service.
 
 **Transparency Log:**
 : A specialized service capable of securely attesting to the information (such
   as public keys) associated with a given end-user identity. The transparency
-  log is run either entirely or partially by the Service Provider.
+  log is run either entirely or partially by the service operator.
 
 
 # Protocol Overview
@@ -156,7 +156,7 @@ reason for rejection, is left to the application.
 # User Interactions
 
 As discussed in {{protocol-overview}}, KT follows a client-server architecture.
-This means that all user interaction is directly with the Service Provider. The
+This means that all user interaction is directly with the service operator. The
 operations that can be executed by a user are as follows:
 
 1. **Search:** Performs a lookup on a specific key in the most recent version of
@@ -190,9 +190,8 @@ presented a view to the user that's not globally consistent with what it has
 shown other users. As such, the log may be able to associate data with keys
 without the key owner's awareness.
 
-The protocol is designed such that users always remember the last `TreeHead`
-that they observed when querying the log, and require subsequent queries to
-prove consistency against this tree head. As such, users always stay on a
+The protocol is designed such that users always require subsequent queries to
+prove consistency with previous queries. As such, users always stay on a
 linearizable view of the log. If a user is ever presented with a forked view,
 they hold on to this forked view forever and reject the output of any subsequent
 queries that are inconsistent with it.
@@ -202,26 +201,20 @@ presented, but isn't in itself sufficient for detection. To detect forks, users
 must either use **out-of-band communication** with other users or **anonymous
 communication** with the Transparency Log.
 
-With out-of-band communication, a user obtains a "distinguished" `TreeHead` that
-was issued closest to a given time, like the start of the day, by sending a
-`Distinguished` request to the Transparency Log. The user then sends the
-`TreeHead` along with the root hash that it verifies against to other users over
-some out-of-band communication channel (for example, an in-app screen with a QR
-code / scanner). The other users check that the `TreeHead` verifies successfully
-and matches their own view of the log. If the `TreeHead` verifies successfully
-on its own but doesn't match a user's view of the log, this proves the existence
-of a fork.
+With out-of-band communication, two users gossip with each other to establish
+that they both have the same view of the log's data. This gossip is able to
+happen over any supported out-of-band channel, even if it is heavily
+bandwidth-limited, such as scanning a QR code or talking over the phone.
 
-With anonymous communication, a user first obtains a "distinguished" `TreeHead`
-by sending a `Distinguished` request to the Transparency Log over their normal
-communication channel. They then send the same `Distinguished` request, omitting
-any identifying information and leaving the `last` field empty, over an
-anonymous channel. If the log responds with a different `TreeHead` over the
-anonymous channel, this proves the existence of a fork.
+With anonymous communication, a single user accesses the Transparency Log over
+an anonymous channel and tries to establish that the log is presenting the same
+view of data over the anonymous channel as it does over authenticated channels.
 
-In the event that a fork is successfully detected, the two signatures on the
-differing views of the log provide non-repudiable proof of log misbehavior which
-can be published.
+In the event that a fork is successfully detected, the user is able to produce
+non-repudiable proof of log misbehavior which can be published.
+
+TODO diagram showing a user talking to a log over an authenticated & anonymous
+channel, gossipping with other users
 
 # Deployment Modes
 
@@ -230,7 +223,7 @@ different modes for deploying a Transparency Log are supported. Each mode has
 slightly different requirements and efficiency considerations for both the
 service operator and the end-user.
 
-**Third-party Management** and **Third-party Auditing** are two deployment modes
+**Third-Party Management** and **Third-Party Auditing** are two deployment modes
 that require the service operator to delegate part of the operation of the
 Transparency Log to a third party. Users are able to run more efficiently as
 long as they can assume that the service operator and the third party won't
@@ -241,32 +234,42 @@ the service operator and the service operator coordinates with the third party
 themself. End-users never contact the third party directly, however they will
 need a signature public key from the third party to verify its assertions.
 
-With Third-party Management, the third party performs the majority of the work
+With Third-Party Management, the third party performs the majority of the work
 of actually storing and operating the log, and the service operator only needs
-to sign new entries as they're added. With Third-party Auditing, the service
+to sign new entries as they're added. With Third-Party Auditing, the service
 operator performs the majority of the work of storing and operating the log, and
 obtains signatures from a lightweight third-party auditor at regular intervals
 asserting that the service operator has been constructing the tree correctly.
 
 **Contact Monitoring**, on the other hand, supports a single-party deployment
-with no third party. The tradeoff is that executing the background monitoring protocol
-requires an amount of work that's proportional to the number of keys a user
-has looked up in the past. As such, it's less suited to use-cases where users
-look up a large number of ephemeral keys, but would work ideally in a use-case
-where users look up a small number of keys repeatedly (for example, the keys of
-regular contacts).
+with no third party. The tradeoff is that executing the background monitoring
+protocol requires an amount of work that's proportional to the number of keys a
+user has looked up in the past. As such, it's less suited to use-cases where
+users look up a large number of ephemeral keys, but would work ideally in a
+use-case where users look up a small number of keys repeatedly (for example, the
+keys of regular contacts).
+
+| Deployment Mode        | Supports ephemeral keys? | Single party? |
+|------------------------| -------------------------|---------------|
+| Contact Monitoring     | No                       | Yes           |
+| Third-Party Auditing   | Yes                      | No            |
+| Third-Party Management | Yes                      | No            |
 
 ## Contact Monitoring
 
-TODO
+TODO diagram showing user request going to service operator, followed by
+monitoring queries later.
 
-## Third-party Management
+## Third-Party Management
 
-TODO
+TODO diagram showing user request going to service operator, immediately being
+proxied to manager with operator signature.
 
-## Third-party Auditing
+## Third-Party Auditing
 
-TODO
+TODO diagram showing a user request going to a service operator and a response
+with an auditor signature coming back. Batched changes going to auditor in
+background.
 
 
 # Security Guarantees
@@ -316,13 +319,13 @@ the user obtains a valid search proof for the exact key and version stored at
 that log entry.
 
 Applications are primarily able to manage the privacy of their data in KT by
-enforcing access control policies on the basic operations performed by users,
-as discussed in {{protocol-overview}}. For example if two users aren't friends,
-an application can block these users from searching for each other's lookup
-keys. This prevents the two users from learning about each other's existence. If
-the users were previously friends but no longer are, the application can prevent
-the users from searching for each other's keys and learning the contents of any
-subsequent account updates.
+relying on these properties when they enforce access control policies on the
+queries issued by users, as discussed in {{protocol-overview}}. For example if
+two users aren't friends, an application can block these users from searching
+for each other's lookup keys. This prevents the two users from learning about
+each other's existence. If the users were previously friends but no longer are,
+the application can prevent the users from searching for each other's keys and
+learning the contents of any subsequent account updates.
 
 TODO specify the rest of the privacy guarantees of the finished protocol
 
