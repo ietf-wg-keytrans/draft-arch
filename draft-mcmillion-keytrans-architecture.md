@@ -350,6 +350,56 @@ TODO specify the rest of the privacy guarantees of the finished protocol
 like rotate their public key or add a new device to their account, or even
 conceal the exact number of users their application has overall. -->
 
+
+# Implementation Guidance
+
+Fundamentally, KT can be thought of as guaranteeing that all the users of a
+service agree on the contents of a key-value database. Using this guarantee,
+that all users agree on a set of keys and values, to authenticate the
+relationship between end-user identities and the end-users of a communication
+service takes special care. Critically, in order to authenticate an end-user
+identity, it must be both *unique* and *user-visible*. However, what exactly
+constitutes a unique and user-visible identifier varies greatly from application
+to application.
+
+Consider, for example, a communication service where users are uniquely
+identified by a fixed username, but KT has been deployed using an internal UUID
+as the lookup key. While the UUID might be unique, it is not user-visible. When
+a user attempts to lookup a contact by username, the service operator must
+translate the username into its UUID. Since this mapping (from username to UUID)
+is unauthenticated, the service operator can manipulate it to eavesdrop on
+conversations by returning the UUID for an account that it controls. From a
+security perspective, this is equivalent to not using KT at all. An example of
+this kind of application would be email.
+
+However in other applications, the use of internal UUIDs in KT may be
+appropriate. For example, many applications don't have this type of fixed
+username and instead use their UI (underpinned internally by a UUID) to indicate
+to users whether a conversation is with a new person or someone they've
+previously contacted. The fact that the UI behaves in this way makes the UUID a
+user-visible identifer, even if a user may not be able to actually see it
+written out. An example of this kind of application would be Slack.
+
+A **primary end-user identity** is one that is unique, user-visible, and unable
+to change. (Or equivalently, if it changes, it appears in the application UI as
+a new conversation with a new user.) A primary end-user identity should always
+be a lookup key in KT, with the end-user's public keys as the associated value.
+
+A **secondary end-user identity** is one that is unique, user-visible, and able
+to change without being interpreted as a different account due to its
+association with a primary identity. Examples of this type of identity include
+phone numbers, or most usernames. These identities are used solely for initial
+user discovery, in which they're converted to a primary identity that's used by
+the application from then on. A secondary end-user identity should be a lookup
+key in KT, for the purpose of authenticating user discovery, with the primary
+end-user identity as the associated value.
+
+While likely helpful to most common applications, the distinction between
+handling primary and secondary identities is not a hard-and-fast rule.
+Applications must be careful to ensure they fully capture the semantics of
+identity in their application with the key-value structure they put in KT.
+
+
 # IANA Considerations
 
 This document has no IANA actions.
