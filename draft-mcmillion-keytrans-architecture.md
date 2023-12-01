@@ -117,7 +117,7 @@ genuinely need to see them.
 **Transparency Log:**
 : A specialized service capable of securely attesting to the information (such
   as public keys) associated with a given end-user identity. The transparency
-  log is run either entirely or partially by the service operator.
+  log is usually run either entirely or partially by the service operator.
 
 
 # Protocol Overview
@@ -156,7 +156,7 @@ reason for rejection, is left to the application.
 # User Interactions
 
 As discussed in {{protocol-overview}}, KT follows a client-server architecture.
-This means that all user interaction is directly with the service operator. The
+This means that all user interaction is directly with the transparency log. The
 operations that can be executed by a user are as follows:
 
 1. **Search:** Performs a lookup on a specific key in the most recent version of
@@ -221,25 +221,25 @@ channel, gossipping with other users
 In the interest of satisfying the widest range of use-cases possible, three
 different modes for deploying a Transparency Log are supported. Each mode has
 slightly different requirements and efficiency considerations for both the
-service operator and the end-user.
+transparency log and the end-user.
 
 **Third-Party Management** and **Third-Party Auditing** are two deployment modes
-that require the service operator to delegate part of the operation of the
-Transparency Log to a third party. Users are able to run more efficiently as
-long as they can assume that the service operator and the third party won't
+that require the transparency log to delegate part of its operation
+to a third party. Users are able to run more efficiently as
+long as they can assume that the transparency log and the third party won't
 collude to trick them into accepting malicious results.
 
 With both third-party modes, all requests from end-users are initially routed to
-the service operator and the service operator coordinates with the third party
-themself. End-users never contact the third party directly, however they will
+the transparency log and the log coordinates with the third party
+itself. End-users never contact the third party directly, however they will
 need a signature public key from the third party to verify its assertions.
 
 With Third-Party Management, the third party performs the majority of the work
-of actually storing and operating the log, and the service operator only needs
-to sign new entries as they're added. With Third-Party Auditing, the service
-operator performs the majority of the work of storing and operating the log, and
+of actually storing and operating the service, and the transparency log only
+signs new entries as they're added. With Third-Party Auditing, the transparency
+log performs the majority of the work of storing and operating the service, and
 obtains signatures from a lightweight third-party auditor at regular intervals
-asserting that the service operator has been constructing the tree correctly.
+asserting that the tree has been constructed correctly.
 
 **Contact Monitoring**, on the other hand, supports a single-party deployment
 with no third party. The tradeoff is that executing the background monitoring
@@ -258,34 +258,34 @@ keys of regular contacts).
 
 ## Contact Monitoring
 
-TODO diagram showing user request going to service operator, followed by
+TODO diagram showing user request going to transparency log, followed by
 monitoring queries later.
 
 ## Third-Party Auditing
 
-With the Third-Party Auditing deployment mode, the service operator obtains
+With the Third-Party Auditing deployment mode, the transparency log obtains
 signatures from a lightweight third-party auditor attesting to the fact that the
-service operator is constructing the tree correctly. These signatures are
+tree has been constructed correctly. These signatures are
 provided to users along with the responses for their queries.
 
 The third-party auditor is expected to run asynchronously, downloading and
 authenticating a log's contents in the background, so as not to become a
-bottleneck for the service operator.
+bottleneck for the transparency log.
 
-TODO diagram showing a user request going to a service operator and a response
+TODO diagram showing a user request going to a transparency log and a response
 with an auditor signature coming back. Batched changes going to auditor in
 background.
 
 ## Third-Party Management
 
 With the Third-Party Management deployment mode, a third party is responsible
-for the majority of the work of storing and operating the log, while the service
-operator serves mainly to enforce access control and authenticate the addition
+for the majority of the work of storing and operating the log, while the
+transparency log serves mainly to enforce access control and authenticate the addition
 of new entries to the log. All user queries are initially sent by users directly
-to the service operator, and the service operator proxies them to the
+to the transparency log, and the log operator proxies them to the
 third-party manager if they pass access control.
 
-TODO diagram showing user request going to service operator, immediately being
+TODO diagram showing user request going to transparency log, immediately being
 proxied to manager with operator signature.
 
 
@@ -317,7 +317,7 @@ underlying cryptographic primitives, but also the deployment mode that the
 Transparency Log relies on:
 
 - Third-Party Management and Third-Party Auditing require an assumption that the
-  service operator and the third-party manager/auditor do not collude
+  transparency log and the third-party manager/auditor do not collude
   to trick users into accepting malicious results.
 - Contact Monitoring requires an assumption that the user that owns a key and
   all users that look up the key do the necessary monitoring afterwards.
