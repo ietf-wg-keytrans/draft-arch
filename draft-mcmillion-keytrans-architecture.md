@@ -242,7 +242,7 @@ obtains signatures from a lightweight third-party auditor at regular intervals
 asserting that the tree has been constructed correctly.
 
 **Contact Monitoring**, on the other hand, supports a single-party deployment
-with no third party. The tradeoff is that executing the background monitoring
+with no third party. The cost of this is that executing the background monitoring
 protocol requires an amount of work that's proportional to the number of keys a
 user has looked up in the past. As such, it's less suited to use-cases where
 users look up a large number of ephemeral keys, but would work ideally in a
@@ -309,11 +309,17 @@ then either:
 Depending on the exact reason that the user enters an invalid state, it will
 either be detected by background monitoring or the next time that out-of-band
 communication is available. Importantly, this means that users must stay
-online for some fixed amount of time after entering an invalid state for it to
+online for some bounded amount of time after entering an invalid state for it to
 be successfully detected.
 
-The exact caveats of the above guarantee depend naturally on the security of
-underlying cryptographic primitives, but also the deployment mode that the
+Alternatively, instead of executing a lookup incorrectly, the Transparency Log
+can attempt to prevent a user from learning about more recent states of the log.
+This would allow the log to continue executing queries correctly, but on
+outdated versions of data. To prevent this, applications configure an upper
+bound on how stale a query response can be without being rejected.
+
+The exact caveats of the above guarantees depend naturally on the security of
+underlying cryptographic primitives, and also the deployment mode that the
 Transparency Log relies on:
 
 - Third-Party Management and Third-Party Auditing require an assumption that the
@@ -321,6 +327,20 @@ Transparency Log relies on:
   to trick users into accepting malicious results.
 - Contact Monitoring requires an assumption that the user that owns a key and
   all users that look up the key do the necessary monitoring afterwards.
+
+In short, assuming that the underlying cryptographic primitives used are secure,
+any deployment-specific assumptions hold (such as non-collusion), and that user
+devices don't go permanently offline, then malicious behavior by the
+Transparency Log is always detected within a bounded amount of time. The
+parameters that determine the maximum amount of time before malicious behavior
+is detected are as follows:
+
+- How stale an application allows query responses to be (ie, how long an
+  application is willing to go without seeing updates to the tree).
+- How frequently users execute background monitoring.
+- How frequently users exercise out-of-band communication.
+- For third-party auditing: the maximum amount of lag that an auditor is allowed
+  to have, with respect to the most recent tree head.
 
 ## Privacy Guarantees
 
@@ -344,11 +364,47 @@ each other's existence. If the users were previously friends but no longer are,
 the application can prevent the users from searching for each other's keys and
 learning the contents of any subsequent account updates.
 
-TODO specify the rest of the privacy guarantees of the finished protocol
+Service operators also expect to be able to control sensitive population-level
+metrics about their users. These metrics include the size of their userbase, the
+frequency with which new users join, and the frequency with which existing users
+update their keys.
 
-<!-- Operators may also wish to conceal when individual users perform a given task
-like rotate their public key or add a new device to their account, or even
-conceal the exact number of users their application has overall. -->
+KT allows service operators to hide the total size of their userbase from
+end-users and other outside observers. It also allows service operators to
+obscure the rate at which changes are made to the tree by padding real changes
+with fake ones, causing outsiders to observe a baseline constant rate of
+changes. Note however, that this information is not obscured from a third-party
+manager or auditor if one is used. Since the third-party plays a crucial role in
+ensuring correct operation of the log, it necessarily is able to distinguish
+real changes from fake ones, and therefore also the total number of real
+keys.
+
+<!--
+Unresolved privacy aspects to consider:
+- Whether hiding that a key has previously existed in the log or not, from new
+  owners of that key.
+- If you see 5 updates, is it possible to tell that those 5 updates are from the
+  same person or not? Does this need to be hidden or not?
+
+Please add more topics here if they come to mind. :)
+-->
+
+### Leakage to Third-Party
+
+In the event that a third-party auditor or manager is used, there's additional
+information leaked to the third-party that's not visible to outsiders.
+
+In the case of a third-party auditor, the auditor is able to learn the total
+number of distinct keys in the log. It is also able to distinguish between real
+and fake modifications to the tree, and keep track of when individual keys are
+modified. However, auditors are not able to learn the plaintext values of any
+keys or values. This is because keys are masked with a VRF, and values are only
+provided to auditors as commitments.
+
+In the case of a third-party manager, the manager generally learns everything
+that the service operator would know. This includes the total set of plaintext
+keys and values and their modification history. It also includes traffic
+patterns, such as how often a specific key is looked up.
 
 
 # Implementation Guidance
