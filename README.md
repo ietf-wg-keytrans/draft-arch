@@ -2,16 +2,16 @@
 
 This is the working area for the individual Internet-Draft, "Key Transparency Architecture".
 
-* [Editor's Copy](https://Bren2010.github.io/draft-kt-arch/#go.draft-mcmillion-keytrans-architecture.html)
-* [Datatracker Page](https://datatracker.ietf.org/doc/draft-mcmillion-keytrans-architecture)
-* [Individual Draft](https://datatracker.ietf.org/doc/html/draft-mcmillion-keytrans-architecture)
-* [Compare Editor's Copy to Individual Draft](https://Bren2010.github.io/draft-kt-arch/#go.draft-mcmillion-keytrans-architecture.diff)
+* [Editor's Copy](https://ietf-wg-keytrans.github.io/draft-arch/#go.draft-ietf-keytrans-architecture.html)
+* [Datatracker Page](https://datatracker.ietf.org/doc/draft-ietf-keytrans-architecture)
+* [Individual Draft](https://datatracker.ietf.org/doc/html/draft-ietf-keytrans-architecture)
+* [Compare Editor's Copy to Individual Draft](https://ietf-wg-keytrans.github.io/draft-arch/#go.draft-ietf-keytrans-architecture.diff)
 
 
 ## Contributing
 
 See the
-[guidelines for contributions](https://github.com/Bren2010/draft-kt-arch/blob//CONTRIBUTING.md).
+[guidelines for contributions](https://github.com/ietf-wg-keytrans/draft-arch/blob//CONTRIBUTING.md).
 
 Contributions can be made by creating pull requests.
 The GitHub interface supports creating pull requests using the Edit (✏) button.

@@ -2,7 +2,7 @@
 title: "Key Transparency Architecture"
 category: info
 
-docname: draft-mcmillion-keytrans-architecture-latest
+docname: draft-ietf-keytrans-architecture-latest
 submissiontype: IETF
 number:
 date:
@@ -17,8 +17,8 @@ venue:
   type: "Working Group"
   mail: "keytrans@ietf.org"
   arch: "https://mailarchive.ietf.org/arch/browse/keytrans/"
-  github: "Bren2010/draft-kt-arch"
-  latest: "https://bren2010.github.io/draft-kt-arch/draft-mcmillion-keytrans-architecture.html"
+  github: "ietf-wg-keytrans/draft-arch"
+  latest: "https://ietf-wg-keytrans.github.io/draft-arch/draft-ietf-keytrans-architecture.html"
 
 author:
  -
