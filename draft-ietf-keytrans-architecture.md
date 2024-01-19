@@ -65,8 +65,9 @@ use them to impersonate or eavesdrop on conversations with that user.
 
 Key Transparency (KT) solves this problem by requiring the service operator to
 store user public keys in a cryptographically-protected append-only log. Any
-malicious entries added to such a log will generally be visible to all
-users, in which case a user can detect that they're being impersonated
+malicious entries added to such a log will generally be equally visible to both
+the key's owner and the owner's contacts,
+in which case a user can detect that they're being impersonated
 by viewing the public keys attached to their account. However, if the service
 operator attempts to conceal some entries of the log from some users but not
 others, this creates a "forked view" which is permanent and easily detectable
@@ -165,8 +166,7 @@ operations that can be executed by a user are as follows:
    returns the corresponding value and a proof of inclusion.
 2. **Update:** Adds a new key-value pair to the log, for which the server
    returns a proof of inclusion. Note that this means that new values are added
-   to the log immediately and are not queued for later insertion with a batch of
-   other values.
+   to the log immediately, and no provisional inclusion proof (like an SCT in {{RFC6962}}) is provided.
 3. **Monitor:** While Search and Update are run by the user as necessary,
    monitoring is done in the background on a recurring basis. It both checks
    that the log is continuing to behave honestly (all previously returned keys
@@ -246,7 +246,7 @@ with no third party. The cost of this is that executing the background monitorin
 protocol requires an amount of work that's proportional to the number of keys a
 user has looked up in the past. As such, it's less suited to use-cases where
 users look up a large number of ephemeral keys, but would work ideally in a
-use-case where users look up a small number of keys repeatedly (for example, the
+use-case where users look up a limited number of keys repeatedly (for example, the
 keys of regular contacts).
 
 | Deployment Mode        | Supports ephemeral keys? | Single party? |
@@ -255,6 +255,20 @@ keys of regular contacts).
 | Third-Party Auditing   | Yes                      | No            |
 | Third-Party Management | Yes                      | No            |
 {: title="Comparison of deployment modes" }
+
+Applications that rely on a Transparency Log deployed in Contact Monitoring mode
+MUST regularly engage in out-of-band communication
+({{out-of-band-communication}}) to ensure that they detect forks in a timely
+manner.
+
+Applications that rely on a Transparency Log deployed in either of the
+third-party modes SHOULD allow users to enable a "Contact Monitoring Mode". This
+mode, which affects only the individual client's behavior, would cause the
+client to behave as if its Transparency Log was deployed in Contact Monitoring
+mode. As such, it would start retaining state about previously looked-up keys
+and regularly engaging in out-of-band communication. Enabling this
+higher-security mode would provide confidence to applications or users that may
+not fully trust the third-party auditor.
 
 ## Contact Monitoring
 
@@ -395,8 +409,7 @@ In the event that a third-party auditor or manager is used, there's additional
 information leaked to the third-party that's not visible to outsiders.
 
 In the case of a third-party auditor, the auditor is able to learn the total
-number of distinct keys in the log. It is also able to distinguish between real
-and fake modifications to the tree, and keep track of when individual keys are
+number of distinct keys in the log, and keep track of when individual keys are
 modified. However, auditors are not able to learn the plaintext values of any
 keys or values. This is because keys are masked with a VRF, and values are only
 provided to auditors as commitments.
