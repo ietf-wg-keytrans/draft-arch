@@ -310,8 +310,8 @@ mode, which affects only the individual client's behavior, would cause the
 client to behave as if its Transparency Log was deployed in Contact Monitoring
 mode. As such, it would start retaining state about previously looked-up keys
 and regularly engaging in out-of-band communication. Enabling this
-higher-security mode would provide confidence to applications or users that may
-not fully trust the third-party auditor.
+higher-security mode allows users to double-check that the third-party is not
+colluding with the Transparency Log to serve malicious data.
 
 ## Contact Monitoring
 
