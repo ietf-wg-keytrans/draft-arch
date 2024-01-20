@@ -177,8 +177,29 @@ These operations are executed over an application-provided transport layer,
 where the transport layer enforces access control by blocking queries which are
 not allowed:
 
-TODO diagram showing a search request over an application-provided transport
-layer getting accepted / rejected
+~~~aasvg
+Alice                                   Transparency Log
+  |                                            |
+  |        (Valid / Accepted Requests)         |
+  |                                            |
+  | Search(Alice) ---------------------------> |
+  | <--------------------- SearchResponse(...) |
+  |                                            |
+  | Search(Bob) -----------------------------> |
+  | <--------------------- SearchResponse(...) |
+  |                                            |
+  | Update(Alice, ...) ----------------------> |
+  | <--------------------- UpdateResponse(...) |
+  |                                            |
+  |                                            |
+  |       (Rejected / Blocked Requests)        |
+  |                                            |
+  | Search(Fred) ----------------------> X     |
+  | Update(Bob, ...) ------------------> X     |
+  |                                            |
+~~~
+{: #request-response title="Example request/response flow. Valid requests
+receive a response while invalid requests are blocked by the transport layer." }
 
 ## Out-of-Band Communication
 
@@ -213,8 +234,30 @@ view of data over the anonymous channel as it does over authenticated channels.
 In the event that a fork is successfully detected, the user is able to produce
 non-repudiable proof of log misbehavior which can be published.
 
-TODO diagram showing a user talking to a log over an authenticated & anonymous
-channel, gossipping with other users
+~~~aasvg
+Alice                      Bob                          Transparency Log
+|                           |                                          |
+|                           | (Normal reqs over authenticated channel) |
+|                           |                                          |
+|                           | Search(Bob) ---------------------------> |
+|                           | <---------- Response{Head: 6c063bb, ...} |
+|                           |                                          |
+|                           |                                          |
+|                           |                                          |
+|                           |                                          |
+|   (OOB check with peer)   |    (OOB check over anonymous channel)    |
+|                           |                                          |
+| <------ DistinguishedHead | DistinguishedHead ~~~~~~~~~~~~~~~~~~~~~> |
+| 6c063bb ----------------> | <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 6c063bb |
+|                           |                                          |
+|                           | Search(Bob) ~~~~~~~~~~~~~~~~~~~> X       |
+|                           |                                          |
+~~~
+{: #out-of-band-checking title="Users receive tree heads while making
+authenticated requests to a Transparency Log. Users ensure consistency of tree
+heads by either comparing amongst themselves, or by contacting the Transparency
+Log over an anonymous channel. Requests that require authorization are not
+available over the anonymous channel." }
 
 # Deployment Modes
 
@@ -272,8 +315,37 @@ not fully trust the third-party auditor.
 
 ## Contact Monitoring
 
-TODO diagram showing user request going to transparency log, followed by
-monitoring queries later.
+~~~aasvg
+Alice                          Transparency Log
+  |                                   |
+  | Search(Bob) --------------------> |
+  | <------------ SearchResponse(...) |
+  |                                   |
+  |                                   |
+  |           (1 day later)           |
+  |                                   |
+  | Monitor(Bob) -------------------> |
+  | <----------- MonitorResponse(...) |
+  |                                   |
+  |                                   |
+  |          (2 days later)           |
+  |                                   |
+  | Monitor(Bob) -------------------> |
+  | <----------- MonitorResponse(...) |
+  |                                   |
+  |                                   |
+  |          (4 days later)           |
+  |                                   |
+  | Monitor(Bob) -------------------> |
+  | <----------- MonitorResponse(...) |
+  |                                   |
+  |               ...                 |
+  |                                   |
+~~~
+{: #contact-monitoring-fig title="Contact Monitoring. When users make a Search
+request, they must check back in with the Transparency Log several times. These
+checks ensure that the data in the Search response wasn't later removed from the
+log." }
 
 ## Third-Party Auditing
 
@@ -286,9 +358,22 @@ The third-party auditor is expected to run asynchronously, downloading and
 authenticating a log's contents in the background, so as not to become a
 bottleneck for the transparency log.
 
-TODO diagram showing a user request going to a transparency log and a response
-with an auditor signature coming back. Batched changes going to auditor in
-background.
+~~~aasvg
+Many Users                        Transparency Log               Auditor
+|                                        |                             |
+| Update(Alice, ...) ------------------> |                             |
+| Update(Bob, ...) --------------------> |                             |
+| Update(Carol, ...) ------------------> |                             |
+| <===== Response{AuditorSig: 66bf, ...} |                             |
+|                                        |                             |
+|                                        |                             |
+|                                        | BatchUpdate --------------> |
+|                                        | <---------- NewSig: 53c1035 |
+|                                        |                             |
+~~~
+{: #auditing-fig title="Third-Party Auditing. A recent signature from the
+auditor is provided to users. The auditor is updated on changes to the tree in
+the background." }
 
 ## Third-Party Management
 
@@ -299,8 +384,21 @@ of new entries to the log. All user queries are initially sent by users directly
 to the transparency log, and the log operator proxies them to the
 third-party manager if they pass access control.
 
-TODO diagram showing user request going to transparency log, immediately being
-proxied to manager with operator signature.
+~~~aasvg
+Alice                  Transparency Log                  Manager
+|                             |                                |
+| Search(Alice) ------------> | -----------------------------> |
+| <-------------------------- | <--------- SearchResponse(...) |
+|                             |                                |
+| Update(Alice, ...) -------> | -----------------------------> |
+| <-------------------------- | <--------- UpdateResponse(...) |
+|                             |                                |
+| Search(Fred) ----------> X  |                                |
+| Update(Bob, ...) ------> X  |                                |
+|                             |                                |
+~~~
+{: #manager-fig title="Third-Party Management. Valid requests are proxied by the
+Transparency Log to the Manager. Rejected requests are blocked." }
 
 
 # Security Guarantees
