@@ -507,7 +507,8 @@ In the event that a third-party auditor or manager is used, there's additional
 information leaked to the third-party that's not visible to outsiders.
 
 In the case of a third-party auditor, the auditor is able to learn the total
-number of distinct keys in the log, and keep track of when individual keys are
+number of distinct keys in the log. It is also able to distinguish between real
+and fake modifications to the tree, and keep track of when individual keys are
 modified. However, auditors are not able to learn the plaintext values of any
 keys or values. This is because keys are masked with a VRF, and values are only
 provided to auditors as commitments.
