@@ -1,0 +1,285 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2024-01-21T01:13:05.525350+00:00",
+  "repo": "ietf-wg-keytrans/draft-arch",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    },
+    {
+      "name": "pr-ready",
+      "description": "",
+      "color": "E90CE2"
+    }
+  ],
+  "issues": [
+    {
+      "number": 1,
+      "id": "I_kwDOKhdr7c52lG3E",
+      "title": "what happens (to users) if a keyserver goes bad?",
+      "url": "https://github.com/ietf-wg-keytrans/draft-arch/issues/1",
+      "state": "OPEN",
+      "author": "sftcd",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "We have a history of some key servers going bad. That could be due to attack, inability to operate or for other reasons. Regardless of the reason though, shouldn't the architecture describe e.g. a set of goals for how users and/or the overall system can recover from such a situation?",
+      "createdAt": "2023-11-12T14:55:36Z",
+      "updatedAt": "2023-12-06T21:07:44Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "OR13",
+          "authorAssociation": "NONE",
+          "body": "(chair hat off)\r\n\r\nI am not sure if this section implies redundancy or not, but perhaps its enough to convince readers its in scope?\r\n\r\nhttps://bren2010.github.io/draft-kt-arch/draft-mcmillion-keytrans-architecture.html#name-third-party-auditing",
+          "createdAt": "2023-12-06T21:02:29Z",
+          "updatedAt": "2023-12-06T21:02:29Z"
+        },
+        {
+          "author": "sftcd",
+          "authorAssociation": "NONE",
+          "body": "Doesn't seem to address the issue as I read it. I think text about how a new log could potentially take over from an old one with the help of auditors of the old log or something like that might do the trick though. I guess that'd be a form of portability? Or maybe as you say, if common practice was for end users to not only use one log but to commonly make use of >1 independent logs, then maybe that'd be enough. I do think covering such issues in an architecture document would be needed or it'd never be covered later though.",
+          "createdAt": "2023-12-06T21:07:43Z",
+          "updatedAt": "2023-12-06T21:07:43Z"
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "id": "I_kwDOKhdr7c56DKuE",
+      "title": "Definition of KT",
+      "url": "https://github.com/ietf-wg-keytrans/draft-arch/issues/2",
+      "state": "OPEN",
+      "author": "eshaghoshms",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [
+        "pr-ready"
+      ],
+      "body": "The Introduction says, \"Any malicious entries added to such a log will generally be visible to all users, in which case a user can detect that they're being impersonated by viewing the public keys attached to their account.\" In the following paragraph, privacy is mentioned: \"KT can better preserve user privacy by only showing entries of the log to participants that genuinely need to see them.\" It is unclear what it means to say that all entries are generally visible to all users, while achieving privacy through access control. Maybe the sentence can be rephrased to: \"Any malicious entries added to such a log will be visible to the owners and recipients of the public-keys, in which case a user can detect that they're being impersonated by viewing the public keys attached to their account\".",
+      "createdAt": "2023-12-18T23:40:00Z",
+      "updatedAt": "2023-12-28T21:47:40Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 3,
+      "id": "I_kwDOKhdr7c56DL5g",
+      "title": "User Interactions",
+      "url": "https://github.com/ietf-wg-keytrans/draft-arch/issues/3",
+      "state": "OPEN",
+      "author": "eshaghoshms",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [
+        "pr-ready"
+      ],
+      "body": "For Search: Would it make sense to add the following: \" if the corresponding version does not exist, server should return a proof of non-inclusion\"? I am also wondering if it is important to exclude batch update from the definition of Update (Note that this means that new values are added to the log immediately and are not queued for later insertion with a batch of other values.) since most scalable systems will do batching at least to some degree.",
+      "createdAt": "2023-12-18T23:43:54Z",
+      "updatedAt": "2024-01-04T21:32:21Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I don't think that we can support proofs of non-inclusion, as they require leaking too much information about the number of entries in the database.\r\n\r\nI would support replacing language about \"batching\" with something that instead just captures the idea that there is no temporary SCT-style proof.",
+          "createdAt": "2023-12-28T21:51:41Z",
+          "updatedAt": "2023-12-28T21:51:41Z"
+        },
+        {
+          "author": "eshaghoshms",
+          "authorAssociation": "NONE",
+          "body": "Isn't in crucial to support uniqueness of keys (i.e., given a certain username, the KT system should be able to return only one key as the latest)? I believe this uniqueness property implies support for non-inclusion proofs for the following reason. If there is no support for non-inclusion proof, the KT server could just claim (without any proof) that a certain username does not exist in the tree, when it actually does.",
+          "createdAt": "2024-01-03T18:46:13Z",
+          "updatedAt": "2024-01-03T18:46:13Z"
+        },
+        {
+          "author": "kevinlewi",
+          "authorAssociation": "NONE",
+          "body": "Are we perhaps relying on owner signing for uniqueness of keys in the database? What if owner signing is not present -- how does the client know that the service provider isn't equivocating by showing two \"valid\" entries for the same username at the same epoch?\r\n\r\n> I don't think that we can support proofs of non-inclusion, as they require leaking too much information about the number of entries in the database.\r\n\r\nHm, I'm also curious about why this is the case. How do proofs of non-inclusion leak more info about the # of entries in the database, beyond what proofs of inclusion do?",
+          "createdAt": "2024-01-03T19:00:37Z",
+          "updatedAt": "2024-01-03T19:00:37Z"
+        },
+        {
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> Isn't in crucial to support uniqueness of keys (i.e., given a certain username, the KT system should be able to return only one key as the latest)? I believe this uniqueness property implies support for non-inclusion proofs for the following reason. If there is no support for non-inclusion proof, the KT server could just claim (without any proof) that a certain username does not exist in the tree, when it actually does.\r\n\r\nIf a proof of inclusion is provided, then that does convey a guarantee of uniqueness: this is the only value corresponding to this key. Functionally (and from a security perspective), proofs of non-inclusion aren't very useful because receiving a proof of non-inclusion results in the same user experience as the KT server simply being down. Either way, there's no risk of impersonation because no cryptographic material was provided.\r\n\r\n> Are we perhaps relying on owner signing for uniqueness of keys in the database?\r\n\r\nOwner Signing is not discussed\r\n\r\n> Hm, I'm also curious about why this is the case. How do proofs of non-inclusion leak more info about the # of entries in the database, beyond what proofs of inclusion do?\r\n\r\nYou can provide a proof of inclusion in a sparse Merkle tree, where empty subtrees are represented by a random hash. This would avoid leaking the number of populated leaves, as outside observers wouldn't be able to distinguish populated subtrees from random ones. To provide a proof of non-inclusion in this same type of tree would require showing that a subtree is empty, and the height of the empty subtree leaks information about the number of populated leaves.",
+          "createdAt": "2024-01-03T21:02:11Z",
+          "updatedAt": "2024-01-03T21:02:11Z"
+        },
+        {
+          "author": "eshaghoshms",
+          "authorAssociation": "NONE",
+          "body": "I\u2019m curious why you think that a proof of inclusion is good enough for uniqueness? By proof-of-non-inclusion, I mean a cryptographic proof that the queried username does not exist in the database. To support uniqueness, the server should be able to provide a proof of the unique key corresponding to the queried username (if it exists in the database) or \"empty string\" to indicate that it does not. That is very different from no response from the server since the server is down. If the proof-of-non-inclusion is the same as no response, the server could exploit this to attack an account by distributing a fake key and proof-of-inclusion for the fake key to some parties, while simply not responding to some other, for the same username. Did you mean something else by proof-of-non-inclusion?\r\n\r\n> If a proof of inclusion is provided, then that does convey a guarantee of uniqueness: this is the only value corresponding to this key. Functionally (and from a security perspective), proofs of non-inclusion aren't very useful because receiving a proof of non-inclusion results in the same user experience as the KT server simply being down. Either way, there's no risk of impersonation because no cryptographic material was provided.\r\n\r\n",
+          "createdAt": "2024-01-03T22:35:30Z",
+          "updatedAt": "2024-01-03T22:36:32Z"
+        },
+        {
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "body": "We have the same understanding of what a proof of non-inclusion is. What you're describing isn't an attack. If I'm a user trying to lookup the public key of my friend, the server refusing to respond doesn't allow impersonation. However, if I'm trying to do monitoring, the server refusing to respond to my monitor queries would need to be handled the same as any cryptographic reason that monitoring might fail (the detection of a fork / other illegal changes to the tree)",
+          "createdAt": "2024-01-04T00:30:01Z",
+          "updatedAt": "2024-01-04T00:30:01Z"
+        },
+        {
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "body": "This conversation made me realize an interesting, privacy-preserving way to do proofs of non-inclusion for a key. When a user attempts to look up a key that doesn't exist, the server can insert version zero of the key with a special tombstone marker as its value. Subsequent lookups can reuse the same tombstone entry.\r\n\r\nThis obviously isn't something that makes sense to do for every application. As I said above, for most applications, a proof of non-inclusion and refusal to provide proof have the same UX and security value. But if a proof of non-inclusion would be particularly valuable, then this is an option.",
+          "createdAt": "2024-01-04T02:37:29Z",
+          "updatedAt": "2024-01-04T02:37:29Z"
+        },
+        {
+          "author": "kevinlewi",
+          "authorAssociation": "NONE",
+          "body": "Ok, after re-reading carefully I think I understand how we are thinking about this differently. In Brendan's proposed architecture, each username is associated with a unique position in the sparse Merkle tree, which never changes, no matter how many times a new value is posted for that username.\r\n\r\nIn Esha's version, each leaf node in the Merkle tree is derived by the tuple (username || version #), so that updates to the value for a username increase this version # and result in different positions in the Merkle tree.\r\n\r\nIn Brendan's proposal, a proof of inclusion suffices for uniqueness because there is exactly one place to look for a username, regardless of how many times it was updated. Therefore, proof of non-inclusion is not needed.\r\n\r\n> To provide a proof of non-inclusion in this same type of tree would require showing that a subtree is empty, and the height of the empty subtree leaks information about the number of populated leaves.\r\n\r\nBtw Brendan, not sure if we understood this the same way, but: typically a proof of non-inclusion is not just a matter of showing that a subtree is empty. It instead consists of two proofs of inclusion of neighboring nodes in tree, which implies that since both of them are in the tree, and they are neighbors, then nothing in between them exists (hence a proof of non-inclusion for a target node). Hope that makes sense...\r\n\r\n---\r\n\r\nAnyway, I think it would be useful for us to perhaps spawn off a separate discussion / issue around the design of having static nodes in the tree for usernames that do not change no matter how many times the username's value is updated. I think there are some interesting tradeoffs which this approach -- I'll create a new issue to host that discussion if you don't mind!",
+          "createdAt": "2024-01-04T21:31:38Z",
+          "updatedAt": "2024-01-04T21:32:21Z"
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "id": "I_kwDOKhdr7c56DNiY",
+      "title": "Deployment Modes and Out-of-Band Communication",
+      "url": "https://github.com/ietf-wg-keytrans/draft-arch/issues/4",
+      "state": "OPEN",
+      "author": "eshaghoshms",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [
+        "pr-ready"
+      ],
+      "body": "The relation between the Deployment Modes and Out-of-Band Communication is a bit unclear. Is Out-of-Band Communication assumed for all Deployment Modes? For example, the Contact Monitoring Mode says it is \"a single-party deployment with no third party\". But this would not be sufficient to detect forking attacks unless some Out-of-Band Communication or Bulletin Board is assumed.",
+      "createdAt": "2023-12-18T23:49:10Z",
+      "updatedAt": "2024-01-04T00:31:40Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Out-of-Band Communication is available to detect forks in all deployment modes. Forking can still happen in the third-party modes if there's collusion",
+          "createdAt": "2023-12-28T22:18:21Z",
+          "updatedAt": "2023-12-28T22:18:21Z"
+        },
+        {
+          "author": "eshaghoshms",
+          "authorAssociation": "NONE",
+          "body": "Thanks for the clarification! Can I suggest that we add this clarification in Section 5 as follows:\r\n\r\n_In the interest of satisfying the widest range of use-cases possible, three different modes for deploying a Transparency Log are supported. Each mode has slightly different requirements and efficiency considerations for both the transparency log and the end-user._\r\n\r\nto\r\n\r\n_In the interest of satisfying the widest range of use-cases possible, three different modes for deploying a Transparency Log are supported. Each mode has slightly different requirements and efficiency considerations for both the transparency log and the end-user. **Note that Out-of-Band Communication is necessary to detect forks in all of these deployment modes.**_",
+          "createdAt": "2024-01-03T21:38:50Z",
+          "updatedAt": "2024-01-03T21:38:50Z"
+        },
+        {
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Go for it",
+          "createdAt": "2024-01-04T00:31:39Z",
+          "updatedAt": "2024-01-04T00:31:39Z"
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "id": "I_kwDOKhdr7c56DQU5",
+      "title": "Security Guarantees",
+      "url": "https://github.com/ietf-wg-keytrans/draft-arch/issues/5",
+      "state": "OPEN",
+      "author": "eshaghoshms",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Some additional parameters that would be nice to add in Section 6 (The parameters that determine the maximum amount of time before malicious behavior is detected are as follows:)\r\n\r\n1. What state is needed to be maintained by the client devices to detect malicious behavior\r\n2. What state the client devices need to maintain about the user's contacts to help detect malicious behavior\r\n3. Who detects the malicious behavior: the owner of the key, or its recipient\r\n\r\n\r\n\r\n",
+      "createdAt": "2023-12-18T23:57:28Z",
+      "updatedAt": "2023-12-19T01:04:05Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 6,
+      "id": "I_kwDOKhdr7c56DSqg",
+      "title": "Leakage to Third-Party",
+      "url": "https://github.com/ietf-wg-keytrans/draft-arch/issues/6",
+      "state": "OPEN",
+      "author": "eshaghoshms",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [
+        "pr-ready"
+      ],
+      "body": "Section 6.1.1 says the following: \"In the case of a third-party auditor, the auditor is able to learn the total number of distinct keys in the log. It is also able to distinguish between real and fake modifications to the tree, and keep track of when individual keys are modified.\" Many of the KT systems so not suffer from this leakage: SEEMless, VeRSA, Verdict, Parakeet, ELEKTRA. Since this leakage in the third-party auditing mode is easily avoidable, I suggest removing the quoted part from Section 6.1.1.",
+      "createdAt": "2023-12-19T00:04:00Z",
+      "updatedAt": "2023-12-28T22:21:00Z",
+      "closedAt": null,
+      "comments": []
+    }
+  ],
+  "pulls": [
+    {
+      "number": 7,
+      "id": "PR_kwDOKhdr7c5knInp",
+      "title": "Resolve easy issues",
+      "url": "https://github.com/ietf-wg-keytrans/draft-arch/pull/7",
+      "state": "OPEN",
+      "author": "Bren2010",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #2, #3, #4, #6\r\n/cc @kevinlewi @eshaghoshms",
+      "createdAt": "2024-01-20T00:54:06Z",
+      "updatedAt": "2024-01-20T00:54:06Z",
+      "baseRepository": "ietf-wg-keytrans/draft-arch",
+      "baseRefName": "main",
+      "baseRefOid": "b9aaa14cb7468dffeae926ac33ef0354e76a5950",
+      "headRepository": "ietf-wg-keytrans/draft-arch",
+      "headRefName": "brendan/bugs",
+      "headRefOid": "90725d2f2ff5581375911dfc8f5dba88183154fa",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    }
+  ]
+}
