@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-01-21T01:13:05.525350+00:00",
+  "timestamp": "2024-01-23T01:09:24.320524+00:00",
   "repo": "ietf-wg-keytrans/draft-arch",
   "labels": [
     {
@@ -252,6 +252,22 @@
       "updatedAt": "2023-12-28T22:21:00Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 8,
+      "id": "I_kwDOKhdr7c58vFD5",
+      "title": "Discuss compaction",
+      "url": "https://github.com/ietf-wg-keytrans/draft-arch/issues/8",
+      "state": "OPEN",
+      "author": "Bren2010",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-01-21T18:47:43Z",
+      "updatedAt": "2024-01-21T18:47:43Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -267,19 +283,93 @@
       "labels": [],
       "body": "Closes #2, #3, #4, #6\r\n/cc @kevinlewi @eshaghoshms",
       "createdAt": "2024-01-20T00:54:06Z",
-      "updatedAt": "2024-01-20T00:54:06Z",
+      "updatedAt": "2024-01-22T20:25:38Z",
       "baseRepository": "ietf-wg-keytrans/draft-arch",
       "baseRefName": "main",
       "baseRefOid": "b9aaa14cb7468dffeae926ac33ef0354e76a5950",
       "headRepository": "ietf-wg-keytrans/draft-arch",
       "headRefName": "brendan/bugs",
-      "headRefOid": "90725d2f2ff5581375911dfc8f5dba88183154fa",
+      "headRefOid": "b9fe3080bb37586374e1a13a7f83370a5366317e",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOKhdr7c5tgtrF",
+          "commit": {
+            "abbreviatedOid": "b9fe308"
+          },
+          "author": "OR13",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-01-22T20:21:20Z",
+          "updatedAt": "2024-01-22T20:21:20Z",
+          "comments": [
+            {
+              "originalPosition": 8,
+              "body": "```suggestion\r\nin which case a user can detect that they are being impersonated\r\n```",
+              "createdAt": "2024-01-22T20:21:20Z",
+              "updatedAt": "2024-01-22T20:21:20Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKhdr7c5tguiI",
+          "commit": {
+            "abbreviatedOid": "b9fe308"
+          },
+          "author": "OR13",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-01-22T20:23:12Z",
+          "updatedAt": "2024-01-22T20:23:13Z",
+          "comments": [
+            {
+              "originalPosition": 18,
+              "body": "```suggestion\r\n   to the log immediately, and no provisional inclusion proof, such as an SCT as defined in {{Section 4.4 of RFC9162}} is provided.\r\n```",
+              "createdAt": "2024-01-22T20:23:12Z",
+              "updatedAt": "2024-01-22T20:23:13Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKhdr7c5tgvXk",
+          "commit": {
+            "abbreviatedOid": "b9fe308"
+          },
+          "author": "OR13",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-01-22T20:25:21Z",
+          "updatedAt": "2024-01-22T20:25:21Z",
+          "comments": [
+            {
+              "originalPosition": 109,
+              "body": "perhaps \"resolved\" instead of \"looked-up\" ?",
+              "createdAt": "2024-01-22T20:25:21Z",
+              "updatedAt": "2024-01-22T20:25:21Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKhdr7c5tgvdz",
+          "commit": {
+            "abbreviatedOid": "b9fe308"
+          },
+          "author": "OR13",
+          "authorAssociation": "NONE",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-01-22T20:25:38Z",
+          "updatedAt": "2024-01-22T20:25:38Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
