@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-01-23T01:09:24.320524+00:00",
+  "timestamp": "2024-01-25T01:09:16.721297+00:00",
   "repo": "ietf-wg-keytrans/draft-arch",
   "labels": [
     {
@@ -283,7 +283,7 @@
       "labels": [],
       "body": "Closes #2, #3, #4, #6\r\n/cc @kevinlewi @eshaghoshms",
       "createdAt": "2024-01-20T00:54:06Z",
-      "updatedAt": "2024-01-22T20:25:38Z",
+      "updatedAt": "2024-01-24T22:51:57Z",
       "baseRepository": "ietf-wg-keytrans/draft-arch",
       "baseRefName": "main",
       "baseRefOid": "b9aaa14cb7468dffeae926ac33ef0354e76a5950",
@@ -294,7 +294,15 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "kevinlewi",
+          "authorAssociation": "NONE",
+          "body": "I think this closes #2, #3, and #4, but not #6 right? Is #6 addressed in this PR (did I miss it)?",
+          "createdAt": "2024-01-24T22:51:56Z",
+          "updatedAt": "2024-01-24T22:51:56Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOKhdr7c5tgtrF",
