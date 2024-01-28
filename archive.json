@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-01-25T01:09:16.721297+00:00",
+  "timestamp": "2024-01-28T01:07:24.245431+00:00",
   "repo": "ietf-wg-keytrans/draft-arch",
   "labels": [
     {
@@ -244,14 +244,34 @@
       "author": "eshaghoshms",
       "authorAssociation": "NONE",
       "assignees": [],
-      "labels": [
-        "pr-ready"
-      ],
-      "body": "Section 6.1.1 says the following: \"In the case of a third-party auditor, the auditor is able to learn the total number of distinct keys in the log. It is also able to distinguish between real and fake modifications to the tree, and keep track of when individual keys are modified.\" Many of the KT systems so not suffer from this leakage: SEEMless, VeRSA, Verdict, Parakeet, ELEKTRA. Since this leakage in the third-party auditing mode is easily avoidable, I suggest removing the quoted part from Section 6.1.1.",
+      "labels": [],
+      "body": "I suggest editing the following text in Section 6.1.1\r\n\r\n_In the event that a third-party auditor or manager is used, there\u2019s additional information leaked to the third-party that\u2019s not visible to outsiders.\r\nIn the case of a third-party auditor, the auditor is able to learn the total number of distinct keys in the log. It is also able to distinguish between real and fake modifications to the tree, and keep track of when individual keys are modified. However, auditors are not able to learn the plaintext values of any keys or values. This is because keys are masked with a VRF, and values are only provided to auditors as commitments._\r\n\r\nto\r\n\r\n_In the event that a third-party auditor or manager is used, there might be additional information leaked to the third-party that\u2019s not visible to outsiders. However, in the case of a third-party auditor, auditors are not able to learn the plaintext values of any keys or values. This is because keys are masked with a VRF, and values are only provided to auditors as commitments._\r\n \r\nThis is because many of the KT systems so not suffer from the extra leakage mentioned in the text leakage: SEEMless, VeRSA, Verdict, Parakeet, ELEKTRA. ",
       "createdAt": "2023-12-19T00:04:00Z",
-      "updatedAt": "2023-12-28T22:21:00Z",
+      "updatedAt": "2024-01-26T23:51:20Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I was inclined to agree with this, but when thinking about it deeper I realized I'm not sure how to do this and also support Contact Monitoring. This might be something we need to revisit with a specific construction in mind",
+          "createdAt": "2024-01-25T20:04:16Z",
+          "updatedAt": "2024-01-25T20:04:16Z"
+        },
+        {
+          "author": "eshaghoshms",
+          "authorAssociation": "NONE",
+          "body": "@Bren2010 : I edited the suggestion to be more precise. I believe leaking the plaintext can be avoided (even in Contact Monitoring mode) by applying VRF and commitments. Does this make sense?",
+          "createdAt": "2024-01-26T06:36:25Z",
+          "updatedAt": "2024-01-26T06:36:25Z"
+        },
+        {
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "body": "The existing text already says that keys and values are not leaked. In your updated comment, you just remove these sentences:\r\n\r\n> In the case of a third-party auditor, the auditor is able to learn the total number of distinct keys in the log. It is also able to distinguish between real and fake modifications to the tree, and keep track of when individual keys are modified.\r\n\r\nThis is the leakage I don't know how to avoid",
+          "createdAt": "2024-01-26T23:51:01Z",
+          "updatedAt": "2024-01-26T23:51:20Z"
+        }
+      ]
     },
     {
       "number": 8,
@@ -281,9 +301,9 @@
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
-      "body": "Closes #2, #3, #4, #6\r\n/cc @kevinlewi @eshaghoshms",
+      "body": "Closes #2, #3, #4\r\n/cc @kevinlewi @eshaghoshms",
       "createdAt": "2024-01-20T00:54:06Z",
-      "updatedAt": "2024-01-24T22:51:57Z",
+      "updatedAt": "2024-01-25T20:05:15Z",
       "baseRepository": "ietf-wg-keytrans/draft-arch",
       "baseRefName": "main",
       "baseRefOid": "b9aaa14cb7468dffeae926ac33ef0354e76a5950",
@@ -301,6 +321,13 @@
           "body": "I think this closes #2, #3, and #4, but not #6 right? Is #6 addressed in this PR (did I miss it)?",
           "createdAt": "2024-01-24T22:51:56Z",
           "updatedAt": "2024-01-24T22:51:56Z"
+        },
+        {
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Yes, #6 is not addressed. I made a comment in that ticket addressing why it was removed",
+          "createdAt": "2024-01-25T20:05:06Z",
+          "updatedAt": "2024-01-25T20:05:06Z"
         }
       ],
       "reviews": [
