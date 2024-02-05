@@ -26,7 +26,6 @@ author:
     email: brendanmcmillion@gmail.com
 
 normative:
-  RFC6962: DOI.10.17487/RFC6962
 
 informative:
 
@@ -166,7 +165,7 @@ operations that can be executed by a user are as follows:
    returns the corresponding value and a proof of inclusion.
 2. **Update:** Adds a new key-value pair to the log, for which the server
    returns a proof of inclusion. Note that this means that new values are added
-   to the log immediately and no provisional inclusion proof, such as an SCT as defined in {{Section 4.4 of RFC9162}}, is provided.
+   to the log immediately and no provisional inclusion proof, such as an SCT as defined in {{Section 3 of ?RFC6962}}, is provided.
 3. **Monitor:** While Search and Update are run by the user as necessary,
    monitoring is done in the background on a recurring basis. It both checks
    that the log is continuing to behave honestly (all previously returned keys
