@@ -400,6 +400,94 @@ Alice                  Transparency Log                  Manager
 Transparency Log to the Manager. Rejected requests are blocked." }
 
 
+# Combining Logs
+
+There are many cases where it makes sense to operate multiple cooperating log
+instances, for example:
+
+- A service provider may decide that it's prudent to rotate its cryptographic
+  keys, or migrate to a new deployment mode. They can do this by creating a new
+  log instance with new cryptographic keys, operating under a new
+  deployment mode if desired, and migrating their data from the old log to the
+  new log while users are able to query both.
+- A service provider may choose to operate multiple logs to improve their
+  ability to scale or provide higher availability.
+- A federated system may allow each participant in the federation to operate
+  their own log for their own users.
+
+Client implementations should generally be prepared to interact with multiple
+logs simultaneously. In particular, clients SHOULD namespace any configuration
+or state related to a particular log, such that information related to different
+logs do not conflict.
+
+When multiple logs are used, all users in the system MUST have a consistent
+policy for executing Search, Update, and Monitor queries against the logs in a
+way that maintains the high-level security guarantees of KT:
+
+- If all logs behave honestly, then users observe a globally-consistent view of
+  the data associated with each key.
+- If any log behaves dishonestly such that the prior guarantee is not met (some
+  users observe data associated with a key that others do not), this will be
+  detected either immediately or in a timely manner by background monitoring.
+
+## Gradual Migration
+
+In the case of gradually migrating from an old log to a new one, this policy may
+look like:
+
+1. Search queries should be executed against the old log first, and then against
+   the new log only if the most recent version of a key in the old log is a
+   tombstone.
+2. Update queries should only be executed against the new log, adding a
+   tombstone entry to the old log if one hasn't been already created.
+3. Both logs should be monitored as they would be if they were run individually.
+   Once the migration has completed and the old log has stopped accepting
+   changes, the old log SHOULD stay operational long enough for all users to
+   complete their monitoring of it (keeping in mind that some users may be
+   offline for a significant amount of time).
+
+Placing a tombstone entry for each key in the old log gives users a clear
+indication as to which log contains the most recent version of a key and
+prevents them from incorrectly accepting a stale version if the new log rejects
+a search query.
+
+## Immediate Migration
+
+In the event of a key compromise, the service provider may instead choose to
+stop adding new entries to a log immediately and provide a new log that is
+pre-populated with the most recent versions of all keys. In this case, the
+policy may look like:
+
+1. Search queries should always be executed against the new log.
+2. Update queries should always be executed against the new log.
+3. The final tree size and root hash of the old log should be provided to users
+   over a trustworthy channel. Users will use this to do any final monitoring of
+   the old log, and then ensure that the most recent versions of the keys they
+   own are properly represented in the new log. From then on, users will monitor
+   only the new log.
+
+The final tree size and root hash of the prior log must be distributed to users
+in a way that guarantees all users have a globally-consistent view. This can be
+done either by storing them in a well-known key of the new log, or with the
+application's code distribution mechanism.
+
+## Federation
+
+In a federated application, many servers that are owned and operated by
+different entities will cooperate to provide a single end-to-end encrypted
+communication service. Each entity in a federated system provides its own
+infrastructure (in particular, a transparency log) to serve the users that rely
+on it. Given this, there must be a consistent policy for directing KT requests
+to the correct transparency log. Typically in such a system, the end-user
+identity directly specifies which entity requests should be directed to. For
+example, with an email end-user identity like `alice@example.com`, the
+controlling entity is `example.com`.
+
+A controlling entity like `example.com` may act as an anonymizing proxy for its
+users when querying transparency logs run by other entities, but should not
+attempt to 'mirror' or combine other transparency logs with its own.
+
+
 # Security Guarantees
 
 A user that correctly verifies a proof from the Transparency Log (and does any
