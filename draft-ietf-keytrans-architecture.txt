@@ -3,9 +3,9 @@
 
 
 Key Transparency                                            B. McMillion
-Internet-Draft                                           19 January 2024
+Internet-Draft                                           5 February 2024
 Intended status: Informational                                          
-Expires: 22 July 2024
+Expires: 8 August 2024
 
 
                      Key Transparency Architecture
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 22 July 2024.
+   This Internet-Draft will expire on 8 August 2024.
 
 Copyright Notice
 
@@ -84,7 +84,9 @@ Table of Contents
        6.1.1.  Leakage to Third-Party
    7.  Implementation Guidance
    8.  IANA Considerations
-   9.  Normative References
+   9.  References
+     9.1.  Normative References
+     9.2.  Informative References
    Acknowledgments
    Author's Address
 
@@ -116,12 +118,13 @@ Table of Contents
    Key Transparency (KT) solves this problem by requiring the service
    operator to store user public keys in a cryptographically-protected
    append-only log.  Any malicious entries added to such a log will
-   generally be visible to all users, in which case a user can detect
-   that they're being impersonated by viewing the public keys attached
-   to their account.  However, if the service operator attempts to
-   conceal some entries of the log from some users but not others, this
-   creates a "forked view" which is permanent and easily detectable with
-   out-of-band communication.
+   generally be equally visible to both the key's owner and the owner's
+   contacts, in which case a user can detect that they are being
+   impersonated by viewing the public keys attached to their account.
+   However, if the service operator attempts to conceal some entries of
+   the log from some users but not others, this creates a "forked view"
+   which is permanent and easily detectable with out-of-band
+   communication.
 
    The critical improvement of KT over related protocols like
    Certificate Transparency [RFC6962] is that KT includes an efficient
@@ -225,8 +228,9 @@ Table of Contents
 
    2.  *Update:* Adds a new key-value pair to the log, for which the
        server returns a proof of inclusion.  Note that this means that
-       new values are added to the log immediately and are not queued
-       for later insertion with a batch of other values.
+       new values are added to the log immediately and no provisional
+       inclusion proof, such as an SCT as defined in Section 3 of
+       [RFC6962], is provided.
 
    3.  *Monitor:* While Search and Update are run by the user as
        necessary, monitoring is done in the background on a recurring
@@ -239,8 +243,29 @@ Table of Contents
    layer, where the transport layer enforces access control by blocking
    queries which are not allowed:
 
-   TODO diagram showing a search request over an application-provided
-   transport layer getting accepted / rejected
+   Alice                                   Transparency Log
+     |                                            |
+     |        (Valid / Accepted Requests)         |
+     |                                            |
+     | Search(Alice) ---------------------------> |
+     | <--------------------- SearchResponse(...) |
+     |                                            |
+     | Search(Bob) -----------------------------> |
+     | <--------------------- SearchResponse(...) |
+     |                                            |
+     | Update(Alice, ...) ----------------------> |
+     | <--------------------- UpdateResponse(...) |
+     |                                            |
+     |                                            |
+     |       (Rejected / Blocked Requests)        |
+     |                                            |
+     | Search(Fred) ----------------------> X     |
+     | Update(Bob, ...) ------------------> X     |
+     |                                            |
+
+      Figure 1: Example request/response flow.  Valid requests receive
+       a response while invalid requests are blocked by the transport
+                                   layer.
 
 4.1.  Out-of-Band Communication
 
@@ -280,8 +305,30 @@ Table of Contents
    to produce non-repudiable proof of log misbehavior which can be
    published.
 
-   TODO diagram showing a user talking to a log over an authenticated &
-   anonymous channel, gossipping with other users
+Alice                      Bob                          Transparency Log
+|                           |                                          |
+|                           | (Normal reqs over authenticated channel) |
+|                           |                                          |
+|                           | Search(Bob) ---------------------------> |
+|                           | <---------- Response{Head: 6c063bb, ...} |
+|                           |                                          |
+|                           |                                          |
+|                           |                                          |
+|                           |                                          |
+|   (OOB check with peer)   |    (OOB check over anonymous channel)    |
+|                           |                                          |
+| <------ DistinguishedHead | DistinguishedHead ~~~~~~~~~~~~~~~~~~~~~> |
+| 6c063bb ----------------> | <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 6c063bb |
+|                           |                                          |
+|                           | Search(Bob) ~~~~~~~~~~~~~~~~~~~> X       |
+|                           |                                          |
+
+    Figure 2: Users receive tree heads while making authenticated
+   requests to a Transparency Log. Users ensure consistency of tree
+    heads by either comparing amongst themselves, or by contacting
+    the Transparency Log over an anonymous channel.  Requests that
+      require authorization are not available over the anonymous
+                               channel.
 
 5.  Deployment Modes
 
@@ -317,7 +364,7 @@ Table of Contents
    proportional to the number of keys a user has looked up in the past.
    As such, it's less suited to use-cases where users look up a large
    number of ephemeral keys, but would work ideally in a use-case where
-   users look up a small number of keys repeatedly (for example, the
+   users look up a limited number of keys repeatedly (for example, the
    keys of regular contacts).
 
    +========================+==========================+===============+
@@ -333,10 +380,53 @@ Table of Contents
 
                   Table 1: Comparison of deployment modes
 
+   Applications that rely on a Transparency Log deployed in Contact
+   Monitoring mode MUST regularly engage in out-of-band communication
+   (Section 4.1) to ensure that they detect forks in a timely manner.
+
+   Applications that rely on a Transparency Log deployed in either of
+   the third-party modes SHOULD allow users to enable a "Contact
+   Monitoring Mode".  This mode, which affects only the individual
+   client's behavior, would cause the client to behave as if its
+   Transparency Log was deployed in Contact Monitoring mode.  As such,
+   it would start retaining state about previously looked-up keys and
+   regularly engaging in out-of-band communication.  Enabling this
+   higher-security mode allows users to double-check that the third-
+   party is not colluding with the Transparency Log to serve malicious
+   data.
+
 5.1.  Contact Monitoring
 
-   TODO diagram showing user request going to transparency log, followed
-   by monitoring queries later.
+   Alice                          Transparency Log
+     |                                   |
+     | Search(Bob) --------------------> |
+     | <------------ SearchResponse(...) |
+     |                                   |
+     |                                   |
+     |           (1 day later)           |
+     |                                   |
+     | Monitor(Bob) -------------------> |
+     | <----------- MonitorResponse(...) |
+     |                                   |
+     |                                   |
+     |          (2 days later)           |
+     |                                   |
+     | Monitor(Bob) -------------------> |
+     | <----------- MonitorResponse(...) |
+     |                                   |
+     |                                   |
+     |          (4 days later)           |
+     |                                   |
+     | Monitor(Bob) -------------------> |
+     | <----------- MonitorResponse(...) |
+     |                                   |
+     |               ...                 |
+     |                                   |
+
+      Figure 3: Contact Monitoring.  When users make a Search request,
+      they must check back in with the Transparency Log several times.
+      These checks ensure that the data in the Search response wasn't
+                        later removed from the log.
 
 5.2.  Third-Party Auditing
 
@@ -350,9 +440,21 @@ Table of Contents
    downloading and authenticating a log's contents in the background, so
    as not to become a bottleneck for the transparency log.
 
-   TODO diagram showing a user request going to a transparency log and a
-   response with an auditor signature coming back.  Batched changes
-   going to auditor in background.
+Many Users                        Transparency Log               Auditor
+|                                        |                             |
+| Update(Alice, ...) ------------------> |                             |
+| Update(Bob, ...) --------------------> |                             |
+| Update(Carol, ...) ------------------> |                             |
+| <===== Response{AuditorSig: 66bf, ...} |                             |
+|                                        |                             |
+|                                        |                             |
+|                                        | BatchUpdate --------------> |
+|                                        | <---------- NewSig: 53c1035 |
+|                                        |                             |
+
+     Figure 4: Third-Party Auditing.  A recent signature from the
+   auditor is provided to users.  The auditor is updated on changes
+                    to the tree in the background.
 
 5.3.  Third-Party Management
 
@@ -364,8 +466,20 @@ Table of Contents
    log, and the log operator proxies them to the third-party manager if
    they pass access control.
 
-   TODO diagram showing user request going to transparency log,
-   immediately being proxied to manager with operator signature.
+   Alice                  Transparency Log                  Manager
+   |                             |                                |
+   | Search(Alice) ------------> | -----------------------------> |
+   | <-------------------------- | <--------- SearchResponse(...) |
+   |                             |                                |
+   | Update(Alice, ...) -------> | -----------------------------> |
+   | <-------------------------- | <--------- UpdateResponse(...) |
+   |                             |                                |
+   | Search(Fred) ----------> X  |                                |
+   | Update(Bob, ...) ------> X  |                                |
+   |                             |                                |
+
+    Figure 5: Third-Party Management.  Valid requests are proxied by the
+      Transparency Log to the Manager.  Rejected requests are blocked.
 
 6.  Security Guarantees
 
@@ -551,20 +665,24 @@ Table of Contents
 
    This document has no IANA actions.
 
-9.  Normative References
+9.  References
+
+9.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/rfc/rfc2119>.
 
-   [RFC6962]  Laurie, B., Langley, A., and E. Kasper, "Certificate
-              Transparency", RFC Editor, DOI 10.17487/rfc6962, June
-              2013, <https://doi.org/10.17487/rfc6962>.
-
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+9.2.  Informative References
+
+   [RFC6962]  Laurie, B., Langley, A., and E. Kasper, "Certificate
+              Transparency", RFC 6962, DOI 10.17487/RFC6962, June 2013,
+              <https://www.rfc-editor.org/rfc/rfc6962>.
 
 Acknowledgments
 
