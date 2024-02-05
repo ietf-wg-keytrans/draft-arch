@@ -67,7 +67,7 @@ Key Transparency (KT) solves this problem by requiring the service operator to
 store user public keys in a cryptographically-protected append-only log. Any
 malicious entries added to such a log will generally be equally visible to both
 the key's owner and the owner's contacts,
-in which case a user can detect that they're being impersonated
+in which case a user can detect that they are being impersonated
 by viewing the public keys attached to their account. However, if the service
 operator attempts to conceal some entries of the log from some users but not
 others, this creates a "forked view" which is permanent and easily detectable
@@ -166,7 +166,7 @@ operations that can be executed by a user are as follows:
    returns the corresponding value and a proof of inclusion.
 2. **Update:** Adds a new key-value pair to the log, for which the server
    returns a proof of inclusion. Note that this means that new values are added
-   to the log immediately, and no provisional inclusion proof (like an SCT in {{RFC6962}}) is provided.
+   to the log immediately and no provisional inclusion proof, such as an SCT as defined in {{Section 4.4 of RFC9162}}, is provided.
 3. **Monitor:** While Search and Update are run by the user as necessary,
    monitoring is done in the background on a recurring basis. It both checks
    that the log is continuing to behave honestly (all previously returned keys
