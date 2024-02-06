@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-02-04T01:07:21.320358+00:00",
+  "timestamp": "2024-02-06T01:02:50.124851+00:00",
   "repo": "ietf-wg-keytrans/draft-arch",
   "labels": [
     {
@@ -72,7 +72,7 @@
       "comments": [
         {
           "author": "OR13",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "body": "(chair hat off)\r\n\r\nI am not sure if this section implies redundancy or not, but perhaps its enough to convince readers its in scope?\r\n\r\nhttps://bren2010.github.io/draft-kt-arch/draft-mcmillion-keytrans-architecture.html#name-third-party-auditing",
           "createdAt": "2023-12-06T21:02:29Z",
           "updatedAt": "2023-12-06T21:02:29Z"
@@ -91,7 +91,7 @@
       "id": "I_kwDOKhdr7c56DKuE",
       "title": "Definition of KT",
       "url": "https://github.com/ietf-wg-keytrans/draft-arch/issues/2",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "eshaghoshms",
       "authorAssociation": "NONE",
       "assignees": [],
@@ -100,8 +100,8 @@
       ],
       "body": "The Introduction says, \"Any malicious entries added to such a log will generally be visible to all users, in which case a user can detect that they're being impersonated by viewing the public keys attached to their account.\" In the following paragraph, privacy is mentioned: \"KT can better preserve user privacy by only showing entries of the log to participants that genuinely need to see them.\" It is unclear what it means to say that all entries are generally visible to all users, while achieving privacy through access control. Maybe the sentence can be rephrased to: \"Any malicious entries added to such a log will be visible to the owners and recipients of the public-keys, in which case a user can detect that they're being impersonated by viewing the public keys attached to their account\".",
       "createdAt": "2023-12-18T23:40:00Z",
-      "updatedAt": "2023-12-28T21:47:40Z",
-      "closedAt": null,
+      "updatedAt": "2024-02-05T19:13:30Z",
+      "closedAt": "2024-02-05T19:13:30Z",
       "comments": []
     },
     {
@@ -109,7 +109,7 @@
       "id": "I_kwDOKhdr7c56DL5g",
       "title": "User Interactions",
       "url": "https://github.com/ietf-wg-keytrans/draft-arch/issues/3",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "eshaghoshms",
       "authorAssociation": "NONE",
       "assignees": [],
@@ -118,8 +118,8 @@
       ],
       "body": "For Search: Would it make sense to add the following: \" if the corresponding version does not exist, server should return a proof of non-inclusion\"? I am also wondering if it is important to exclude batch update from the definition of Update (Note that this means that new values are added to the log immediately and are not queued for later insertion with a batch of other values.) since most scalable systems will do batching at least to some degree.",
       "createdAt": "2023-12-18T23:43:54Z",
-      "updatedAt": "2024-01-04T21:32:21Z",
-      "closedAt": null,
+      "updatedAt": "2024-02-05T19:13:31Z",
+      "closedAt": "2024-02-05T19:13:31Z",
       "comments": [
         {
           "author": "Bren2010",
@@ -184,7 +184,7 @@
       "id": "I_kwDOKhdr7c56DNiY",
       "title": "Deployment Modes and Out-of-Band Communication",
       "url": "https://github.com/ietf-wg-keytrans/draft-arch/issues/4",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "eshaghoshms",
       "authorAssociation": "NONE",
       "assignees": [],
@@ -193,8 +193,8 @@
       ],
       "body": "The relation between the Deployment Modes and Out-of-Band Communication is a bit unclear. Is Out-of-Band Communication assumed for all Deployment Modes? For example, the Contact Monitoring Mode says it is \"a single-party deployment with no third party\". But this would not be sufficient to detect forking attacks unless some Out-of-Band Communication or Bulletin Board is assumed.",
       "createdAt": "2023-12-18T23:49:10Z",
-      "updatedAt": "2024-01-04T00:31:40Z",
-      "closedAt": null,
+      "updatedAt": "2024-02-05T19:13:31Z",
+      "closedAt": "2024-02-05T19:13:31Z",
       "comments": [
         {
           "author": "Bren2010",
@@ -296,24 +296,26 @@
       "id": "PR_kwDOKhdr7c5knInp",
       "title": "Resolve easy issues",
       "url": "https://github.com/ietf-wg-keytrans/draft-arch/pull/7",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "Bren2010",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Closes #2, #3, #4\r\n/cc @kevinlewi @eshaghoshms",
       "createdAt": "2024-01-20T00:54:06Z",
-      "updatedAt": "2024-01-25T20:05:15Z",
+      "updatedAt": "2024-02-05T19:13:29Z",
       "baseRepository": "ietf-wg-keytrans/draft-arch",
       "baseRefName": "main",
       "baseRefOid": "b9aaa14cb7468dffeae926ac33ef0354e76a5950",
       "headRepository": "ietf-wg-keytrans/draft-arch",
       "headRefName": "brendan/bugs",
-      "headRefOid": "b9fe3080bb37586374e1a13a7f83370a5366317e",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "c66112e2c5b4bd4dde5dba6c4fcf0df2d5e60058",
+      "closedAt": "2024-02-05T19:13:29Z",
+      "mergedAt": "2024-02-05T19:13:29Z",
+      "mergedBy": "Bren2010",
+      "mergeCommit": {
+        "oid": "bb25dd8a5b33d52704f34ff2008e79e966a4f268"
+      },
       "comments": [
         {
           "author": "kevinlewi",
@@ -337,7 +339,7 @@
             "abbreviatedOid": "b9fe308"
           },
           "author": "OR13",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2024-01-22T20:21:20Z",
@@ -357,7 +359,7 @@
             "abbreviatedOid": "b9fe308"
           },
           "author": "OR13",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2024-01-22T20:23:12Z",
@@ -365,9 +367,9 @@
           "comments": [
             {
               "originalPosition": 18,
-              "body": "```suggestion\r\n   to the log immediately, and no provisional inclusion proof, such as an SCT as defined in {{Section 4.4 of RFC9162}} is provided.\r\n```",
+              "body": "```suggestion\r\n   to the log immediately and no provisional inclusion proof, such as an SCT as defined in {{Section 4.4 of RFC9162}}, is provided.\r\n```",
               "createdAt": "2024-01-22T20:23:12Z",
-              "updatedAt": "2024-01-22T20:23:13Z"
+              "updatedAt": "2024-02-05T19:12:35Z"
             }
           ]
         },
@@ -377,7 +379,7 @@
             "abbreviatedOid": "b9fe308"
           },
           "author": "OR13",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2024-01-22T20:25:21Z",
@@ -397,7 +399,7 @@
             "abbreviatedOid": "b9fe308"
           },
           "author": "OR13",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "state": "APPROVED",
           "body": "",
           "createdAt": "2024-01-22T20:25:38Z",
