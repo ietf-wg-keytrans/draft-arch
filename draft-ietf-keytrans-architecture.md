@@ -518,6 +518,54 @@ keys and values and their modification history. It also includes traffic
 patterns, such as how often a specific key is looked up.
 
 
+# Privacy Law Compliance
+
+Consumer privacy laws often provide a 'right to erasure', meaning that when a
+consumer requests that a service provider delete their personal information, the
+service provider is legally obligated to do so. This may seem to be incompatible
+with the description of KT in {{introduction}} as an 'append-only log'. Once an
+entry is added to a transparency log, it indeed can not be removed.
+
+The important caveat here is that user data is not directly stored in the
+append-only log. Instead, the log consists of privacy-preserving cryptographic
+commitments. By logging commitments instead of plaintext user data, users
+interacting with the log are unable to infer anything about an entry's contents
+until the service provider explicitly provides the commitment's opening. A
+service provider responding to an erasure request can delete the commitment
+opening and the associated data, effectively anonymizing the entry.
+
+Other than the log, the second place where user information is stored is in the
+*prefix tree*. This is a cryptographic index provided to users to allow them to
+efficiently query the log, which contains information about which lookup keys
+exist and where. These lookup keys are usually serialized end-user identifiers,
+although it varies by application. To minimize leakage, all lookup keys are
+processed through a Verifiable Random Function, or VRF {{?RFC9381}}.
+
+A VRF deterministically maps each lookup key to the fixed-length pseudorandom
+value. The VRF can only be executed by the service operator, who holds a private
+key. But critically, VRFs can still provide a proof that an input-output pair is
+valid, which users verify with a public key. When a user tries to search for or
+update a key, the service operator first executes its VRF on the input lookup
+key to obtain the output key that will actually be looked up or stored in the
+prefix tree. The service operator then provides the output key, along with a
+proof that the output key is correct, in its response to the user.
+
+The pseudorandom output of VRFs means that even if a user indirectly observes
+that a search key exists in the prefix tree, they can't immediately learn which
+user the search key identifies. The inability of users to execute the VRF
+themselves also prevents offline "password cracking" approaches, where an
+attacker tries all possibilities in a low entropy space (like the set of phone
+numbers) to find the input that produces a given search key.
+
+A service provider responding to an erasure request can 'trim' the prefix tree,
+by no longer storing the full VRF output for any lookup keys corresponding to an
+end-user's identifiers. With only a small amount of the VRF output left in
+storage, even if the transparency log is later compromised, it would be unable
+to recover deleted identifiers. If the same lookup keys were reinserted into the
+log at a later time, it would appear as if they were being inserted for the
+first time.
+
+
 # Implementation Guidance
 
 Fundamentally, KT can be thought of as guaranteeing that all the users of a
