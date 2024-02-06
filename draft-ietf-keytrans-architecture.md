@@ -442,7 +442,7 @@ look like:
    tombstone entry to the old log if one hasn't been already created.
 3. Both logs should be monitored as they would be if they were run individually.
    Once the migration has completed and the old log has stopped accepting
-   changes, the old log SHOULD stay operational long enough for all users to
+   changes, the old log MUST stay operational long enough for all users to
    complete their monitoring of it (keeping in mind that some users may be
    offline for a significant amount of time).
 
