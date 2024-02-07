@@ -3,9 +3,9 @@
 
 
 Key Transparency                                            B. McMillion
-Internet-Draft                                           6 February 2024
+Internet-Draft                                           7 February 2024
 Intended status: Informational                                          
-Expires: 9 August 2024
+Expires: 10 August 2024
 
 
                      Key Transparency Architecture
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 August 2024.
+   This Internet-Draft will expire on 10 August 2024.
 
 Copyright Notice
 
@@ -528,7 +528,8 @@ Many Users                        Transparency Log               Auditor
 
    1.  Search queries should be executed against the old log first, and
        then against the new log only if the most recent version of a key
-       in the old log is a tombstone.
+       in the old log is a special application-defined 'tombstone'
+       entry.
 
    2.  Update queries should only be executed against the new log,
        adding a tombstone entry to the old log if one hasn't been
