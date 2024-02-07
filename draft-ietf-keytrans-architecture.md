@@ -565,6 +565,28 @@ to recover deleted identifiers. If the same lookup keys were reinserted into the
 log at a later time, it would appear as if they were being inserted for the
 first time.
 
+As an example, consider the information stored in a transparency log after
+inserting a key `K` with value `V`. The value stored in the prefix tree would
+roughly correspond to `VRF(key K) = pseudorandom bytes`, and the value stored in
+the append-only log would roughly correspond to:
+
+~~~
+Commit(nonce: random bytes, body: version N of key K is V)
+~~~
+
+After receiving an erasure request, the transparency log deletes the key, value,
+and random commitment nonce. It also trims the VRF output to the minimum size
+necessary. The commitment scheme guarantees that, without the high-entropy
+random nonce, the remaining commitment reveals nothing about the key or value.
+
+Assuming that the prefix tree is well-balanced (which is extremely likely due to
+VRFs being pseudorandom), the number of VRF output bits retained is
+approximately equal to the logarithm of the total number of keys logged. This
+means that while the VRF's full output may be 256 bits, in a log with one
+million keys, only 20 output bits would need to be retained. This would be
+insufficient for recovering even a very low-entropy identifier like a phone
+number.
+
 
 # Implementation Guidance
 
