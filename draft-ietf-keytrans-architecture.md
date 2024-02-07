@@ -437,7 +437,7 @@ look like:
 
 1. Search queries should be executed against the old log first, and then against
    the new log only if the most recent version of a key in the old log is a
-   tombstone.
+   special application-defined 'tombstone' entry.
 2. Update queries should only be executed against the new log, adding a
    tombstone entry to the old log if one hasn't been already created.
 3. Both logs should be monitored as they would be if they were run individually.
