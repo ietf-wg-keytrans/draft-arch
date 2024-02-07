@@ -1954,9 +1954,11 @@ first time.<a href="#section-7-6" class="pilcrow">¶</a></p>
 inserting a key <code>K</code> with value <code>V</code>. The value stored in the prefix tree would
 roughly correspond to <code>VRF(key K) = pseudorandom bytes</code>, and the value stored in
 the append-only log would roughly correspond to:<a href="#section-7-7" class="pilcrow">¶</a></p>
-<p id="section-7-8"><code>
+<div class="alignLeft art-text artwork" id="section-7-8">
+<pre>
 Commit(nonce: random bytes, body: version N of key K is V)
-</code><a href="#section-7-8" class="pilcrow">¶</a></p>
+</pre><a href="#section-7-8" class="pilcrow">¶</a>
+</div>
 <p id="section-7-9">After receiving an erasure request, the transparency log deletes the key, value,
 and random commitment nonce. It also trims the VRF output to the minimum size
 necessary. The commitment scheme guarantees that, without the high-entropy
