@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-02-06T01:02:50.124851+00:00",
+  "timestamp": "2024-02-08T01:01:51.650646+00:00",
   "repo": "ietf-wg-keytrans/draft-arch",
   "labels": [
     {
@@ -405,6 +405,201 @@
           "createdAt": "2024-01-22T20:25:38Z",
           "updatedAt": "2024-01-22T20:25:38Z",
           "comments": []
+        }
+      ]
+    },
+    {
+      "number": 9,
+      "id": "PR_kwDOKhdr7c5mF2b9",
+      "title": "Write section on privacy law compliance.",
+      "url": "https://github.com/ietf-wg-keytrans/draft-arch/pull/9",
+      "state": "OPEN",
+      "author": "Bren2010",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-02-06T02:25:12Z",
+      "updatedAt": "2024-02-07T18:03:10Z",
+      "baseRepository": "ietf-wg-keytrans/draft-arch",
+      "baseRefName": "main",
+      "baseRefOid": "073f63d7c7e8ade3c272f03151b3c659de71e2e4",
+      "headRepository": "ietf-wg-keytrans/draft-arch",
+      "headRefName": "brendan/gdpr",
+      "headRefOid": "71333b69575b71df91ea60169a444f48b4cc2a5f",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> Again, I'm not saying that my worries should be addressed in this PR, but I think it would be better to work on a list of requirements that a KT design must provide and then proceed to the design.\r\n\r\nThis PR does go into the construction more than would be ideal, but solely for explanatory reasons. If we asserted that entry deletion must be possible without discussing how we plan to do that, people would jump too quickly to \"this is impossible\"",
+          "createdAt": "2024-02-07T18:03:09Z",
+          "updatedAt": "2024-02-07T18:03:09Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKhdr7c5vHcCo",
+          "commit": {
+            "abbreviatedOid": "1dd3f1b"
+          },
+          "author": "OR13",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "This seems to make some assumptions about the logs construction that perhaps are beyond the architecture.\n\nI find myself wishing for a simple concrete example to look at, to be assured of these properties.",
+          "createdAt": "2024-02-06T03:33:15Z",
+          "updatedAt": "2024-02-06T03:33:15Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOKhdr7c5vSxki",
+          "commit": {
+            "abbreviatedOid": "1dd3f1b"
+          },
+          "author": "felixlinker",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "My sentiment is the same as for #10, but I am a bit more positive here. My understanding is that this PR shows how deletion requests can be supported in a KT system using the standard construction, i.e., you show that it is possible to implement the requirement of \"entry deletion must be possible.\"\r\n\r\nNevertheless, reading what you wrote, I started thinking: \"But will that actually work?\" Couldn't the mechanism as described here lead to equivocation attacks where a provider tells some clients that an entry was deleted and others that it was not? Maybe we require a tombstoning mechanism (as in #10)?\r\n\r\nAgain, I'm not saying that my worries should be addressed in this PR, but I think it would be better to work on a list of requirements that a KT design must provide and then proceed to the design.",
+          "createdAt": "2024-02-07T08:30:06Z",
+          "updatedAt": "2024-02-07T08:30:06Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 10,
+      "id": "PR_kwDOKhdr7c5mF2hK",
+      "title": "Discuss combining and retiring logs.",
+      "url": "https://github.com/ietf-wg-keytrans/draft-arch/pull/10",
+      "state": "OPEN",
+      "author": "Bren2010",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Resolves #1 ",
+      "createdAt": "2024-02-06T02:25:40Z",
+      "updatedAt": "2024-02-07T17:19:29Z",
+      "baseRepository": "ietf-wg-keytrans/draft-arch",
+      "baseRefName": "main",
+      "baseRefOid": "073f63d7c7e8ade3c272f03151b3c659de71e2e4",
+      "headRepository": "ietf-wg-keytrans/draft-arch",
+      "headRefName": "brendan/combinations",
+      "headRefOid": "4b5566a18f990649b6ab93fadff9d94c5556c86f",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "sftcd",
+          "authorAssociation": "NONE",
+          "body": "> Resolves #1\r\n\r\nFWIW, I think this text is good enough for the present, but it does seem to omit a case that's been seen in the past - where a log suffers a poisoning or DoS attack or otherwise becomes practically useless, but where the log operator is not trying to be dishonest. I'm fine that the detail is considered later but might be worth a mention now as another case.",
+          "createdAt": "2024-02-06T20:14:08Z",
+          "updatedAt": "2024-02-06T20:14:08Z"
+        },
+        {
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> Or am I getting the process wrong? My understanding was that the KT architecture document is supposed to align the work of the WG at a high level, not provide a design.\r\n\r\nI don't believe there is any real protocol design happening here. It is a statement of architecture to say that there will be multiple logs operating independently, clients will likely be communicating with multiple logs, and clients are responsible for communicating with multiple logs in a way that is secure. And then we give some examples of how to communicate with multiple logs securely -- emphasizing that these are examples and not standardized behavior. Does that address your concern?",
+          "createdAt": "2024-02-07T17:19:27Z",
+          "updatedAt": "2024-02-07T17:19:27Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKhdr7c5vHcTM",
+          "commit": {
+            "abbreviatedOid": "dba8317"
+          },
+          "author": "OR13",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-02-06T03:35:04Z",
+          "updatedAt": "2024-02-06T03:42:25Z",
+          "comments": [
+            {
+              "originalPosition": 20,
+              "body": "What happens if conflicts exist? Why not MUST?",
+              "createdAt": "2024-02-06T03:35:04Z",
+              "updatedAt": "2024-02-06T03:42:25Z"
+            },
+            {
+              "originalPosition": 25,
+              "body": "I wonder if an example policy might make this clearer... It reads as \" the service provider should have a policy of not being duplicitous\"...but if that is detectable, what does this MUST really unlock?",
+              "createdAt": "2024-02-06T03:39:02Z",
+              "updatedAt": "2024-02-06T03:42:25Z"
+            },
+            {
+              "originalPosition": 46,
+              "body": "Again what happens when this doesn't happen, why not MUST?",
+              "createdAt": "2024-02-06T03:40:34Z",
+              "updatedAt": "2024-02-06T03:42:25Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKhdr7c5vOUBN",
+          "commit": {
+            "abbreviatedOid": "dba8317"
+          },
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-06T18:15:42Z",
+          "updatedAt": "2024-02-06T18:15:42Z",
+          "comments": [
+            {
+              "originalPosition": 20,
+              "body": "\"SHOULD\" because I think supporting multiple logs should be the default decision, unless an implementer really really knows they're only ever going to talk to one log at a time",
+              "createdAt": "2024-02-06T18:15:42Z",
+              "updatedAt": "2024-02-06T18:15:43Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKhdr7c5vOVIo",
+          "commit": {
+            "abbreviatedOid": "dba8317"
+          },
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-06T18:18:33Z",
+          "updatedAt": "2024-02-06T18:18:33Z",
+          "comments": [
+            {
+              "originalPosition": 25,
+              "body": "This \"MUST\" doesn't affect the service provider, it's saying all of the users need to behave in a consistent way. If they don't, it gets very hard to reason about whether security guarantees are met",
+              "createdAt": "2024-02-06T18:18:33Z",
+              "updatedAt": "2024-02-06T18:18:33Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKhdr7c5vSnrB",
+          "commit": {
+            "abbreviatedOid": "28f43ae"
+          },
+          "author": "felixlinker",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "I worry that this addition to the architecture document introduces more problems than it solves. I liked the initial architecture document because it described what I presume that _every_ KT system will do at a high-level. This PR now reduces the design space and vaguely commits us to a specific design trying to address #1.\r\n\r\nFor example, with this PR, I worry that providing federated logs might over-complicate the design without providing much value. For example, you could also gain the benefits of a federated setup (load balancing, redundancy) from a setup that is federated \"behind the scenes.\" A KT provider could simply store its tree in a distributed database, but clients and auditors use one API endpoint and need not care how the provider manages to reply to their queries. I do not claim that this is a better design, but I do think we need to discuss what is the best design.\r\n\r\nBefore we start designing a KT system, I think it would be better to identify requirements that a KT design must implement (e.g., being able to migrate from log A to log B) and leave it there. With the requirements set out, we can then start working on a new design document.\r\n\r\nOr am I getting the process wrong? My understanding was that the KT architecture document is supposed to align the work of the WG at a high level, not provide a design.",
+          "createdAt": "2024-02-07T08:07:10Z",
+          "updatedAt": "2024-02-07T08:23:09Z",
+          "comments": [
+            {
+              "originalPosition": 41,
+              "body": "\"Tombstone\" is used here for the first time without further definition. I think this is a concept that was first introduced in SEEMless and requires introduction.",
+              "createdAt": "2024-02-07T08:07:11Z",
+              "updatedAt": "2024-02-07T08:23:09Z"
+            }
+          ]
         }
       ]
     }
