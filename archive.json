@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-02-08T01:01:51.650646+00:00",
+  "timestamp": "2024-02-11T01:07:12.685074+00:00",
   "repo": "ietf-wg-keytrans/draft-arch",
   "labels": [
     {
@@ -420,7 +420,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-02-06T02:25:12Z",
-      "updatedAt": "2024-02-07T18:03:10Z",
+      "updatedAt": "2024-02-08T08:53:35Z",
       "baseRepository": "ietf-wg-keytrans/draft-arch",
       "baseRefName": "main",
       "baseRefOid": "073f63d7c7e8ade3c272f03151b3c659de71e2e4",
@@ -466,6 +466,19 @@
           "createdAt": "2024-02-07T08:30:06Z",
           "updatedAt": "2024-02-07T08:30:06Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOKhdr7c5vb3-Q",
+          "commit": {
+            "abbreviatedOid": "71333b6"
+          },
+          "author": "felixlinker",
+          "authorAssociation": "NONE",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-02-08T08:53:35Z",
+          "updatedAt": "2024-02-08T08:53:35Z",
+          "comments": []
         }
       ]
     },
@@ -481,7 +494,7 @@
       "labels": [],
       "body": "Resolves #1 ",
       "createdAt": "2024-02-06T02:25:40Z",
-      "updatedAt": "2024-02-07T17:19:29Z",
+      "updatedAt": "2024-02-10T10:02:36Z",
       "baseRepository": "ietf-wg-keytrans/draft-arch",
       "baseRefName": "main",
       "baseRefOid": "073f63d7c7e8ade3c272f03151b3c659de71e2e4",
@@ -506,6 +519,20 @@
           "body": "> Or am I getting the process wrong? My understanding was that the KT architecture document is supposed to align the work of the WG at a high level, not provide a design.\r\n\r\nI don't believe there is any real protocol design happening here. It is a statement of architecture to say that there will be multiple logs operating independently, clients will likely be communicating with multiple logs, and clients are responsible for communicating with multiple logs in a way that is secure. And then we give some examples of how to communicate with multiple logs securely -- emphasizing that these are examples and not standardized behavior. Does that address your concern?",
           "createdAt": "2024-02-07T17:19:27Z",
           "updatedAt": "2024-02-07T17:19:27Z"
+        },
+        {
+          "author": "felixlinker",
+          "authorAssociation": "NONE",
+          "body": "> I don't believe there is any real protocol design happening here. It is a statement of architecture to say that there will be multiple logs operating independently, clients will likely be communicating with multiple logs, and clients are responsible for communicating with multiple logs in a way that is secure. And then we give some examples of how to communicate with multiple logs securely -- emphasizing that these are examples and not standardized behavior. Does that address your concern?\r\n\r\nYou are right, this is not protocol design. I guess my problem lies more in mandating that the design provides federation. #1 raised the issue of what should happen if one key server becomes unavailable. I agree that it is an important to provide a mechanism for log migration (i.e., you \"import\" a state of some other log). Log migration has the benefit, though, that one log becomes stale and you don't expect any updates to it.\r\n\r\nProviding full on federation where you would like to see updates to key-mappings in multiple logs is much harder as you need to find policies to decide what to do in case of conflicts, etc. You don't need federation to solve #1. I can see benefits to it, but also many problems in practice so I wouldn't commit to federation now.",
+          "createdAt": "2024-02-08T09:01:12Z",
+          "updatedAt": "2024-02-08T09:01:12Z"
+        },
+        {
+          "author": "robinbryce",
+          "authorAssociation": "NONE",
+          "body": "This wording I think also helps deal with the pragmatic problem of log format evolution. For whatever reason multiple logs are used though, Is it worth including some words about how to place the logs in a series? If the log entries include a commitment to some time series or intrinsically encode log position in their entries, then puting the last valid root of the previous log in the next could make it clear that the retired log was 'complete' and any subequent entries are invalid.",
+          "createdAt": "2024-02-10T10:02:35Z",
+          "updatedAt": "2024-02-10T10:02:35Z"
         }
       ],
       "reviews": [
