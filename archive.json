@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-02-11T01:07:12.685074+00:00",
+  "timestamp": "2024-02-13T01:03:09.101649+00:00",
   "repo": "ietf-wg-keytrans/draft-arch",
   "labels": [
     {
@@ -494,7 +494,7 @@
       "labels": [],
       "body": "Resolves #1 ",
       "createdAt": "2024-02-06T02:25:40Z",
-      "updatedAt": "2024-02-10T10:02:36Z",
+      "updatedAt": "2024-02-12T17:29:22Z",
       "baseRepository": "ietf-wg-keytrans/draft-arch",
       "baseRefName": "main",
       "baseRefOid": "073f63d7c7e8ade3c272f03151b3c659de71e2e4",
@@ -625,6 +625,26 @@
               "body": "\"Tombstone\" is used here for the first time without further definition. I think this is a concept that was first introduced in SEEMless and requires introduction.",
               "createdAt": "2024-02-07T08:07:11Z",
               "updatedAt": "2024-02-07T08:23:09Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKhdr7c5vznU3",
+          "commit": {
+            "abbreviatedOid": "dba8317"
+          },
+          "author": "OR13",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-12T17:29:22Z",
+          "updatedAt": "2024-02-12T17:29:22Z",
+          "comments": [
+            {
+              "originalPosition": 25,
+              "body": "So this is a policy suggestion for \"clients\" ? maybe client is a better word than user here.... saying \"must be consistent\" without further clarity remains triggering for me, but your answer to makes sense to me.",
+              "createdAt": "2024-02-12T17:29:22Z",
+              "updatedAt": "2024-02-12T17:29:22Z"
             }
           ]
         }
