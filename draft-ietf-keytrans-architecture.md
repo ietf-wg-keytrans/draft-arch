@@ -518,7 +518,7 @@ keys and values and their modification history. It also includes traffic
 patterns, such as how often a specific key is looked up.
 
 
-# Privacy Law Compliance
+# Privacy Law Consideration
 
 Consumer privacy laws often provide a 'right to erasure', meaning that when a
 consumer requests that a service provider delete their personal information, the
