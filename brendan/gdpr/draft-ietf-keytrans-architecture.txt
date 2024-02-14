@@ -3,9 +3,9 @@
 
 
 Key Transparency                                            B. McMillion
-Internet-Draft                                           7 February 2024
+Internet-Draft                                          14 February 2024
 Intended status: Informational                                          
-Expires: 10 August 2024
+Expires: 17 August 2024
 
 
                      Key Transparency Architecture
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 August 2024.
+   This Internet-Draft will expire on 17 August 2024.
 
 Copyright Notice
 
@@ -82,7 +82,7 @@ Table of Contents
    6.  Security Guarantees
      6.1.  Privacy Guarantees
        6.1.1.  Leakage to Third-Party
-   7.  Privacy Law Compliance
+   7.  Privacy Law Consideration
    8.  Implementation Guidance
    9.  IANA Considerations
    10. References
@@ -607,7 +607,7 @@ Many Users                        Transparency Log               Auditor
    history.  It also includes traffic patterns, such as how often a
    specific key is looked up.
 
-7.  Privacy Law Compliance
+7.  Privacy Law Consideration
 
    Consumer privacy laws often provide a 'right to erasure', meaning
    that when a consumer requests that a service provider delete their
