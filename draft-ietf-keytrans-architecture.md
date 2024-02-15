@@ -458,8 +458,8 @@ stop adding new entries to a log immediately and provide a new log that is
 pre-populated with the most recent versions of all keys. In this case, the
 policy may look like:
 
-1. Search queries should always be executed against the new log.
-2. Update queries should always be executed against the new log.
+1. Search queries must be executed against the new log.
+2. Update queries must be executed against the new log.
 3. The final tree size and root hash of the old log should be provided to users
    over a trustworthy channel. Users will use this to do any final monitoring of
    the old log, and then ensure that the most recent versions of the keys they
