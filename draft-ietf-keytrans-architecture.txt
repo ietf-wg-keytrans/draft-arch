@@ -126,10 +126,9 @@ Table of Contents
    generally be equally visible to both the key's owner and the owner's
    contacts, in which case a user can detect that they are being
    impersonated by viewing the public keys attached to their account.
-   However, if the service operator attempts to conceal some entries of
-   the log from some users but not others, this creates a "forked view"
-   which is permanent and easily detectable with out-of-band
-   communication.
+   If the service operator attempts to conceal some entries of the log
+   from some users but not others, this creates a "forked view" which is
+   permanent and easily detectable with out-of-band communication.
 
    The critical improvement of KT over related protocols like
    Certificate Transparency [RFC6962] is that KT includes an efficient
@@ -292,10 +291,10 @@ Table of Contents
 
    This provides ample opportunity for users to detect when a fork has
    been presented, but isn't in itself sufficient for detection.  To
-   detect forks, users must either use *out-of-band communication* with
-   other users or *anonymous communication* with the Transparency Log.
+   detect forks, users must either use *peer-to-peer communication* or
+   *anonymous communication* with the Transparency Log.
 
-   With out-of-band communication, two users gossip with each other to
+   With peer-to-peer communication, two users gossip with each other to
    establish that they both have the same view of the log's data.  This
    gossip is able to happen over any supported out-of-band channel, even
    if it is heavily bandwidth-limited, such as scanning a QR code or
@@ -402,36 +401,56 @@ Alice                      Bob                          Transparency Log
 
 5.1.  Contact Monitoring
 
-   Alice                          Transparency Log
-     |                                   |
-     | Search(Bob) --------------------> |
-     | <------------ SearchResponse(...) |
-     |                                   |
-     |                                   |
-     |           (1 day later)           |
-     |                                   |
-     | Monitor(Bob) -------------------> |
-     | <----------- MonitorResponse(...) |
-     |                                   |
-     |                                   |
-     |          (2 days later)           |
-     |                                   |
-     | Monitor(Bob) -------------------> |
-     | <----------- MonitorResponse(...) |
-     |                                   |
-     |                                   |
-     |          (4 days later)           |
-     |                                   |
-     | Monitor(Bob) -------------------> |
-     | <----------- MonitorResponse(...) |
-     |                                   |
-     |               ...                 |
-     |                                   |
+   With the Contact Monitoring deployment mode, the monitoring burden is
+   split between both the owner of a key and those that look up the key.
+   Stated as simply as possible, the monitoring obligations of each
+   party are:
 
-      Figure 3: Contact Monitoring.  When users make a Search request,
-      they must check back in with the Transparency Log several times.
-      These checks ensure that the data in the Search response wasn't
-                        later removed from the log.
+   1.  The key owner, on a regular basis, searches for the most recent
+       version of the key in the log.  They verify that the key has not
+       changed unexpectedly.
+
+   2.  The users that looked up a key, at some point in the future,
+       verify that the key-value pair they observed is still properly
+       represented in the tree such that other users would find it if
+       they searched for it.
+
+   This guarantees that if a malicious key-value pair is added to the
+   log, then either it is detected by the key owner, or if it is
+   removed/obscured from the log before the key owner can detect it,
+   then any users that observed it will detect its removal.
+
+Alice                        Transparency Log                        Bob
+|                                   |                                  |
+| Search(Bob) --------------------> |                                  |
+| <------------ SearchResponse(...) |                                  |
+|                                   |                                  |
+|                                   |                                  |
+|           (1 day later)           |                                  |
+|                                   |                                  |
+| Monitor(Bob) -------------------> |                                  |
+| <----------- MonitorResponse(...) |                                  |
+|                                   |                                  |
+|                                   |                                  |
+|          (2 days later)           |                                  |
+|                                   |                                  |
+| Monitor(Bob) -------------------> |                                  |
+| <----------- MonitorResponse(...) |                                  |
+|                                   |                                  |
+|                                   | <------------------ Monitor(Bob) |
+|          (4 days later)           | MonitorResponse(...) ----------> |
+|                                   |                                  |
+| Monitor(Bob) -------------------> |                                  |
+| <----------- MonitorResponse(...) |                                  |
+|                                   |                                  |
+|               ...                 |                                  |
+|                                   |                                  |
+
+   Figure 3: Contact Monitoring.  When users make a Search request,
+   they must check back in with the Transparency Log several times.
+   These checks ensure that the data in the Search response wasn't
+    later removed from the log.  Overlap with the key owner's own
+           monitoring guarantees a consistent view of data.
 
 5.2.  Third-Party Auditing
 
