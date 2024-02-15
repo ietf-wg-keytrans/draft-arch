@@ -3,9 +3,9 @@
 
 
 Key Transparency                                            B. McMillion
-Internet-Draft                                           7 February 2024
+Internet-Draft                                          15 February 2024
 Intended status: Informational                                          
-Expires: 10 August 2024
+Expires: 18 August 2024
 
 
                      Key Transparency Architecture
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 August 2024.
+   This Internet-Draft will expire on 18 August 2024.
 
 Copyright Notice
 
@@ -554,9 +554,9 @@ Many Users                        Transparency Log               Auditor
    new log that is pre-populated with the most recent versions of all
    keys.  In this case, the policy may look like:
 
-   1.  Search queries should always be executed against the new log.
+   1.  Search queries must be executed against the new log.
 
-   2.  Update queries should always be executed against the new log.
+   2.  Update queries must be executed against the new log.
 
    3.  The final tree size and root hash of the old log should be
        provided to users over a trustworthy channel.  Users will use
