@@ -3,9 +3,9 @@
 
 
 Key Transparency                                            B. McMillion
-Internet-Draft                                          14 February 2024
+Internet-Draft                                          15 February 2024
 Intended status: Informational                                          
-Expires: 17 August 2024
+Expires: 18 August 2024
 
 
                      Key Transparency Architecture
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 August 2024.
+   This Internet-Draft will expire on 18 August 2024.
 
 Copyright Notice
 
@@ -79,15 +79,19 @@ Table of Contents
      5.1.  Contact Monitoring
      5.2.  Third-Party Auditing
      5.3.  Third-Party Management
-   6.  Security Guarantees
-     6.1.  Privacy Guarantees
-       6.1.1.  Leakage to Third-Party
-   7.  Privacy Law Consideration
-   8.  Implementation Guidance
-   9.  IANA Considerations
-   10. References
-     10.1.  Normative References
-     10.2.  Informative References
+   6.  Combining Logs
+     6.1.  Gradual Migration
+     6.2.  Immediate Migration
+     6.3.  Federation
+   7.  Security Guarantees
+     7.1.  Privacy Guarantees
+       7.1.1.  Leakage to Third-Party
+   8.  Privacy Law Consideration
+   9.  Implementation Guidance
+   10. IANA Considerations
+   11. References
+     11.1.  Normative References
+     11.2.  Informative References
    Acknowledgments
    Author's Address
 
@@ -482,7 +486,111 @@ Many Users                        Transparency Log               Auditor
     Figure 5: Third-Party Management.  Valid requests are proxied by the
       Transparency Log to the Manager.  Rejected requests are blocked.
 
-6.  Security Guarantees
+6.  Combining Logs
+
+   There are many cases where it makes sense to operate multiple
+   cooperating log instances, for example:
+
+   *  A service provider may decide that it's prudent to rotate its
+      cryptographic keys, or migrate to a new deployment mode.  They can
+      do this by creating a new log instance with new cryptographic
+      keys, operating under a new deployment mode if desired, and
+      migrating their data from the old log to the new log while users
+      are able to query both.
+
+   *  A service provider may choose to operate multiple logs to improve
+      their ability to scale or provide higher availability.
+
+   *  A federated system may allow each participant in the federation to
+      operate their own log for their own users.
+
+   Client implementations should generally be prepared to interact with
+   multiple logs simultaneously.  In particular, clients SHOULD
+   namespace any configuration or state related to a particular log,
+   such that information related to different logs do not conflict.
+
+   When multiple logs are used, all users in the system MUST have a
+   consistent policy for executing Search, Update, and Monitor queries
+   against the logs in a way that maintains the high-level security
+   guarantees of KT:
+
+   *  If all logs behave honestly, then users observe a globally-
+      consistent view of the data associated with each key.
+
+   *  If any log behaves dishonestly such that the prior guarantee is
+      not met (some users observe data associated with a key that others
+      do not), this will be detected either immediately or in a timely
+      manner by background monitoring.
+
+6.1.  Gradual Migration
+
+   In the case of gradually migrating from an old log to a new one, this
+   policy may look like:
+
+   1.  Search queries should be executed against the old log first, and
+       then against the new log only if the most recent version of a key
+       in the old log is a special application-defined 'tombstone'
+       entry.
+
+   2.  Update queries should only be executed against the new log,
+       adding a tombstone entry to the old log if one hasn't been
+       already created.
+
+   3.  Both logs should be monitored as they would be if they were run
+       individually.  Once the migration has completed and the old log
+       has stopped accepting changes, the old log MUST stay operational
+       long enough for all users to complete their monitoring of it
+       (keeping in mind that some users may be offline for a significant
+       amount of time).
+
+   Placing a tombstone entry for each key in the old log gives users a
+   clear indication as to which log contains the most recent version of
+   a key and prevents them from incorrectly accepting a stale version if
+   the new log rejects a search query.
+
+6.2.  Immediate Migration
+
+   In the event of a key compromise, the service provider may instead
+   choose to stop adding new entries to a log immediately and provide a
+   new log that is pre-populated with the most recent versions of all
+   keys.  In this case, the policy may look like:
+
+   1.  Search queries must be executed against the new log.
+
+   2.  Update queries must be executed against the new log.
+
+   3.  The final tree size and root hash of the old log should be
+       provided to users over a trustworthy channel.  Users will use
+       this to do any final monitoring of the old log, and then ensure
+       that the most recent versions of the keys they own are properly
+       represented in the new log.  From then on, users will monitor
+       only the new log.
+
+   The final tree size and root hash of the prior log must be
+   distributed to users in a way that guarantees all users have a
+   globally-consistent view.  This can be done either by storing them in
+   a well-known key of the new log, or with the application's code
+   distribution mechanism.
+
+6.3.  Federation
+
+   In a federated application, many servers that are owned and operated
+   by different entities will cooperate to provide a single end-to-end
+   encrypted communication service.  Each entity in a federated system
+   provides its own infrastructure (in particular, a transparency log)
+   to serve the users that rely on it.  Given this, there must be a
+   consistent policy for directing KT requests to the correct
+   transparency log.  Typically in such a system, the end-user identity
+   directly specifies which entity requests should be directed to.  For
+   example, with an email end-user identity like alice@example.com, the
+   controlling entity is example.com.
+
+   A controlling entity like example.com may act as an anonymizing proxy
+   for its users when querying transparency logs run by other entities,
+   but should not attempt to 'mirror' or combine other transparency logs
+   with its own.
+
+7.  Security Guarantees
 
    A user that correctly verifies a proof from the Transparency Log (and
    does any required monitoring afterwards) receives a guarantee that
@@ -547,7 +655,7 @@ Many Users                        Transparency Log               Auditor
       auditor is allowed to have, with respect to the most recent tree
       head.
 
-6.1.  Privacy Guarantees
+7.1.  Privacy Guarantees
 
    For applications deploying KT, service operators expect to be able to
    control when sensitive information is revealed.  In particular, an
@@ -587,7 +695,7 @@ Many Users                        Transparency Log               Auditor
    real changes from fake ones, and therefore also the total number of
    real keys.
 
-6.1.1.  Leakage to Third-Party
+7.1.1.  Leakage to Third-Party
 
    In the event that a third-party auditor or manager is used, there's
    additional information leaked to the third-party that's not visible
@@ -607,7 +715,7 @@ Many Users                        Transparency Log               Auditor
    history.  It also includes traffic patterns, such as how often a
    specific key is looked up.
 
-7.  Privacy Law Consideration
+8.  Privacy Law Consideration
 
    Consumer privacy laws often provide a 'right to erasure', meaning
    that when a consumer requests that a service provider delete their
@@ -682,7 +790,7 @@ Many Users                        Transparency Log               Auditor
    need to be retained.  This would be insufficient for recovering even
    a very low-entropy identifier like a phone number.
 
-8.  Implementation Guidance
+9.  Implementation Guidance
 
    Fundamentally, KT can be thought of as guaranteeing that all the
    users of a service agree on the contents of a key-value database.
@@ -737,13 +845,13 @@ Many Users                        Transparency Log               Auditor
    the semantics of identity in their application with the key-value
    structure they put in KT.
 
-9.  IANA Considerations
+10.  IANA Considerations
 
    This document has no IANA actions.
 
-10.  References
+11.  References
 
-10.1.  Normative References
+11.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -754,7 +862,7 @@ Many Users                        Transparency Log               Auditor
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
-10.2.  Informative References
+11.2.  Informative References
 
    [RFC6962]  Laurie, B., Langley, A., and E. Kasper, "Certificate
               Transparency", RFC 6962, DOI 10.17487/RFC6962, June 2013,
