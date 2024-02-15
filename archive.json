@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-02-13T01:03:09.101649+00:00",
+  "timestamp": "2024-02-15T01:02:53.231033+00:00",
   "repo": "ietf-wg-keytrans/draft-arch",
   "labels": [
     {
@@ -60,15 +60,15 @@
       "id": "I_kwDOKhdr7c52lG3E",
       "title": "what happens (to users) if a keyserver goes bad?",
       "url": "https://github.com/ietf-wg-keytrans/draft-arch/issues/1",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "sftcd",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "We have a history of some key servers going bad. That could be due to attack, inability to operate or for other reasons. Regardless of the reason though, shouldn't the architecture describe e.g. a set of goals for how users and/or the overall system can recover from such a situation?",
       "createdAt": "2023-11-12T14:55:36Z",
-      "updatedAt": "2023-12-06T21:07:44Z",
-      "closedAt": null,
+      "updatedAt": "2024-02-15T00:09:25Z",
+      "closedAt": "2024-02-15T00:09:25Z",
       "comments": [
         {
           "author": "OR13",
@@ -413,24 +413,26 @@
       "id": "PR_kwDOKhdr7c5mF2b9",
       "title": "Write section on privacy law compliance.",
       "url": "https://github.com/ietf-wg-keytrans/draft-arch/pull/9",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "Bren2010",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2024-02-06T02:25:12Z",
-      "updatedAt": "2024-02-08T08:53:35Z",
+      "updatedAt": "2024-02-14T23:50:32Z",
       "baseRepository": "ietf-wg-keytrans/draft-arch",
       "baseRefName": "main",
       "baseRefOid": "073f63d7c7e8ade3c272f03151b3c659de71e2e4",
       "headRepository": "ietf-wg-keytrans/draft-arch",
       "headRefName": "brendan/gdpr",
-      "headRefOid": "71333b69575b71df91ea60169a444f48b4cc2a5f",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "6b6008b8c1672d853ebda8b0875aa992a810f090",
+      "closedAt": "2024-02-14T23:50:32Z",
+      "mergedAt": "2024-02-14T23:50:32Z",
+      "mergedBy": "Bren2010",
+      "mergeCommit": {
+        "oid": "12854ab1ed4b1cc9b54839dd4d343d9f0dd03e5c"
+      },
       "comments": [
         {
           "author": "Bren2010",
@@ -479,6 +481,26 @@
           "createdAt": "2024-02-08T08:53:35Z",
           "updatedAt": "2024-02-08T08:53:35Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOKhdr7c5v_x6W",
+          "commit": {
+            "abbreviatedOid": "71333b6"
+          },
+          "author": "thibmeu",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "I concur with previous reviews that the example might be too much for an architecture doc, but seems scoped enough to ease comprehension, without suggesting a specific implementation.",
+          "createdAt": "2024-02-13T21:46:07Z",
+          "updatedAt": "2024-02-13T21:49:12Z",
+          "comments": [
+            {
+              "originalPosition": 4,
+              "body": "```suggestion\r\n# Privacy Law Consideration\r\n```\r\ncompliance may be too much",
+              "createdAt": "2024-02-13T21:46:07Z",
+              "updatedAt": "2024-02-13T21:49:12Z"
+            }
+          ]
         }
       ]
     },
@@ -487,24 +509,26 @@
       "id": "PR_kwDOKhdr7c5mF2hK",
       "title": "Discuss combining and retiring logs.",
       "url": "https://github.com/ietf-wg-keytrans/draft-arch/pull/10",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "Bren2010",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Resolves #1 ",
       "createdAt": "2024-02-06T02:25:40Z",
-      "updatedAt": "2024-02-12T17:29:22Z",
+      "updatedAt": "2024-02-15T00:09:24Z",
       "baseRepository": "ietf-wg-keytrans/draft-arch",
       "baseRefName": "main",
       "baseRefOid": "073f63d7c7e8ade3c272f03151b3c659de71e2e4",
       "headRepository": "ietf-wg-keytrans/draft-arch",
       "headRefName": "brendan/combinations",
-      "headRefOid": "4b5566a18f990649b6ab93fadff9d94c5556c86f",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "9809e1c5fe31730c9f2686ac95c95e1d64aa0b24",
+      "closedAt": "2024-02-15T00:09:24Z",
+      "mergedAt": "2024-02-15T00:09:24Z",
+      "mergedBy": "Bren2010",
+      "mergeCommit": {
+        "oid": "f6fc19ea68950ae41bd1cf5cdbf4a08574131684"
+      },
       "comments": [
         {
           "author": "sftcd",
@@ -645,6 +669,70 @@
               "body": "So this is a policy suggestion for \"clients\" ? maybe client is a better word than user here.... saying \"must be consistent\" without further clarity remains triggering for me, but your answer to makes sense to me.",
               "createdAt": "2024-02-12T17:29:22Z",
               "updatedAt": "2024-02-12T17:29:22Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKhdr7c5v_too",
+          "commit": {
+            "abbreviatedOid": "4b5566a"
+          },
+          "author": "thibmeu",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-13T21:34:05Z",
+          "updatedAt": "2024-02-13T21:45:14Z",
+          "comments": [
+            {
+              "originalPosition": 9,
+              "body": "```suggestion\r\n- A service provider MAY decide that it's prudent to rotate its cryptographic\r\n```\r\nis this MAY, or only a suggestion?",
+              "createdAt": "2024-02-13T21:34:05Z",
+              "updatedAt": "2024-02-13T21:45:14Z"
+            },
+            {
+              "originalPosition": 17,
+              "body": "do you envision sharding to be used, by year for instance? I have the impression it provides a slightly more concrete example.",
+              "createdAt": "2024-02-13T21:36:46Z",
+              "updatedAt": "2024-02-13T21:45:14Z"
+            },
+            {
+              "originalPosition": 62,
+              "body": "```suggestion\r\n1. Search queries must be executed against the new log.\r\n```\r\nsemantic, should always is a must I would say",
+              "createdAt": "2024-02-13T21:39:23Z",
+              "updatedAt": "2024-02-13T21:45:14Z"
+            },
+            {
+              "originalPosition": 89,
+              "body": "for an HTTP request, this would be `no-store`/`private`?",
+              "createdAt": "2024-02-13T21:44:41Z",
+              "updatedAt": "2024-02-13T21:45:14Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKhdr7c5wJbZi",
+          "commit": {
+            "abbreviatedOid": "4b5566a"
+          },
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-14T23:55:47Z",
+          "updatedAt": "2024-02-15T00:08:31Z",
+          "comments": [
+            {
+              "originalPosition": 9,
+              "body": "Mentioning more as a possibility than a protocol mechanism",
+              "createdAt": "2024-02-14T23:55:47Z",
+              "updatedAt": "2024-02-15T00:08:31Z"
+            },
+            {
+              "originalPosition": 89,
+              "body": "I think we are looking at something more like OHAI. So the server in the federation that I rely on can anonymize my requests to other servers, but doesn't end up observing a bunch of private user data.",
+              "createdAt": "2024-02-15T00:08:21Z",
+              "updatedAt": "2024-02-15T00:08:31Z"
             }
           ]
         }
