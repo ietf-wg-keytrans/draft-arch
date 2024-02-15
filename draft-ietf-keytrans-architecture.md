@@ -67,7 +67,7 @@ store user public keys in a cryptographically-protected append-only log. Any
 malicious entries added to such a log will generally be equally visible to both
 the key's owner and the owner's contacts,
 in which case a user can detect that they are being impersonated
-by viewing the public keys attached to their account. However, if the service
+by viewing the public keys attached to their account. If the service
 operator attempts to conceal some entries of the log from some users but not
 others, this creates a "forked view" which is permanent and easily detectable
 with out-of-band communication.
@@ -218,10 +218,10 @@ queries that are inconsistent with it.
 
 This provides ample opportunity for users to detect when a fork has been
 presented, but isn't in itself sufficient for detection. To detect forks, users
-must either use **out-of-band communication** with other users or **anonymous
-communication** with the Transparency Log.
+must either use **peer-to-peer communication** or **anonymous communication**
+with the Transparency Log.
 
-With out-of-band communication, two users gossip with each other to establish
+With peer-to-peer communication, two users gossip with each other to establish
 that they both have the same view of the log's data. This gossip is able to
 happen over any supported out-of-band channel, even if it is heavily
 bandwidth-limited, such as scanning a QR code or talking over the phone.
@@ -314,37 +314,53 @@ colluding with the Transparency Log to serve malicious data.
 
 ## Contact Monitoring
 
+With the Contact Monitoring deployment mode, the monitoring burden is split
+between both the owner of a key and those that look up the key. Stated as simply
+as possible, the monitoring obligations of each party are:
+
+1. The key owner, on a regular basis, searches for the most recent version of
+   the key in the log. They verify that the key has not changed unexpectedly.
+2. The users that looked up a key, at some point in the future, verify that the
+   key-value pair they observed is still properly represented in the tree such
+   that other users would find it if they searched for it.
+
+This guarantees that if a malicious key-value pair is added to the log, then
+either it is detected by the key owner, or if it is removed/obscured from the
+log before the key owner can detect it, then any users that observed it will
+detect its removal.
+
 ~~~aasvg
-Alice                          Transparency Log
-  |                                   |
-  | Search(Bob) --------------------> |
-  | <------------ SearchResponse(...) |
-  |                                   |
-  |                                   |
-  |           (1 day later)           |
-  |                                   |
-  | Monitor(Bob) -------------------> |
-  | <----------- MonitorResponse(...) |
-  |                                   |
-  |                                   |
-  |          (2 days later)           |
-  |                                   |
-  | Monitor(Bob) -------------------> |
-  | <----------- MonitorResponse(...) |
-  |                                   |
-  |                                   |
-  |          (4 days later)           |
-  |                                   |
-  | Monitor(Bob) -------------------> |
-  | <----------- MonitorResponse(...) |
-  |                                   |
-  |               ...                 |
-  |                                   |
+Alice                        Transparency Log                        Bob
+|                                   |                                  |
+| Search(Bob) --------------------> |                                  |
+| <------------ SearchResponse(...) |                                  |
+|                                   |                                  |
+|                                   |                                  |
+|           (1 day later)           |                                  |
+|                                   |                                  |
+| Monitor(Bob) -------------------> |                                  |
+| <----------- MonitorResponse(...) |                                  |
+|                                   |                                  |
+|                                   |                                  |
+|          (2 days later)           |                                  |
+|                                   |                                  |
+| Monitor(Bob) -------------------> |                                  |
+| <----------- MonitorResponse(...) |                                  |
+|                                   |                                  |
+|                                   | <------------------ Monitor(Bob) |
+|          (4 days later)           | MonitorResponse(...) ----------> |
+|                                   |                                  |
+| Monitor(Bob) -------------------> |                                  |
+| <----------- MonitorResponse(...) |                                  |
+|                                   |                                  |
+|               ...                 |                                  |
+|                                   |                                  |
 ~~~
 {: #contact-monitoring-fig title="Contact Monitoring. When users make a Search
 request, they must check back in with the Transparency Log several times. These
 checks ensure that the data in the Search response wasn't later removed from the
-log." }
+log. Overlap with the key owner's own monitoring guarantees a consistent view of
+data." }
 
 ## Third-Party Auditing
 
