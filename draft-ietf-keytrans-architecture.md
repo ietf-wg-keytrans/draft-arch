@@ -504,6 +504,46 @@ users when querying transparency logs run by other entities, but should not
 attempt to 'mirror' or combine other transparency logs with its own.
 
 
+# Pruning
+
+As part of the core infrastructure of an end-to-end encrypted communication
+service, Transparency Logs are required to operate seamlessly for several years.
+This presents a problem for general append-only logs, as even moderate usage can
+cause the log to grow to an unmanageable size. This issue is further compounded
+by the fact that a substantial portion of the entries added to a log may be
+fake, having been added solely for the purpose of obscuring short-term update
+rates (as discussed in {{privacy-guarantees}}). Given this, Transparency Logs
+need to be able manage their footprint by pruning data which is no longer
+required by the communication service.
+
+Broadly speaking, a Transparency Log's database will contain two types of data:
+
+1. Serialized user data (the values corresponding to keys in the log), and
+2. Cryptographic data, such as pre-computed portions of hash trees or commitment
+   openings.
+
+The first type, serialized user data, can be pruned by removing any entries that
+the service operator's access control policy would never permit access to. For
+example, a service operator may only permit clients to search for the most
+recent version (or `n` versions) of a key. Any entries that don't meet this
+criteria can be deleted without consideration to the rest of the protocol.
+
+The second type, cryptographic data, can also be pruned, but only after
+considering which parts are no longer required by the protocol for producing
+proofs. For example, even though the key-value pair inserted at a particular
+entry in the append-only log may have been deleted, parts of the log entry may
+still be needed to produce proofs for Search / Update / Monitor queries on other
+keys. The exact mechanism for determining which data is safe to delete will
+depend on the implementation.
+
+The distinction between user data and cryptographic data provides a valuable
+separation of concerns, given that the protocol document does not provide a
+mechanism for a service operator to convey its access control policy to a
+Transparency Log. That is: pruning user data can be done entirely by
+application-defined code, while pruning cryptographic data can be done entirely
+by KT-specific code as a subsequent operation.
+
+
 # Security Guarantees
 
 A user that correctly verifies a proof from the Transparency Log (and does any
