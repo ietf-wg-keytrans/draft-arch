@@ -3,9 +3,9 @@
 
 
 Key Transparency                                            B. McMillion
-Internet-Draft                                          15 February 2024
+Internet-Draft                                          16 February 2024
 Intended status: Informational                                          
-Expires: 18 August 2024
+Expires: 19 August 2024
 
 
                      Key Transparency Architecture
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 August 2024.
+   This Internet-Draft will expire on 19 August 2024.
 
 Copyright Notice
 
@@ -86,7 +86,7 @@ Table of Contents
    7.  Security Guarantees
      7.1.  Privacy Guarantees
        7.1.1.  Leakage to Third-Party
-   8.  Privacy Law Consideration
+   8.  Privacy Law Considerations
    9.  Implementation Guidance
    10. IANA Considerations
    11. References
@@ -605,9 +605,9 @@ Many Users                        Transparency Log               Auditor
    controlling entity is example.com.
 
    A controlling entity like example.com may act as an anonymizing proxy
-   for its users when querying transparency logs run by other entities,
-   but should not attempt to 'mirror' or combine other transparency logs
-   with its own.
+   for its users when querying transparency logs run by other entities
+   (in the manner of [RFC9458]), but should not attempt to 'mirror' or
+   combine other transparency logs with its own.
 
 7.  Security Guarantees
 
@@ -734,7 +734,7 @@ Many Users                        Transparency Log               Auditor
    history.  It also includes traffic patterns, such as how often a
    specific key is looked up.
 
-8.  Privacy Law Consideration
+8.  Privacy Law Considerations
 
    Consumer privacy laws often provide a 'right to erasure', meaning
    that when a consumer requests that a service provider delete their
@@ -891,6 +891,10 @@ Many Users                        Transparency Log               Auditor
               "Verifiable Random Functions (VRFs)", RFC 9381,
               DOI 10.17487/RFC9381, August 2023,
               <https://www.rfc-editor.org/rfc/rfc9381>.
+
+   [RFC9458]  Thomson, M. and C. A. Wood, "Oblivious HTTP", RFC 9458,
+              DOI 10.17487/RFC9458, January 2024,
+              <https://www.rfc-editor.org/rfc/rfc9458>.
 
 Acknowledgments
 
