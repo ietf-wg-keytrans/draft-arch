@@ -500,8 +500,9 @@ example, with an email end-user identity like `alice@example.com`, the
 controlling entity is `example.com`.
 
 A controlling entity like `example.com` may act as an anonymizing proxy for its
-users when querying transparency logs run by other entities, but should not
-attempt to 'mirror' or combine other transparency logs with its own.
+users when querying transparency logs run by other entities (in the manner of
+{{?RFC9458}}), but should not attempt to 'mirror' or combine other transparency
+logs with its own.
 
 
 # Security Guarantees
@@ -622,7 +623,7 @@ keys and values and their modification history. It also includes traffic
 patterns, such as how often a specific key is looked up.
 
 
-# Privacy Law Consideration
+# Privacy Law Considerations
 
 Consumer privacy laws often provide a 'right to erasure', meaning that when a
 consumer requests that a service provider delete their personal information, the
