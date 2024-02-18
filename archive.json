@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-02-15T01:02:53.231033+00:00",
+  "timestamp": "2024-02-18T01:06:30.092260+00:00",
   "repo": "ietf-wg-keytrans/draft-arch",
   "labels": [
     {
@@ -737,6 +737,58 @@
           ]
         }
       ]
+    },
+    {
+      "number": 11,
+      "id": "PR_kwDOKhdr7c5nCYjL",
+      "title": "Write section on pruning",
+      "url": "https://github.com/ietf-wg-keytrans/draft-arch/pull/11",
+      "state": "OPEN",
+      "author": "Bren2010",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-02-16T00:31:23Z",
+      "updatedAt": "2024-02-16T00:31:23Z",
+      "baseRepository": "ietf-wg-keytrans/draft-arch",
+      "baseRefName": "main",
+      "baseRefOid": "b3d139296e0554c7c285daf0d07ab0b6c6ece984",
+      "headRepository": "ietf-wg-keytrans/draft-arch",
+      "headRefName": "brendan/prune",
+      "headRefOid": "5bcfec12da753b74bf003d7682ecc3bf8fd19941",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 12,
+      "id": "PR_kwDOKhdr7c5nH3VD",
+      "title": "Write about how to preserve anonymity",
+      "url": "https://github.com/ietf-wg-keytrans/draft-arch/pull/12",
+      "state": "OPEN",
+      "author": "Bren2010",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-02-16T19:14:06Z",
+      "updatedAt": "2024-02-16T19:14:06Z",
+      "baseRepository": "ietf-wg-keytrans/draft-arch",
+      "baseRefName": "main",
+      "baseRefOid": "a7ebacec537afcbc47ac9459beb4b379f3e75bb3",
+      "headRepository": "ietf-wg-keytrans/draft-arch",
+      "headRefName": "brendan/sealed-sender",
+      "headRefOid": "51148b8e0670c23cc863d0a8fc8333cbc5f281c8",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
