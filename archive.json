@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-02-29T01:01:32.812312+00:00",
+  "timestamp": "2024-03-03T01:05:41.244050+00:00",
   "repo": "ietf-wg-keytrans/draft-arch",
   "labels": [
     {
@@ -750,7 +750,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-02-16T00:31:23Z",
-      "updatedAt": "2024-02-16T00:31:23Z",
+      "updatedAt": "2024-02-29T08:51:47Z",
       "baseRepository": "ietf-wg-keytrans/draft-arch",
       "baseRefName": "main",
       "baseRefOid": "b3d139296e0554c7c285daf0d07ab0b6c6ece984",
@@ -762,7 +762,21 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOKhdr7c5xvlXE",
+          "commit": {
+            "abbreviatedOid": "5bcfec1"
+          },
+          "author": "felixlinker",
+          "authorAssociation": "NONE",
+          "state": "APPROVED",
+          "body": "If one can say something about that, it might also be worthwhile to point out how pruning affects log growth. With pruning and assuming a user-base of constant size for the sake of the argument; is there a limit to the size of the log? This would be a desirable property. But I don't know whether this is true (or under what conditions).",
+          "createdAt": "2024-02-29T08:51:47Z",
+          "updatedAt": "2024-02-29T08:51:47Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 12,
@@ -776,7 +790,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-02-16T19:14:06Z",
-      "updatedAt": "2024-02-16T19:14:06Z",
+      "updatedAt": "2024-02-29T08:47:27Z",
       "baseRepository": "ietf-wg-keytrans/draft-arch",
       "baseRefName": "main",
       "baseRefOid": "a7ebacec537afcbc47ac9459beb4b379f3e75bb3",
@@ -788,7 +802,46 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOKhdr7c5xvfBz",
+          "commit": {
+            "abbreviatedOid": "51148b8"
+          },
+          "author": "felixlinker",
+          "authorAssociation": "NONE",
+          "state": "APPROVED",
+          "body": "In general, I find this a good clarification. It took me quite a while to understand the paragraph starting with \"Strong credentials...\" so I made some suggestions to (hopefully) be a bit more clear! :)",
+          "createdAt": "2024-02-29T08:38:14Z",
+          "updatedAt": "2024-02-29T08:47:27Z",
+          "comments": [
+            {
+              "originalPosition": 16,
+              "body": "```suggestion\r\nThis means users generally interact directly with the transparency log. The\r\n```",
+              "createdAt": "2024-02-29T08:38:14Z",
+              "updatedAt": "2024-02-29T08:47:27Z"
+            },
+            {
+              "originalPosition": 28,
+              "body": "```suggestion\r\npotentially several encryption or signature public keys and are meant to be\r\nverified with no/minimal network requests by other users.\r\n```",
+              "createdAt": "2024-02-29T08:38:53Z",
+              "updatedAt": "2024-02-29T08:47:27Z"
+            },
+            {
+              "originalPosition": 32,
+              "body": "```suggestion\r\nIn particular, credentials that can be verified with minimal network access are\r\noften required by applications provide anonymous communication. These\r\napplications provide end-to-end encryption with a protocol\r\n```",
+              "createdAt": "2024-02-29T08:40:14Z",
+              "updatedAt": "2024-02-29T08:47:27Z"
+            },
+            {
+              "originalPosition": 41,
+              "body": "```suggestion\r\nhandshake messages required), or Sealed Sender {{sealed-sender}}. When a user\r\nreceives a message, these protocols have senders provide their own credential in\r\nan encrypted portion of the message. Encrypting the sender's credential prevents\r\nit from being visible to the service provider, while still assuring the\r\nrecipient of the sender's identity. If users were to authenticate the sender's\r\npublic key directly with the service provider, they would leak to the service\r\nprovider who the they are communicating with.\r\n```",
+              "createdAt": "2024-02-29T08:45:44Z",
+              "updatedAt": "2024-02-29T08:47:27Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
