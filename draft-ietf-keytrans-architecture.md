@@ -678,24 +678,15 @@ metrics about their users. These metrics include the size of their userbase, the
 frequency with which new users join, and the frequency with which existing users
 update their keys.
 
-KT allows service operators to hide the total size of their userbase from
-end-users and other outside observers. It also allows service operators to
-obscure the rate at which changes are made to the tree by padding real changes
-with fake ones, causing outsiders to observe a baseline constant rate of
-changes. Note however, that this information is not obscured from a third-party
-manager or auditor if one is used. Since the third-party plays a crucial role in
-ensuring correct operation of the log, it necessarily is able to distinguish
-real changes from fake ones, and therefore also the total number of real
-keys.
+KT allows a service operator to obscure the size of its userbase by padding the
+tree with fake entries. Similarly, it also allows a service operator to obscure
+the rate at which changes are made by padding real changes with fake ones,
+causing outsiders to observe a baseline constant rate of changes.
 
 <!--
 Unresolved privacy aspects to consider:
 - Whether hiding that a key has previously existed in the log or not, from new
   owners of that key.
-- If you see 5 updates, is it possible to tell that those 5 updates are from the
-  same person or not? Does this need to be hidden or not?
-
-Please add more topics here if they come to mind. :)
 -->
 
 ### Leakage to Third-Party
@@ -704,11 +695,13 @@ In the event that a third-party auditor or manager is used, there's additional
 information leaked to the third-party that's not visible to outsiders.
 
 In the case of a third-party auditor, the auditor is able to learn the total
-number of distinct keys in the log. It is also able to distinguish between real
-and fake modifications to the tree, and keep track of when individual keys are
-modified. However, auditors are not able to learn the plaintext values of any
-keys or values. This is because keys are masked with a VRF, and values are only
-provided to auditors as commitments.
+number of distinct changes to the log. It is also able to learn the order and
+approximate timing with which each change was made. However, auditors are not
+able to learn the plaintext of any keys or values. This is because keys
+are masked with a VRF, and values are only provided to auditors as commitments.
+They are also not able to distinguish between whether a change represents a key
+being created for the first time or being updated, or whether a change
+represents a "real" change from an end-user or a "fake" padding change.
 
 In the case of a third-party manager, the manager generally learns everything
 that the service operator would know. This includes the total set of plaintext
