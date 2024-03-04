@@ -13,12 +13,12 @@ infrastructure, and specifies the security properties that the protocol
 provides. It also gives more general, non-prescriptive guidance on how to
 securely apply KT to a number of common applications. 
     " name="description">
-<meta content="xml2rfc 3.19.2" name="generator">
+<meta content="xml2rfc 3.20.0" name="generator">
 <meta content="key transparency" name="keyword">
 <meta content="draft-ietf-keytrans-architecture-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.19.2
-    Python 3.11.6
+  xml2rfc 3.20.0
+    Python 3.11.8
     ConfigArgParse 1.7
     google-i18n-address 3.1.0
     intervaltree 3.1.0
@@ -1029,11 +1029,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Key Transparency Architecture</td>
-<td class="right">February 2024</td>
+<td class="right">March 2024</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">McMillion</td>
-<td class="center">Expires 19 August 2024</td>
+<td class="center">Expires 5 September 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1046,12 +1046,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-keytrans-architecture-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-02-16" class="published">16 February 2024</time>
+<time datetime="2024-03-04" class="published">4 March 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-08-19">19 August 2024</time></dd>
+<dd class="expires"><time datetime="2024-09-05">5 September 2024</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1104,7 +1104,7 @@ securely apply KT to a number of common applications.<a href="#section-abstract-
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 19 August 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 5 September 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1179,43 +1179,46 @@ securely apply KT to a number of common applications.<a href="#section-abstract-
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
-            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-security-guarantees" class="internal xref">Security Guarantees</a></p>
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-pruning" class="internal xref">Pruning</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-security-guarantees" class="internal xref">Security Guarantees</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
-                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-privacy-guarantees" class="internal xref">Privacy Guarantees</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1">
+                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-privacy-guarantees" class="internal xref">Privacy Guarantees</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1.2.1">
-                    <p id="section-toc.1-1.7.2.1.2.1.1"><a href="#section-7.1.1" class="auto internal xref">7.1.1</a>.  <a href="#name-leakage-to-third-party" class="internal xref">Leakage to Third-Party</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.1">
+                    <p id="section-toc.1-1.8.2.1.2.1.1"><a href="#section-8.1.1" class="auto internal xref">8.1.1</a>.  <a href="#name-leakage-to-third-party" class="internal xref">Leakage to Third-Party</a></p>
 </li>
                 </ul>
 </li>
             </ul>
 </li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
-            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-privacy-law-considerations" class="internal xref">Privacy Law Considerations</a></p>
-</li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
-            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-implementation-guidance" class="internal xref">Implementation Guidance</a></p>
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-privacy-law-considerations" class="internal xref">Privacy Law Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-implementation-guidance" class="internal xref">Implementation Guidance</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-references" class="internal xref">References</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1">
-                <p id="section-toc.1-1.11.2.1.1"><a href="#section-11.1" class="auto internal xref">11.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2">
-                <p id="section-toc.1-1.11.2.2.1"><a href="#section-11.2" class="auto internal xref">11.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
+            <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.1">
+                <p id="section-toc.1-1.12.2.1.1"><a href="#section-12.1" class="auto internal xref">12.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.2">
+                <p id="section-toc.1-1.12.2.2.1"><a href="#section-12.2" class="auto internal xref">12.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
 </li>
             </ul>
 </li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
-</li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
-            <p id="section-toc.1-1.13.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
+            <p id="section-toc.1-1.13.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
+            <p id="section-toc.1-1.14.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
 </li>
         </ul>
 </nav>
@@ -1944,102 +1947,146 @@ logs with its own.<a href="#section-6.3-2" class="pilcrow">¶</a></p>
 </div>
 </section>
 </div>
-<div id="security-guarantees">
+<div id="pruning">
 <section id="section-7">
-      <h2 id="name-security-guarantees">
-<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-security-guarantees" class="section-name selfRef">Security Guarantees</a>
+      <h2 id="name-pruning">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-pruning" class="section-name selfRef">Pruning</a>
       </h2>
-<p id="section-7-1">A user that correctly verifies a proof from the Transparency Log (and does any
+<p id="section-7-1">As part of the core infrastructure of an end-to-end encrypted communication
+service, Transparency Logs are required to operate seamlessly for several years.
+This presents a problem for general append-only logs, as even moderate usage can
+cause the log to grow to an unmanageable size. This issue is further compounded
+by the fact that a substantial portion of the entries added to a log may be
+fake, having been added solely for the purpose of obscuring short-term update
+rates (as discussed in <a href="#privacy-guarantees" class="auto internal xref">Section 8.1</a>). Given this, Transparency Logs
+need to be able manage their footprint by pruning data which is no longer
+required by the communication service.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-2">Broadly speaking, a Transparency Log's database will contain two types of data:<a href="#section-7-2" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-7-3">
+<li id="section-7-3.1">
+          <p id="section-7-3.1.1">Serialized user data (the values corresponding to keys in the log), and<a href="#section-7-3.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="section-7-3.2">
+          <p id="section-7-3.2.1">Cryptographic data, such as pre-computed portions of hash trees or commitment
+openings.<a href="#section-7-3.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ol>
+<p id="section-7-4">The first type, serialized user data, can be pruned by removing any entries that
+the service operator's access control policy would never permit access to. For
+example, a service operator may only permit clients to search for the most
+recent version (or <code>n</code> versions) of a key. Any entries that don't meet this
+criteria can be deleted without consideration to the rest of the protocol.<a href="#section-7-4" class="pilcrow">¶</a></p>
+<p id="section-7-5">The second type, cryptographic data, can also be pruned, but only after
+considering which parts are no longer required by the protocol for producing
+proofs. For example, even though the key-value pair inserted at a particular
+entry in the append-only log may have been deleted, parts of the log entry may
+still be needed to produce proofs for Search / Update / Monitor queries on other
+keys. The exact mechanism for determining which data is safe to delete will
+depend on the implementation.<a href="#section-7-5" class="pilcrow">¶</a></p>
+<p id="section-7-6">The distinction between user data and cryptographic data provides a valuable
+separation of concerns, given that the protocol document does not provide a
+mechanism for a service operator to convey its access control policy to a
+Transparency Log. That is: pruning user data can be done entirely by
+application-defined code, while pruning cryptographic data can be done entirely
+by KT-specific code as a subsequent operation.<a href="#section-7-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="security-guarantees">
+<section id="section-8">
+      <h2 id="name-security-guarantees">
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-security-guarantees" class="section-name selfRef">Security Guarantees</a>
+      </h2>
+<p id="section-8-1">A user that correctly verifies a proof from the Transparency Log (and does any
 required monitoring afterwards) receives a guarantee that the Transparency Log
 operator executed the key-value lookup correctly, and in a way that's globally
 consistent with what it has shown all other users. That is, when a user searches
 for a key, they're guaranteed that the result they receive represents the same
 result that any other user searching for the same key would've seen. When a user
 modifies a key, they're guaranteed that other users will see the modification
-the next time they search for the key.<a href="#section-7-1" class="pilcrow">¶</a></p>
-<p id="section-7-2">If the Transparency Log operator does not execute a key-value lookup correctly,
-then either:<a href="#section-7-2" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-7-3">
-<li id="section-7-3.1">
-          <p id="section-7-3.1.1">The user will detect the error immediately and reject the proof, or<a href="#section-7-3.1.1" class="pilcrow">¶</a></p>
+the next time they search for the key.<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-2">If the Transparency Log operator does not execute a key-value lookup correctly,
+then either:<a href="#section-8-2" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-8-3">
+<li id="section-8-3.1">
+          <p id="section-8-3.1.1">The user will detect the error immediately and reject the proof, or<a href="#section-8-3.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li id="section-7-3.2">
-          <p id="section-7-3.2.1">The user will permanently enter an invalid state.<a href="#section-7-3.2.1" class="pilcrow">¶</a></p>
+        <li id="section-8-3.2">
+          <p id="section-8-3.2.1">The user will permanently enter an invalid state.<a href="#section-8-3.2.1" class="pilcrow">¶</a></p>
 </li>
       </ol>
-<p id="section-7-4">Depending on the exact reason that the user enters an invalid state, it will
+<p id="section-8-4">Depending on the exact reason that the user enters an invalid state, it will
 either be detected by background monitoring or the next time that out-of-band
 communication is available. Importantly, this means that users must stay
 online for some bounded amount of time after entering an invalid state for it to
-be successfully detected.<a href="#section-7-4" class="pilcrow">¶</a></p>
-<p id="section-7-5">Alternatively, instead of executing a lookup incorrectly, the Transparency Log
+be successfully detected.<a href="#section-8-4" class="pilcrow">¶</a></p>
+<p id="section-8-5">Alternatively, instead of executing a lookup incorrectly, the Transparency Log
 can attempt to prevent a user from learning about more recent states of the log.
 This would allow the log to continue executing queries correctly, but on
 outdated versions of data. To prevent this, applications configure an upper
-bound on how stale a query response can be without being rejected.<a href="#section-7-5" class="pilcrow">¶</a></p>
-<p id="section-7-6">The exact caveats of the above guarantees depend naturally on the security of
+bound on how stale a query response can be without being rejected.<a href="#section-8-5" class="pilcrow">¶</a></p>
+<p id="section-8-6">The exact caveats of the above guarantees depend naturally on the security of
 underlying cryptographic primitives, and also the deployment mode that the
-Transparency Log relies on:<a href="#section-7-6" class="pilcrow">¶</a></p>
+Transparency Log relies on:<a href="#section-8-6" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-7.1">
-          <p id="section-7-7.1.1">Third-Party Management and Third-Party Auditing require an assumption that the
+<li class="normal" id="section-8-7.1">
+          <p id="section-8-7.1.1">Third-Party Management and Third-Party Auditing require an assumption that the
 transparency log and the third-party manager/auditor do not collude
-to trick users into accepting malicious results.<a href="#section-7-7.1.1" class="pilcrow">¶</a></p>
+to trick users into accepting malicious results.<a href="#section-8-7.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-7-7.2">
-          <p id="section-7-7.2.1">Contact Monitoring requires an assumption that the user that owns a key and
-all users that look up the key do the necessary monitoring afterwards.<a href="#section-7-7.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-8-7.2">
+          <p id="section-8-7.2.1">Contact Monitoring requires an assumption that the user that owns a key and
+all users that look up the key do the necessary monitoring afterwards.<a href="#section-8-7.2.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-7-8">In short, assuming that the underlying cryptographic primitives used are secure,
+<p id="section-8-8">In short, assuming that the underlying cryptographic primitives used are secure,
 any deployment-specific assumptions hold (such as non-collusion), and that user
 devices don't go permanently offline, then malicious behavior by the
 Transparency Log is always detected within a bounded amount of time. The
 parameters that determine the maximum amount of time before malicious behavior
-is detected are as follows:<a href="#section-7-8" class="pilcrow">¶</a></p>
+is detected are as follows:<a href="#section-8-8" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-9.1">
-          <p id="section-7-9.1.1">How stale an application allows query responses to be (ie, how long an
-application is willing to go without seeing updates to the tree).<a href="#section-7-9.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-8-9.1">
+          <p id="section-8-9.1.1">How stale an application allows query responses to be (ie, how long an
+application is willing to go without seeing updates to the tree).<a href="#section-8-9.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-7-9.2">
-          <p id="section-7-9.2.1">How frequently users execute background monitoring.<a href="#section-7-9.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-8-9.2">
+          <p id="section-8-9.2.1">How frequently users execute background monitoring.<a href="#section-8-9.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-7-9.3">
-          <p id="section-7-9.3.1">How frequently users exercise out-of-band communication.<a href="#section-7-9.3.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-8-9.3">
+          <p id="section-8-9.3.1">How frequently users exercise out-of-band communication.<a href="#section-8-9.3.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-7-9.4">
-          <p id="section-7-9.4.1">For third-party auditing: the maximum amount of lag that an auditor is allowed
-to have, with respect to the most recent tree head.<a href="#section-7-9.4.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-8-9.4">
+          <p id="section-8-9.4.1">For third-party auditing: the maximum amount of lag that an auditor is allowed
+to have, with respect to the most recent tree head.<a href="#section-8-9.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <div id="privacy-guarantees">
-<section id="section-7.1">
+<section id="section-8.1">
         <h3 id="name-privacy-guarantees">
-<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-privacy-guarantees" class="section-name selfRef">Privacy Guarantees</a>
+<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-privacy-guarantees" class="section-name selfRef">Privacy Guarantees</a>
         </h3>
-<p id="section-7.1-1">For applications deploying KT, service operators expect to be able to control
+<p id="section-8.1-1">For applications deploying KT, service operators expect to be able to control
 when sensitive information is revealed. In particular, an operator can often
 only reveal that a user is a member of their service, and information about that
-user's account, to that user's friends or contacts.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
-<p id="section-7.1-2">KT only allows users to learn whether or not a lookup key exists in the
+user's account, to that user's friends or contacts.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
+<p id="section-8.1-2">KT only allows users to learn whether or not a lookup key exists in the
 Transparency Log if the user obtains a valid search proof for that key.
 Similarly, KT only allows users to learn about the contents of a log entry if
 the user obtains a valid search proof for the exact key and version stored at
-that log entry.<a href="#section-7.1-2" class="pilcrow">¶</a></p>
-<p id="section-7.1-3">Applications are primarily able to manage the privacy of their data in KT by
+that log entry.<a href="#section-8.1-2" class="pilcrow">¶</a></p>
+<p id="section-8.1-3">Applications are primarily able to manage the privacy of their data in KT by
 relying on these properties when they enforce access control policies on the
 queries issued by users, as discussed in <a href="#protocol-overview" class="auto internal xref">Section 3</a>. For example if
 two users aren't friends, an application can block these users from searching
 for each other's lookup keys. This prevents the two users from learning about
 each other's existence. If the users were previously friends but no longer are,
 the application can prevent the users from searching for each other's keys and
-learning the contents of any subsequent account updates.<a href="#section-7.1-3" class="pilcrow">¶</a></p>
-<p id="section-7.1-4">Service operators also expect to be able to control sensitive population-level
+learning the contents of any subsequent account updates.<a href="#section-8.1-3" class="pilcrow">¶</a></p>
+<p id="section-8.1-4">Service operators also expect to be able to control sensitive population-level
 metrics about their users. These metrics include the size of their userbase, the
 frequency with which new users join, and the frequency with which existing users
-update their keys.<a href="#section-7.1-4" class="pilcrow">¶</a></p>
-<p id="section-7.1-5">KT allows service operators to hide the total size of their userbase from
+update their keys.<a href="#section-8.1-4" class="pilcrow">¶</a></p>
+<p id="section-8.1-5">KT allows service operators to hide the total size of their userbase from
 end-users and other outside observers. It also allows service operators to
 obscure the rate at which changes are made to the tree by padding real changes
 with fake ones, causing outsiders to observe a baseline constant rate of
@@ -2047,24 +2094,24 @@ changes. Note however, that this information is not obscured from a third-party
 manager or auditor if one is used. Since the third-party plays a crucial role in
 ensuring correct operation of the log, it necessarily is able to distinguish
 real changes from fake ones, and therefore also the total number of real
-keys.<a href="#section-7.1-5" class="pilcrow">¶</a></p>
+keys.<a href="#section-8.1-5" class="pilcrow">¶</a></p>
 <div id="leakage-to-third-party">
-<section id="section-7.1.1">
+<section id="section-8.1.1">
           <h4 id="name-leakage-to-third-party">
-<a href="#section-7.1.1" class="section-number selfRef">7.1.1. </a><a href="#name-leakage-to-third-party" class="section-name selfRef">Leakage to Third-Party</a>
+<a href="#section-8.1.1" class="section-number selfRef">8.1.1. </a><a href="#name-leakage-to-third-party" class="section-name selfRef">Leakage to Third-Party</a>
           </h4>
-<p id="section-7.1.1-1">In the event that a third-party auditor or manager is used, there's additional
-information leaked to the third-party that's not visible to outsiders.<a href="#section-7.1.1-1" class="pilcrow">¶</a></p>
-<p id="section-7.1.1-2">In the case of a third-party auditor, the auditor is able to learn the total
+<p id="section-8.1.1-1">In the event that a third-party auditor or manager is used, there's additional
+information leaked to the third-party that's not visible to outsiders.<a href="#section-8.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-8.1.1-2">In the case of a third-party auditor, the auditor is able to learn the total
 number of distinct keys in the log. It is also able to distinguish between real
 and fake modifications to the tree, and keep track of when individual keys are
 modified. However, auditors are not able to learn the plaintext values of any
 keys or values. This is because keys are masked with a VRF, and values are only
-provided to auditors as commitments.<a href="#section-7.1.1-2" class="pilcrow">¶</a></p>
-<p id="section-7.1.1-3">In the case of a third-party manager, the manager generally learns everything
+provided to auditors as commitments.<a href="#section-8.1.1-2" class="pilcrow">¶</a></p>
+<p id="section-8.1.1-3">In the case of a third-party manager, the manager generally learns everything
 that the service operator would know. This includes the total set of plaintext
 keys and values and their modification history. It also includes traffic
-patterns, such as how often a specific key is looked up.<a href="#section-7.1.1-3" class="pilcrow">¶</a></p>
+patterns, such as how often a specific key is looked up.<a href="#section-8.1.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2072,85 +2119,85 @@ patterns, such as how often a specific key is looked up.<a href="#section-7.1.1-
 </section>
 </div>
 <div id="privacy-law-considerations">
-<section id="section-8">
+<section id="section-9">
       <h2 id="name-privacy-law-considerations">
-<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-privacy-law-considerations" class="section-name selfRef">Privacy Law Considerations</a>
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-privacy-law-considerations" class="section-name selfRef">Privacy Law Considerations</a>
       </h2>
-<p id="section-8-1">Consumer privacy laws often provide a 'right to erasure', meaning that when a
+<p id="section-9-1">Consumer privacy laws often provide a 'right to erasure', meaning that when a
 consumer requests that a service provider delete their personal information, the
 service provider is legally obligated to do so. This may seem to be incompatible
 with the description of KT in <a href="#introduction" class="auto internal xref">Section 1</a> as an 'append-only log'. Once an
-entry is added to a transparency log, it indeed can not be removed.<a href="#section-8-1" class="pilcrow">¶</a></p>
-<p id="section-8-2">The important caveat here is that user data is not directly stored in the
+entry is added to a transparency log, it indeed can not be removed.<a href="#section-9-1" class="pilcrow">¶</a></p>
+<p id="section-9-2">The important caveat here is that user data is not directly stored in the
 append-only log. Instead, the log consists of privacy-preserving cryptographic
 commitments. By logging commitments instead of plaintext user data, users
 interacting with the log are unable to infer anything about an entry's contents
 until the service provider explicitly provides the commitment's opening. A
 service provider responding to an erasure request can delete the commitment
-opening and the associated data, effectively anonymizing the entry.<a href="#section-8-2" class="pilcrow">¶</a></p>
-<p id="section-8-3">Other than the log, the second place where user information is stored is in the
+opening and the associated data, effectively anonymizing the entry.<a href="#section-9-2" class="pilcrow">¶</a></p>
+<p id="section-9-3">Other than the log, the second place where user information is stored is in the
 <em>prefix tree</em>. This is a cryptographic index provided to users to allow them to
 efficiently query the log, which contains information about which lookup keys
 exist and where. These lookup keys are usually serialized end-user identifiers,
 although it varies by application. To minimize leakage, all lookup keys are
-processed through a Verifiable Random Function, or VRF <span>[<a href="#RFC9381" class="cite xref">RFC9381</a>]</span>.<a href="#section-8-3" class="pilcrow">¶</a></p>
-<p id="section-8-4">A VRF deterministically maps each lookup key to the fixed-length pseudorandom
+processed through a Verifiable Random Function, or VRF <span>[<a href="#RFC9381" class="cite xref">RFC9381</a>]</span>.<a href="#section-9-3" class="pilcrow">¶</a></p>
+<p id="section-9-4">A VRF deterministically maps each lookup key to the fixed-length pseudorandom
 value. The VRF can only be executed by the service operator, who holds a private
 key. But critically, VRFs can still provide a proof that an input-output pair is
 valid, which users verify with a public key. When a user tries to search for or
 update a key, the service operator first executes its VRF on the input lookup
 key to obtain the output key that will actually be looked up or stored in the
 prefix tree. The service operator then provides the output key, along with a
-proof that the output key is correct, in its response to the user.<a href="#section-8-4" class="pilcrow">¶</a></p>
-<p id="section-8-5">The pseudorandom output of VRFs means that even if a user indirectly observes
+proof that the output key is correct, in its response to the user.<a href="#section-9-4" class="pilcrow">¶</a></p>
+<p id="section-9-5">The pseudorandom output of VRFs means that even if a user indirectly observes
 that a search key exists in the prefix tree, they can't immediately learn which
 user the search key identifies. The inability of users to execute the VRF
 themselves also prevents offline "password cracking" approaches, where an
 attacker tries all possibilities in a low entropy space (like the set of phone
-numbers) to find the input that produces a given search key.<a href="#section-8-5" class="pilcrow">¶</a></p>
-<p id="section-8-6">A service provider responding to an erasure request can 'trim' the prefix tree,
+numbers) to find the input that produces a given search key.<a href="#section-9-5" class="pilcrow">¶</a></p>
+<p id="section-9-6">A service provider responding to an erasure request can 'trim' the prefix tree,
 by no longer storing the full VRF output for any lookup keys corresponding to an
 end-user's identifiers. With only a small amount of the VRF output left in
 storage, even if the transparency log is later compromised, it would be unable
 to recover deleted identifiers. If the same lookup keys were reinserted into the
 log at a later time, it would appear as if they were being inserted for the
-first time.<a href="#section-8-6" class="pilcrow">¶</a></p>
-<p id="section-8-7">As an example, consider the information stored in a transparency log after
+first time.<a href="#section-9-6" class="pilcrow">¶</a></p>
+<p id="section-9-7">As an example, consider the information stored in a transparency log after
 inserting a key <code>K</code> with value <code>V</code>. The value stored in the prefix tree would
 roughly correspond to <code>VRF(key K) = pseudorandom bytes</code>, and the value stored in
-the append-only log would roughly correspond to:<a href="#section-8-7" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-8-8">
+the append-only log would roughly correspond to:<a href="#section-9-7" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-9-8">
 <pre>
 Commit(nonce: random bytes, body: version N of key K is V)
-</pre><a href="#section-8-8" class="pilcrow">¶</a>
+</pre><a href="#section-9-8" class="pilcrow">¶</a>
 </div>
-<p id="section-8-9">After receiving an erasure request, the transparency log deletes the key, value,
+<p id="section-9-9">After receiving an erasure request, the transparency log deletes the key, value,
 and random commitment nonce. It also trims the VRF output to the minimum size
 necessary. The commitment scheme guarantees that, without the high-entropy
-random nonce, the remaining commitment reveals nothing about the key or value.<a href="#section-8-9" class="pilcrow">¶</a></p>
-<p id="section-8-10">Assuming that the prefix tree is well-balanced (which is extremely likely due to
+random nonce, the remaining commitment reveals nothing about the key or value.<a href="#section-9-9" class="pilcrow">¶</a></p>
+<p id="section-9-10">Assuming that the prefix tree is well-balanced (which is extremely likely due to
 VRFs being pseudorandom), the number of VRF output bits retained is
 approximately equal to the logarithm of the total number of keys logged. This
 means that while the VRF's full output may be 256 bits, in a log with one
 million keys, only 20 output bits would need to be retained. This would be
 insufficient for recovering even a very low-entropy identifier like a phone
-number.<a href="#section-8-10" class="pilcrow">¶</a></p>
+number.<a href="#section-9-10" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="implementation-guidance">
-<section id="section-9">
+<section id="section-10">
       <h2 id="name-implementation-guidance">
-<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-implementation-guidance" class="section-name selfRef">Implementation Guidance</a>
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-implementation-guidance" class="section-name selfRef">Implementation Guidance</a>
       </h2>
-<p id="section-9-1">Fundamentally, KT can be thought of as guaranteeing that all the users of a
+<p id="section-10-1">Fundamentally, KT can be thought of as guaranteeing that all the users of a
 service agree on the contents of a key-value database. Using this guarantee,
 that all users agree on a set of keys and values, to authenticate the
 relationship between end-user identities and the end-users of a communication
 service takes special care. Critically, in order to authenticate an end-user
 identity, it must be both <em>unique</em> and <em>user-visible</em>. However, what exactly
 constitutes a unique and user-visible identifier varies greatly from application
-to application.<a href="#section-9-1" class="pilcrow">¶</a></p>
-<p id="section-9-2">Consider, for example, a communication service where users are uniquely
+to application.<a href="#section-10-1" class="pilcrow">¶</a></p>
+<p id="section-10-2">Consider, for example, a communication service where users are uniquely
 identified by a fixed username, but KT has been deployed using an internal UUID
 as the lookup key. While the UUID might be unique, it is not user-visible. When
 a user attempts to lookup a contact by username, the service operator must
@@ -2158,48 +2205,48 @@ translate the username into its UUID. Since this mapping (from username to UUID)
 is unauthenticated, the service operator can manipulate it to eavesdrop on
 conversations by returning the UUID for an account that it controls. From a
 security perspective, this is equivalent to not using KT at all. An example of
-this kind of application would be email.<a href="#section-9-2" class="pilcrow">¶</a></p>
-<p id="section-9-3">However in other applications, the use of internal UUIDs in KT may be
+this kind of application would be email.<a href="#section-10-2" class="pilcrow">¶</a></p>
+<p id="section-10-3">However in other applications, the use of internal UUIDs in KT may be
 appropriate. For example, many applications don't have this type of fixed
 username and instead use their UI (underpinned internally by a UUID) to indicate
 to users whether a conversation is with a new person or someone they've
 previously contacted. The fact that the UI behaves in this way makes the UUID a
 user-visible identifer, even if a user may not be able to actually see it
-written out. An example of this kind of application would be Slack.<a href="#section-9-3" class="pilcrow">¶</a></p>
-<p id="section-9-4">A <strong>primary end-user identity</strong> is one that is unique, user-visible, and unable
+written out. An example of this kind of application would be Slack.<a href="#section-10-3" class="pilcrow">¶</a></p>
+<p id="section-10-4">A <strong>primary end-user identity</strong> is one that is unique, user-visible, and unable
 to change. (Or equivalently, if it changes, it appears in the application UI as
 a new conversation with a new user.) A primary end-user identity should always
-be a lookup key in KT, with the end-user's public keys as the associated value.<a href="#section-9-4" class="pilcrow">¶</a></p>
-<p id="section-9-5">A <strong>secondary end-user identity</strong> is one that is unique, user-visible, and able
+be a lookup key in KT, with the end-user's public keys as the associated value.<a href="#section-10-4" class="pilcrow">¶</a></p>
+<p id="section-10-5">A <strong>secondary end-user identity</strong> is one that is unique, user-visible, and able
 to change without being interpreted as a different account due to its
 association with a primary identity. Examples of this type of identity include
 phone numbers, or most usernames. These identities are used solely for initial
 user discovery, in which they're converted to a primary identity that's used by
 the application from then on. A secondary end-user identity should be a lookup
 key in KT, for the purpose of authenticating user discovery, with the primary
-end-user identity as the associated value.<a href="#section-9-5" class="pilcrow">¶</a></p>
-<p id="section-9-6">While likely helpful to most common applications, the distinction between
+end-user identity as the associated value.<a href="#section-10-5" class="pilcrow">¶</a></p>
+<p id="section-10-6">While likely helpful to most common applications, the distinction between
 handling primary and secondary identities is not a hard-and-fast rule.
 Applications must be careful to ensure they fully capture the semantics of
-identity in their application with the key-value structure they put in KT.<a href="#section-9-6" class="pilcrow">¶</a></p>
+identity in their application with the key-value structure they put in KT.<a href="#section-10-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">
-<section id="section-10">
+<section id="section-11">
       <h2 id="name-iana-considerations">
-<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<p id="section-10-1">This document has no IANA actions.<a href="#section-10-1" class="pilcrow">¶</a></p>
+<p id="section-11-1">This document has no IANA actions.<a href="#section-11-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<section id="section-11">
+<section id="section-12">
       <h2 id="name-references">
-<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-references" class="section-name selfRef">References</a>
+<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-references" class="section-name selfRef">References</a>
       </h2>
 <div id="sec-normative-references">
-<section id="section-11.1">
+<section id="section-12.1">
         <h3 id="name-normative-references">
-<a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+<a href="#section-12.1" class="section-number selfRef">12.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
 <dt id="RFC2119">[RFC2119]</dt>
@@ -2214,9 +2261,9 @@ identity in their application with the key-value structure they put in KT.<a hre
 </section>
 </div>
 <div id="sec-informative-references">
-<section id="section-11.2">
+<section id="section-12.2">
         <h3 id="name-informative-references">
-<a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+<a href="#section-12.2" class="section-number selfRef">12.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
 <dt id="RFC6962">[RFC6962]</dt>

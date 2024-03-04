@@ -3,9 +3,9 @@
 
 
 Key Transparency                                            B. McMillion
-Internet-Draft                                          16 February 2024
+Internet-Draft                                              4 March 2024
 Intended status: Informational                                          
-Expires: 19 August 2024
+Expires: 5 September 2024
 
 
                      Key Transparency Architecture
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 August 2024.
+   This Internet-Draft will expire on 5 September 2024.
 
 Copyright Notice
 
@@ -83,15 +83,16 @@ Table of Contents
      6.1.  Gradual Migration
      6.2.  Immediate Migration
      6.3.  Federation
-   7.  Security Guarantees
-     7.1.  Privacy Guarantees
-       7.1.1.  Leakage to Third-Party
-   8.  Privacy Law Considerations
-   9.  Implementation Guidance
-   10. IANA Considerations
-   11. References
-     11.1.  Normative References
-     11.2.  Informative References
+   7.  Pruning
+   8.  Security Guarantees
+     8.1.  Privacy Guarantees
+       8.1.1.  Leakage to Third-Party
+   9.  Privacy Law Considerations
+   10. Implementation Guidance
+   11. IANA Considerations
+   12. References
+     12.1.  Normative References
+     12.2.  Informative References
    Acknowledgments
    Author's Address
 
@@ -609,7 +610,53 @@ Many Users                        Transparency Log               Auditor
    (in the manner of [RFC9458]), but should not attempt to 'mirror' or
    combine other transparency logs with its own.
 
-7.  Security Guarantees
+7.  Pruning
+
+   As part of the core infrastructure of an end-to-end encrypted
+   communication service, Transparency Logs are required to operate
+   seamlessly for several years.  This presents a problem for general
+   append-only logs, as even moderate usage can cause the log to grow to
+   an unmanageable size.  This issue is further compounded by the fact
+   that a substantial portion of the entries added to a log may be fake,
+   having been added solely for the purpose of obscuring short-term
+   update rates (as discussed in Section 8.1).  Given this, Transparency
+   Logs need to be able manage their footprint by pruning data which is
+   no longer required by the communication service.
+
+   Broadly speaking, a Transparency Log's database will contain two
+   types of data:
+
+   1.  Serialized user data (the values corresponding to keys in the
+       log), and
+
+   2.  Cryptographic data, such as pre-computed portions of hash trees
+       or commitment openings.
+
+   The first type, serialized user data, can be pruned by removing any
+   entries that the service operator's access control policy would never
+   permit access to.  For example, a service operator may only permit
+   clients to search for the most recent version (or n versions) of a
+   key.  Any entries that don't meet this criteria can be deleted
+   without consideration to the rest of the protocol.
+
+   The second type, cryptographic data, can also be pruned, but only
+   after considering which parts are no longer required by the protocol
+   for producing proofs.  For example, even though the key-value pair
+   inserted at a particular entry in the append-only log may have been
+   deleted, parts of the log entry may still be needed to produce proofs
+   for Search / Update / Monitor queries on other keys.  The exact
+   mechanism for determining which data is safe to delete will depend on
+   the implementation.
+
+   The distinction between user data and cryptographic data provides a
+   valuable separation of concerns, given that the protocol document
+   does not provide a mechanism for a service operator to convey its
+   access control policy to a Transparency Log. That is: pruning user
+   data can be done entirely by application-defined code, while pruning
+   cryptographic data can be done entirely by KT-specific code as a
+   subsequent operation.
+
+8.  Security Guarantees
 
    A user that correctly verifies a proof from the Transparency Log (and
    does any required monitoring afterwards) receives a guarantee that
@@ -674,7 +721,7 @@ Many Users                        Transparency Log               Auditor
       auditor is allowed to have, with respect to the most recent tree
       head.
 
-7.1.  Privacy Guarantees
+8.1.  Privacy Guarantees
 
    For applications deploying KT, service operators expect to be able to
    control when sensitive information is revealed.  In particular, an
@@ -714,7 +761,7 @@ Many Users                        Transparency Log               Auditor
    real changes from fake ones, and therefore also the total number of
    real keys.
 
-7.1.1.  Leakage to Third-Party
+8.1.1.  Leakage to Third-Party
 
    In the event that a third-party auditor or manager is used, there's
    additional information leaked to the third-party that's not visible
@@ -734,7 +781,7 @@ Many Users                        Transparency Log               Auditor
    history.  It also includes traffic patterns, such as how often a
    specific key is looked up.
 
-8.  Privacy Law Considerations
+9.  Privacy Law Considerations
 
    Consumer privacy laws often provide a 'right to erasure', meaning
    that when a consumer requests that a service provider delete their
@@ -809,7 +856,7 @@ Many Users                        Transparency Log               Auditor
    need to be retained.  This would be insufficient for recovering even
    a very low-entropy identifier like a phone number.
 
-9.  Implementation Guidance
+10.  Implementation Guidance
 
    Fundamentally, KT can be thought of as guaranteeing that all the
    users of a service agree on the contents of a key-value database.
@@ -864,13 +911,13 @@ Many Users                        Transparency Log               Auditor
    the semantics of identity in their application with the key-value
    structure they put in KT.
 
-10.  IANA Considerations
+11.  IANA Considerations
 
    This document has no IANA actions.
 
-11.  References
+12.  References
 
-11.1.  Normative References
+12.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -881,7 +928,7 @@ Many Users                        Transparency Log               Auditor
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
-11.2.  Informative References
+12.2.  Informative References
 
    [RFC6962]  Laurie, B., Langley, A., and E. Kasper, "Certificate
               Transparency", RFC 6962, DOI 10.17487/RFC6962, June 2013,
