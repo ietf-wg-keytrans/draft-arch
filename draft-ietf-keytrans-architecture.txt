@@ -221,9 +221,8 @@ Table of Contents
 4.  User Interactions
 
    As discussed in Section 3, KT follows a client-server architecture.
-   This means that all user interaction is directly with the
-   transparency log.  The operations that can be executed by a user are
-   as follows:
+   This means users generally interact directly with the transparency
+   log.  The operations that can be executed by a user are as follows:
 
    1.  *Search:* Performs a lookup on a specific key in the most recent
        version of the log.  Users may request either a specific version
@@ -271,6 +270,58 @@ Table of Contents
       Figure 1: Example request/response flow.  Valid requests receive
        a response while invalid requests are blocked by the transport
                                    layer.
+
+   An important caveat to the client-server architecture is that many
+   end-to-end encrypted communication services require the ability to
+   provide _credentials_ to their users.  These credentials convey a
+   binding between an end-user identity and potentially several
+   encryption or signature public keys, and are meant to be verified
+   with no/minimal network requests by the receiving users.
+
+   In particular, credentials that can be verified with minimal network
+   access are often required by applications provide anonymous
+   communication.  These applications provide end-to-end encryption with
+   a protocol like the Messaging Layer Security protocol [RFC9420] (with
+   the encryption of handshake messages required), or Sealed Sender
+   [sealed-sender].  When a user receives a message, these protocols
+   have senders provide their own credential in an encrypted portion of
+   the message.  Encrypting the sender's credential prevents it from
+   being visible to the service provider, while still assuring the
+   recipient of the sender's identity.  If users were to authenticate
+   the sender's public key directly with the service provider, they
+   would leak to the service provider who the they are communicating
+   with.
+
+   Key Transparency credentials can be created by serializing one or
+   more Search request-response pairs.  These Search operations would
+   correspond to the lookups a user needs to do to prove the
+   relationship between their end-user identity and their cryptographic
+   keys.  Recipients can verify the request-response pairs themselves
+   without contacting the Transparency Log.
+
+   Any future monitoring that may be required can be provided to
+   recipients proactively by the sender.  However if this fails, the
+   recipient can still perform the monitoring themselves (including over
+   an anonymous channel if necessary).
+
+   Transparency Log               Alice           Anonymous Group
+   |                                |                           |
+   | <--------------- Search(Alice) |                           |
+   | SearchResponse(...) ---------> | Encrypt(Anon Group,       |
+   |                                |     SearchResponse ||     |
+   |                                |     Message   ||          |
+   |                                |     Signature) ---------> |
+   |                                |                           |
+   | <-------------- Monitor(Alice) |                           |
+   | MonitorResponse(...) --------> | Encrypt(Anon Group,       |
+   |                                |     MonitorResponse) ---> |
+   |                                |                           |
+
+     Figure 2: Example message flow in an anonymous deployment.  Users
+      request their own key from the Transparency Log and provide the
+       serialized response, functioning as a credential, in encrypted
+         messages to other users.  Required monitoring is provided
+                                proactively.
 
 4.1.  Out-of-Band Communication
 
@@ -328,7 +379,7 @@ Alice                      Bob                          Transparency Log
 |                           | Search(Bob) ~~~~~~~~~~~~~~~~~~~> X       |
 |                           |                                          |
 
-    Figure 2: Users receive tree heads while making authenticated
+    Figure 3: Users receive tree heads while making authenticated
    requests to a Transparency Log. Users ensure consistency of tree
     heads by either comparing amongst themselves, or by contacting
     the Transparency Log over an anonymous channel.  Requests that
@@ -447,7 +498,7 @@ Alice                        Transparency Log                        Bob
 |               ...                 |                                  |
 |                                   |                                  |
 
-   Figure 3: Contact Monitoring.  When users make a Search request,
+   Figure 4: Contact Monitoring.  When users make a Search request,
    they must check back in with the Transparency Log several times.
    These checks ensure that the data in the Search response wasn't
     later removed from the log.  Overlap with the key owner's own
@@ -477,7 +528,7 @@ Many Users                        Transparency Log               Auditor
 |                                        | <---------- NewSig: 53c1035 |
 |                                        |                             |
 
-     Figure 4: Third-Party Auditing.  A recent signature from the
+     Figure 5: Third-Party Auditing.  A recent signature from the
    auditor is provided to users.  The auditor is updated on changes
                     to the tree in the background.
 
@@ -503,7 +554,7 @@ Many Users                        Transparency Log               Auditor
    | Update(Bob, ...) ------> X  |                                |
    |                             |                                |
 
-    Figure 5: Third-Party Management.  Valid requests are proxied by the
+    Figure 6: Third-Party Management.  Valid requests are proxied by the
       Transparency Log to the Manager.  Rejected requests are blocked.
 
 6.  Combining Logs
@@ -939,9 +990,18 @@ Many Users                        Transparency Log               Auditor
               DOI 10.17487/RFC9381, August 2023,
               <https://www.rfc-editor.org/rfc/rfc9381>.
 
+   [RFC9420]  Barnes, R., Beurdouche, B., Robert, R., Millican, J.,
+              Omara, E., and K. Cohn-Gordon, "The Messaging Layer
+              Security (MLS) Protocol", RFC 9420, DOI 10.17487/RFC9420,
+              July 2023, <https://www.rfc-editor.org/rfc/rfc9420>.
+
    [RFC9458]  Thomson, M. and C. A. Wood, "Oblivious HTTP", RFC 9458,
               DOI 10.17487/RFC9458, January 2024,
               <https://www.rfc-editor.org/rfc/rfc9458>.
+
+   [sealed-sender]
+              "Technology preview: Sealed sender for Signal", 29 October
+              2018, <https://signal.org/blog/sealed-sender/>.
 
 Acknowledgments
 
