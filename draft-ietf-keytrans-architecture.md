@@ -160,7 +160,7 @@ reason for rejection, is left to the application.
 # User Interactions
 
 As discussed in {{protocol-overview}}, KT follows a client-server architecture.
-This means that user interaction is generally directly with the transparency log. The
+This means users generally interact directly with the transparency log. The
 operations that can be executed by a user are as follows:
 
 1. **Search:** Performs a lookup on a specific key in the most recent version of
@@ -207,21 +207,20 @@ receive a response while invalid requests are blocked by the transport layer." }
 An important caveat to the client-server architecture is that many end-to-end
 encrypted communication services require the ability to provide *credentials* to
 their users. These credentials convey a binding between an end-user identity and
-potentially several encryption or signature public keys, but are meant to be
-verified with no/minimal network requests.
+potentially several encryption or signature public keys, and are meant to be
+verified with no/minimal network requests by the receiving users.
 
-Strong credentials that can be verified with minimal network access are
-especially necessary for applications that allow users to communicate
-anonymously. These applications provide end-to-end encryption with a protocol
+In particular, credentials that can be verified with minimal network access are
+often required by applications provide anonymous communication. These
+applications provide end-to-end encryption with a protocol
 like the Messaging Layer Security protocol {{?RFC9420}} (with the encryption of
 handshake messages required), or Sealed Sender {{sealed-sender}}. When a user
-receives a message, that user would usually be able to check directly with the
-service provider to authenticate the sender's public key. However, given that
-this would leak to the service provider who the user is communicating with,
-these protocols instead have senders provide their own credential in an
-encrypted portion of the message. Encrypting the sender's credential prevents it
-from being visible to the service provider, while still assuring the recipient
-of the sender's identity.
+receives a message, these protocols have senders provide their own credential in
+an encrypted portion of the message. Encrypting the sender's credential prevents
+it from being visible to the service provider, while still assuring the
+recipient of the sender's identity. If users were to authenticate the sender's
+public key directly with the service provider, they would leak to the service
+provider who the they are communicating with.
 
 Key Transparency credentials can be created by serializing one or more Search
 request-response pairs. These Search operations would correspond to the lookups
