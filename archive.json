@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-03-03T01:05:41.244050+00:00",
+  "timestamp": "2024-03-05T01:01:55.970382+00:00",
   "repo": "ietf-wg-keytrans/draft-arch",
   "labels": [
     {
@@ -278,15 +278,15 @@
       "id": "I_kwDOKhdr7c58vFD5",
       "title": "Discuss compaction",
       "url": "https://github.com/ietf-wg-keytrans/draft-arch/issues/8",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "Bren2010",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2024-01-21T18:47:43Z",
-      "updatedAt": "2024-01-21T18:47:43Z",
-      "closedAt": null,
+      "updatedAt": "2024-03-04T20:00:21Z",
+      "closedAt": "2024-03-04T20:00:21Z",
       "comments": []
     }
   ],
@@ -462,7 +462,7 @@
             "abbreviatedOid": "1dd3f1b"
           },
           "author": "felixlinker",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "state": "COMMENTED",
           "body": "My sentiment is the same as for #10, but I am a bit more positive here. My understanding is that this PR shows how deletion requests can be supported in a KT system using the standard construction, i.e., you show that it is possible to implement the requirement of \"entry deletion must be possible.\"\r\n\r\nNevertheless, reading what you wrote, I started thinking: \"But will that actually work?\" Couldn't the mechanism as described here lead to equivocation attacks where a provider tells some clients that an entry was deleted and others that it was not? Maybe we require a tombstoning mechanism (as in #10)?\r\n\r\nAgain, I'm not saying that my worries should be addressed in this PR, but I think it would be better to work on a list of requirements that a KT design must provide and then proceed to the design.",
           "createdAt": "2024-02-07T08:30:06Z",
@@ -475,7 +475,7 @@
             "abbreviatedOid": "71333b6"
           },
           "author": "felixlinker",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "state": "APPROVED",
           "body": "",
           "createdAt": "2024-02-08T08:53:35Z",
@@ -546,7 +546,7 @@
         },
         {
           "author": "felixlinker",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "body": "> I don't believe there is any real protocol design happening here. It is a statement of architecture to say that there will be multiple logs operating independently, clients will likely be communicating with multiple logs, and clients are responsible for communicating with multiple logs in a way that is secure. And then we give some examples of how to communicate with multiple logs securely -- emphasizing that these are examples and not standardized behavior. Does that address your concern?\r\n\r\nYou are right, this is not protocol design. I guess my problem lies more in mandating that the design provides federation. #1 raised the issue of what should happen if one key server becomes unavailable. I agree that it is an important to provide a mechanism for log migration (i.e., you \"import\" a state of some other log). Log migration has the benefit, though, that one log becomes stale and you don't expect any updates to it.\r\n\r\nProviding full on federation where you would like to see updates to key-mappings in multiple logs is much harder as you need to find policies to decide what to do in case of conflicts, etc. You don't need federation to solve #1. I can see benefits to it, but also many problems in practice so I wouldn't commit to federation now.",
           "createdAt": "2024-02-08T09:01:12Z",
           "updatedAt": "2024-02-08T09:01:12Z"
@@ -638,7 +638,7 @@
             "abbreviatedOid": "28f43ae"
           },
           "author": "felixlinker",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "state": "COMMENTED",
           "body": "I worry that this addition to the architecture document introduces more problems than it solves. I liked the initial architecture document because it described what I presume that _every_ KT system will do at a high-level. This PR now reduces the design space and vaguely commits us to a specific design trying to address #1.\r\n\r\nFor example, with this PR, I worry that providing federated logs might over-complicate the design without providing much value. For example, you could also gain the benefits of a federated setup (load balancing, redundancy) from a setup that is federated \"behind the scenes.\" A KT provider could simply store its tree in a distributed database, but clients and auditors use one API endpoint and need not care how the provider manages to reply to their queries. I do not claim that this is a better design, but I do think we need to discuss what is the best design.\r\n\r\nBefore we start designing a KT system, I think it would be better to identify requirements that a KT design must implement (e.g., being able to migrate from log A to log B) and leave it there. With the requirements set out, we can then start working on a new design document.\r\n\r\nOr am I getting the process wrong? My understanding was that the KT architecture document is supposed to align the work of the WG at a high level, not provide a design.",
           "createdAt": "2024-02-07T08:07:10Z",
@@ -743,24 +743,26 @@
       "id": "PR_kwDOKhdr7c5nCYjL",
       "title": "Write section on pruning",
       "url": "https://github.com/ietf-wg-keytrans/draft-arch/pull/11",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "Bren2010",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2024-02-16T00:31:23Z",
-      "updatedAt": "2024-02-29T08:51:47Z",
+      "updatedAt": "2024-03-04T20:00:20Z",
       "baseRepository": "ietf-wg-keytrans/draft-arch",
       "baseRefName": "main",
       "baseRefOid": "b3d139296e0554c7c285daf0d07ab0b6c6ece984",
       "headRepository": "ietf-wg-keytrans/draft-arch",
       "headRefName": "brendan/prune",
       "headRefOid": "5bcfec12da753b74bf003d7682ecc3bf8fd19941",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2024-03-04T20:00:20Z",
+      "mergedAt": "2024-03-04T20:00:20Z",
+      "mergedBy": "Bren2010",
+      "mergeCommit": {
+        "oid": "7ab2ad33c6b7c58565a4a14c006c32314f01ef1e"
+      },
       "comments": [],
       "reviews": [
         {
@@ -769,7 +771,7 @@
             "abbreviatedOid": "5bcfec1"
           },
           "author": "felixlinker",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "state": "APPROVED",
           "body": "If one can say something about that, it might also be worthwhile to point out how pruning affects log growth. With pruning and assuming a user-base of constant size for the sake of the argument; is there a limit to the size of the log? This would be a desirable property. But I don't know whether this is true (or under what conditions).",
           "createdAt": "2024-02-29T08:51:47Z",
@@ -783,24 +785,26 @@
       "id": "PR_kwDOKhdr7c5nH3VD",
       "title": "Write about how to preserve anonymity",
       "url": "https://github.com/ietf-wg-keytrans/draft-arch/pull/12",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "Bren2010",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2024-02-16T19:14:06Z",
-      "updatedAt": "2024-02-29T08:47:27Z",
+      "updatedAt": "2024-03-04T20:06:38Z",
       "baseRepository": "ietf-wg-keytrans/draft-arch",
       "baseRefName": "main",
       "baseRefOid": "a7ebacec537afcbc47ac9459beb4b379f3e75bb3",
       "headRepository": "ietf-wg-keytrans/draft-arch",
       "headRefName": "brendan/sealed-sender",
-      "headRefOid": "51148b8e0670c23cc863d0a8fc8333cbc5f281c8",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "0e8d28fb4e18ef5f87def0afa7e15ffefa42249a",
+      "closedAt": "2024-03-04T20:06:38Z",
+      "mergedAt": "2024-03-04T20:06:38Z",
+      "mergedBy": "Bren2010",
+      "mergeCommit": {
+        "oid": "f68a99ff8b2ed01dbe38201306a6bb30134eec1c"
+      },
       "comments": [],
       "reviews": [
         {
@@ -809,7 +813,7 @@
             "abbreviatedOid": "51148b8"
           },
           "author": "felixlinker",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "state": "APPROVED",
           "body": "In general, I find this a good clarification. It took me quite a while to understand the paragraph starting with \"Strong credentials...\" so I made some suggestions to (hopefully) be a bit more clear! :)",
           "createdAt": "2024-02-29T08:38:14Z",
@@ -823,9 +827,9 @@
             },
             {
               "originalPosition": 28,
-              "body": "```suggestion\r\npotentially several encryption or signature public keys and are meant to be\r\nverified with no/minimal network requests by other users.\r\n```",
+              "body": "```suggestion\r\npotentially several encryption or signature public keys, and are meant to be\r\nverified with no/minimal network requests by the receiving users.\r\n```",
               "createdAt": "2024-02-29T08:38:53Z",
-              "updatedAt": "2024-02-29T08:47:27Z"
+              "updatedAt": "2024-03-04T20:02:14Z"
             },
             {
               "originalPosition": 32,
@@ -840,6 +844,48 @@
               "updatedAt": "2024-02-29T08:47:27Z"
             }
           ]
+        }
+      ]
+    },
+    {
+      "number": 13,
+      "id": "PR_kwDOKhdr7c5oo7UG",
+      "title": "Reduce leakage from KT log",
+      "url": "https://github.com/ietf-wg-keytrans/draft-arch/pull/13",
+      "state": "MERGED",
+      "author": "Bren2010",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-03-04T21:11:01Z",
+      "updatedAt": "2024-03-04T22:49:35Z",
+      "baseRepository": "ietf-wg-keytrans/draft-arch",
+      "baseRefName": "main",
+      "baseRefOid": "f68a99ff8b2ed01dbe38201306a6bb30134eec1c",
+      "headRepository": "ietf-wg-keytrans/draft-arch",
+      "headRefName": "brendan/leakage",
+      "headRefOid": "320a9c236e27fe791450e20467774fe79c9e76ba",
+      "closedAt": "2024-03-04T22:49:35Z",
+      "mergedAt": "2024-03-04T22:49:35Z",
+      "mergedBy": "Bren2010",
+      "mergeCommit": {
+        "oid": "b32f9091619252aa08ffa01fd7cebc2c660e39c2"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKhdr7c5yKnXI",
+          "commit": {
+            "abbreviatedOid": "320a9c2"
+          },
+          "author": "OR13",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-03-04T21:27:12Z",
+          "updatedAt": "2024-03-04T21:27:12Z",
+          "comments": []
         }
       ]
     }
