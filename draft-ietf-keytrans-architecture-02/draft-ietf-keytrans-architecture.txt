@@ -3,9 +3,9 @@
 
 
 Key Transparency                                            B. McMillion
-Internet-Draft                                           21 January 2024
+Internet-Draft                                            26 August 2024
 Intended status: Informational                                          
-Expires: 24 July 2024
+Expires: 27 February 2025
 
 
                      Key Transparency Architecture
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 July 2024.
+   This Internet-Draft will expire on 27 February 2025.
 
 Copyright Notice
 
@@ -79,12 +79,20 @@ Table of Contents
      5.1.  Contact Monitoring
      5.2.  Third-Party Auditing
      5.3.  Third-Party Management
-   6.  Security Guarantees
-     6.1.  Privacy Guarantees
-       6.1.1.  Leakage to Third-Party
-   7.  Implementation Guidance
-   8.  IANA Considerations
-   9.  Normative References
+   6.  Combining Logs
+     6.1.  Gradual Migration
+     6.2.  Immediate Migration
+     6.3.  Federation
+   7.  Pruning
+   8.  Security Guarantees
+     8.1.  Privacy Guarantees
+       8.1.1.  Leakage to Third-Party
+   9.  Privacy Law Considerations
+   10. Implementation Guidance
+   11. IANA Considerations
+   12. References
+     12.1.  Normative References
+     12.2.  Informative References
    Acknowledgments
    Author's Address
 
@@ -117,12 +125,11 @@ Table of Contents
    operator to store user public keys in a cryptographically-protected
    append-only log.  Any malicious entries added to such a log will
    generally be equally visible to both the key's owner and the owner's
-   contacts, in which case a user can detect that they're being
+   contacts, in which case a user can detect that they are being
    impersonated by viewing the public keys attached to their account.
-   However, if the service operator attempts to conceal some entries of
-   the log from some users but not others, this creates a "forked view"
-   which is permanent and easily detectable with out-of-band
-   communication.
+   If the service operator attempts to conceal some entries of the log
+   from some users but not others, this creates a "forked view" which is
+   permanent and easily detectable with out-of-band communication.
 
    The critical improvement of KT over related protocols like
    Certificate Transparency [RFC6962] is that KT includes an efficient
@@ -214,9 +221,8 @@ Table of Contents
 4.  User Interactions
 
    As discussed in Section 3, KT follows a client-server architecture.
-   This means that all user interaction is directly with the
-   transparency log.  The operations that can be executed by a user are
-   as follows:
+   This means users generally interact directly with the transparency
+   log.  The operations that can be executed by a user are as follows:
 
    1.  *Search:* Performs a lookup on a specific key in the most recent
        version of the log.  Users may request either a specific version
@@ -226,8 +232,9 @@ Table of Contents
 
    2.  *Update:* Adds a new key-value pair to the log, for which the
        server returns a proof of inclusion.  Note that this means that
-       new values are added to the log immediately, and no provisional
-       inclusion proof (like an SCT in [RFC6962]) is provided.
+       new values are added to the log immediately and no provisional
+       inclusion proof, such as an SCT as defined in Section 3 of
+       [RFC6962], is provided.
 
    3.  *Monitor:* While Search and Update are run by the user as
        necessary, monitoring is done in the background on a recurring
@@ -264,6 +271,58 @@ Table of Contents
        a response while invalid requests are blocked by the transport
                                    layer.
 
+   An important caveat to the client-server architecture is that many
+   end-to-end encrypted communication services require the ability to
+   provide _credentials_ to their users.  These credentials convey a
+   binding between an end-user identity and potentially several
+   encryption or signature public keys, and are meant to be verified
+   with no/minimal network requests by the receiving users.
+
+   In particular, credentials that can be verified with minimal network
+   access are often required by applications provide anonymous
+   communication.  These applications provide end-to-end encryption with
+   a protocol like the Messaging Layer Security protocol [RFC9420] (with
+   the encryption of handshake messages required), or Sealed Sender
+   [sealed-sender].  When a user receives a message, these protocols
+   have senders provide their own credential in an encrypted portion of
+   the message.  Encrypting the sender's credential prevents it from
+   being visible to the service provider, while still assuring the
+   recipient of the sender's identity.  If users were to authenticate
+   the sender's public key directly with the service provider, they
+   would leak to the service provider who the they are communicating
+   with.
+
+   Key Transparency credentials can be created by serializing one or
+   more Search request-response pairs.  These Search operations would
+   correspond to the lookups a user needs to do to prove the
+   relationship between their end-user identity and their cryptographic
+   keys.  Recipients can verify the request-response pairs themselves
+   without contacting the Transparency Log.
+
+   Any future monitoring that may be required can be provided to
+   recipients proactively by the sender.  However if this fails, the
+   recipient can still perform the monitoring themselves (including over
+   an anonymous channel if necessary).
+
+   Transparency Log               Alice           Anonymous Group
+   |                                |                           |
+   | <--------------- Search(Alice) |                           |
+   | SearchResponse(...) ---------> | Encrypt(Anon Group,       |
+   |                                |     SearchResponse ||     |
+   |                                |     Message   ||          |
+   |                                |     Signature) ---------> |
+   |                                |                           |
+   | <-------------- Monitor(Alice) |                           |
+   | MonitorResponse(...) --------> | Encrypt(Anon Group,       |
+   |                                |     MonitorResponse) ---> |
+   |                                |                           |
+
+     Figure 2: Example message flow in an anonymous deployment.  Users
+      request their own key from the Transparency Log and provide the
+       serialized response, functioning as a credential, in encrypted
+         messages to other users.  Required monitoring is provided
+                                proactively.
+
 4.1.  Out-of-Band Communication
 
    It is sometimes possible for a Transparency Log to present forked
@@ -284,10 +343,10 @@ Table of Contents
 
    This provides ample opportunity for users to detect when a fork has
    been presented, but isn't in itself sufficient for detection.  To
-   detect forks, users must either use *out-of-band communication* with
-   other users or *anonymous communication* with the Transparency Log.
+   detect forks, users must either use *peer-to-peer communication* or
+   *anonymous communication* with the Transparency Log.
 
-   With out-of-band communication, two users gossip with each other to
+   With peer-to-peer communication, two users gossip with each other to
    establish that they both have the same view of the log's data.  This
    gossip is able to happen over any supported out-of-band channel, even
    if it is heavily bandwidth-limited, such as scanning a QR code or
@@ -320,7 +379,7 @@ Alice                      Bob                          Transparency Log
 |                           | Search(Bob) ~~~~~~~~~~~~~~~~~~~> X       |
 |                           |                                          |
 
-    Figure 2: Users receive tree heads while making authenticated
+    Figure 3: Users receive tree heads while making authenticated
    requests to a Transparency Log. Users ensure consistency of tree
     heads by either comparing amongst themselves, or by contacting
     the Transparency Log over an anonymous channel.  Requests that
@@ -394,36 +453,56 @@ Alice                      Bob                          Transparency Log
 
 5.1.  Contact Monitoring
 
-   Alice                          Transparency Log
-     |                                   |
-     | Search(Bob) --------------------> |
-     | <------------ SearchResponse(...) |
-     |                                   |
-     |                                   |
-     |           (1 day later)           |
-     |                                   |
-     | Monitor(Bob) -------------------> |
-     | <----------- MonitorResponse(...) |
-     |                                   |
-     |                                   |
-     |          (2 days later)           |
-     |                                   |
-     | Monitor(Bob) -------------------> |
-     | <----------- MonitorResponse(...) |
-     |                                   |
-     |                                   |
-     |          (4 days later)           |
-     |                                   |
-     | Monitor(Bob) -------------------> |
-     | <----------- MonitorResponse(...) |
-     |                                   |
-     |               ...                 |
-     |                                   |
+   With the Contact Monitoring deployment mode, the monitoring burden is
+   split between both the owner of a key and those that look up the key.
+   Stated as simply as possible, the monitoring obligations of each
+   party are:
 
-      Figure 3: Contact Monitoring.  When users make a Search request,
-      they must check back in with the Transparency Log several times.
-      These checks ensure that the data in the Search response wasn't
-                        later removed from the log.
+   1.  The key owner, on a regular basis, searches for the most recent
+       version of the key in the log.  They verify that the key has not
+       changed unexpectedly.
+
+   2.  The users that looked up a key, at some point in the future,
+       verify that the key-value pair they observed is still properly
+       represented in the tree such that other users would find it if
+       they searched for it.
+
+   This guarantees that if a malicious key-value pair is added to the
+   log, then either it is detected by the key owner, or if it is
+   removed/obscured from the log before the key owner can detect it,
+   then any users that observed it will detect its removal.
+
+Alice                        Transparency Log                        Bob
+|                                   |                                  |
+| Search(Bob) --------------------> |                                  |
+| <------------ SearchResponse(...) |                                  |
+|                                   |                                  |
+|                                   |                                  |
+|           (1 day later)           |                                  |
+|                                   |                                  |
+| Monitor(Bob) -------------------> |                                  |
+| <----------- MonitorResponse(...) |                                  |
+|                                   |                                  |
+|                                   |                                  |
+|          (2 days later)           |                                  |
+|                                   |                                  |
+| Monitor(Bob) -------------------> |                                  |
+| <----------- MonitorResponse(...) |                                  |
+|                                   |                                  |
+|                                   | <------------------ Monitor(Bob) |
+|          (4 days later)           | MonitorResponse(...) ----------> |
+|                                   |                                  |
+| Monitor(Bob) -------------------> |                                  |
+| <----------- MonitorResponse(...) |                                  |
+|                                   |                                  |
+|               ...                 |                                  |
+|                                   |                                  |
+
+   Figure 4: Contact Monitoring.  When users make a Search request,
+   they must check back in with the Transparency Log several times.
+   These checks ensure that the data in the Search response wasn't
+    later removed from the log.  Overlap with the key owner's own
+           monitoring guarantees a consistent view of data.
 
 5.2.  Third-Party Auditing
 
@@ -449,7 +528,7 @@ Many Users                        Transparency Log               Auditor
 |                                        | <---------- NewSig: 53c1035 |
 |                                        |                             |
 
-     Figure 4: Third-Party Auditing.  A recent signature from the
+     Figure 5: Third-Party Auditing.  A recent signature from the
    auditor is provided to users.  The auditor is updated on changes
                     to the tree in the background.
 
@@ -475,10 +554,160 @@ Many Users                        Transparency Log               Auditor
    | Update(Bob, ...) ------> X  |                                |
    |                             |                                |
 
-    Figure 5: Third-Party Management.  Valid requests are proxied by the
+    Figure 6: Third-Party Management.  Valid requests are proxied by the
       Transparency Log to the Manager.  Rejected requests are blocked.
 
-6.  Security Guarantees
+6.  Combining Logs
+
+   There are many cases where it makes sense to operate multiple
+   cooperating log instances, for example:
+
+   *  A service provider may decide that it's prudent to rotate its
+      cryptographic keys, or migrate to a new deployment mode.  They can
+      do this by creating a new log instance with new cryptographic
+      keys, operating under a new deployment mode if desired, and
+      migrating their data from the old log to the new log while users
+      are able to query both.
+
+   *  A service provider may choose to operate multiple logs to improve
+      their ability to scale or provide higher availability.
+
+   *  A federated system may allow each participant in the federation to
+      operate their own log for their own users.
+
+   Client implementations should generally be prepared to interact with
+   multiple logs simultaneously.  In particular, clients SHOULD
+   namespace any configuration or state related to a particular log,
+   such that information related to different logs do not conflict.
+
+   When multiple logs are used, all users in the system MUST have a
+   consistent policy for executing Search, Update, and Monitor queries
+   against the logs in a way that maintains the high-level security
+   guarantees of KT:
+
+   *  If all logs behave honestly, then users observe a globally-
+      consistent view of the data associated with each key.
+
+   *  If any log behaves dishonestly such that the prior guarantee is
+      not met (some users observe data associated with a key that others
+      do not), this will be detected either immediately or in a timely
+      manner by background monitoring.
+
+6.1.  Gradual Migration
+
+   In the case of gradually migrating from an old log to a new one, this
+   policy may look like:
+
+   1.  Search queries should be executed against the old log first, and
+       then against the new log only if the most recent version of a key
+       in the old log is a special application-defined 'tombstone'
+       entry.
+
+   2.  Update queries should only be executed against the new log,
+       adding a tombstone entry to the old log if one hasn't been
+       already created.
+
+   3.  Both logs should be monitored as they would be if they were run
+       individually.  Once the migration has completed and the old log
+       has stopped accepting changes, the old log MUST stay operational
+       long enough for all users to complete their monitoring of it
+       (keeping in mind that some users may be offline for a significant
+       amount of time).
+
+   Placing a tombstone entry for each key in the old log gives users a
+   clear indication as to which log contains the most recent version of
+   a key and prevents them from incorrectly accepting a stale version if
+   the new log rejects a search query.
+
+6.2.  Immediate Migration
+
+   In the event of a key compromise, the service provider may instead
+   choose to stop adding new entries to a log immediately and provide a
+   new log that is pre-populated with the most recent versions of all
+   keys.  In this case, the policy may look like:
+
+   1.  Search queries must be executed against the new log.
+
+   2.  Update queries must be executed against the new log.
+
+   3.  The final tree size and root hash of the old log should be
+       provided to users over a trustworthy channel.  Users will use
+       this to do any final monitoring of the old log, and then ensure
+       that the most recent versions of the keys they own are properly
+       represented in the new log.  From then on, users will monitor
+       only the new log.
+
+   The final tree size and root hash of the prior log must be
+   distributed to users in a way that guarantees all users have a
+   globally-consistent view.  This can be done either by storing them in
+   a well-known key of the new log, or with the application's code
+   distribution mechanism.
+
+6.3.  Federation
+
+   In a federated application, many servers that are owned and operated
+   by different entities will cooperate to provide a single end-to-end
+   encrypted communication service.  Each entity in a federated system
+   provides its own infrastructure (in particular, a transparency log)
+   to serve the users that rely on it.  Given this, there must be a
+   consistent policy for directing KT requests to the correct
+   transparency log.  Typically in such a system, the end-user identity
+   directly specifies which entity requests should be directed to.  For
+   example, with an email end-user identity like alice@example.com, the
+   controlling entity is example.com.
+
+   A controlling entity like example.com may act as an anonymizing proxy
+   for its users when querying transparency logs run by other entities
+   (in the manner of [RFC9458]), but should not attempt to 'mirror' or
+   combine other transparency logs with its own.
+
+7.  Pruning
+
+   As part of the core infrastructure of an end-to-end encrypted
+   communication service, Transparency Logs are required to operate
+   seamlessly for several years.  This presents a problem for general
+   append-only logs, as even moderate usage can cause the log to grow to
+   an unmanageable size.  This issue is further compounded by the fact
+   that a substantial portion of the entries added to a log may be fake,
+   having been added solely for the purpose of obscuring short-term
+   update rates (as discussed in Section 8.1).  Given this, Transparency
+   Logs need to be able manage their footprint by pruning data which is
+   no longer required by the communication service.
+
+   Broadly speaking, a Transparency Log's database will contain two
+   types of data:
+
+   1.  Serialized user data (the values corresponding to keys in the
+       log), and
+
+   2.  Cryptographic data, such as pre-computed portions of hash trees
+       or commitment openings.
+
+   The first type, serialized user data, can be pruned by removing any
+   entries that the service operator's access control policy would never
+   permit access to.  For example, a service operator may only permit
+   clients to search for the most recent version (or n versions) of a
+   key.  Any entries that don't meet this criteria can be deleted
+   without consideration to the rest of the protocol.
+
+   The second type, cryptographic data, can also be pruned, but only
+   after considering which parts are no longer required by the protocol
+   for producing proofs.  For example, even though the key-value pair
+   inserted at a particular entry in the append-only log may have been
+   deleted, parts of the log entry may still be needed to produce proofs
+   for Search / Update / Monitor queries on other keys.  The exact
+   mechanism for determining which data is safe to delete will depend on
+   the implementation.
+
+   The distinction between user data and cryptographic data provides a
+   valuable separation of concerns, given that the protocol document
+   does not provide a mechanism for a service operator to convey its
+   access control policy to a Transparency Log. That is: pruning user
+   data can be done entirely by application-defined code, while pruning
+   cryptographic data can be done entirely by KT-specific code as a
+   subsequent operation.
+
+8.  Security Guarantees
 
    A user that correctly verifies a proof from the Transparency Log (and
    does any required monitoring afterwards) receives a guarantee that
@@ -543,7 +772,7 @@ Many Users                        Transparency Log               Auditor
       auditor is allowed to have, with respect to the most recent tree
       head.
 
-6.1.  Privacy Guarantees
+8.1.  Privacy Guarantees
 
    For applications deploying KT, service operators expect to be able to
    control when sensitive information is revealed.  In particular, an
@@ -572,30 +801,28 @@ Many Users                        Transparency Log               Auditor
    the size of their userbase, the frequency with which new users join,
    and the frequency with which existing users update their keys.
 
-   KT allows service operators to hide the total size of their userbase
-   from end-users and other outside observers.  It also allows service
-   operators to obscure the rate at which changes are made to the tree
-   by padding real changes with fake ones, causing outsiders to observe
-   a baseline constant rate of changes.  Note however, that this
-   information is not obscured from a third-party manager or auditor if
-   one is used.  Since the third-party plays a crucial role in ensuring
-   correct operation of the log, it necessarily is able to distinguish
-   real changes from fake ones, and therefore also the total number of
-   real keys.
+   KT allows a service operator to obscure the size of its userbase by
+   padding the tree with fake entries.  Similarly, it also allows a
+   service operator to obscure the rate at which changes are made by
+   padding real changes with fake ones, causing outsiders to observe a
+   baseline constant rate of changes.
 
-6.1.1.  Leakage to Third-Party
+8.1.1.  Leakage to Third-Party
 
    In the event that a third-party auditor or manager is used, there's
    additional information leaked to the third-party that's not visible
    to outsiders.
 
    In the case of a third-party auditor, the auditor is able to learn
-   the total number of distinct keys in the log.  It is also able to
-   distinguish between real and fake modifications to the tree, and keep
-   track of when individual keys are modified.  However, auditors are
-   not able to learn the plaintext values of any keys or values.  This
-   is because keys are masked with a VRF, and values are only provided
-   to auditors as commitments.
+   the total number of distinct changes to the log.  It is also able to
+   learn the order and approximate timing with which each change was
+   made.  However, auditors are not able to learn the plaintext of any
+   keys or values.  This is because keys are masked with a VRF, and
+   values are only provided to auditors as commitments.  They are also
+   not able to distinguish between whether a change represents a key
+   being created for the first time or being updated, or whether a
+   change represents a "real" change from an end-user or a "fake"
+   padding change.
 
    In the case of a third-party manager, the manager generally learns
    everything that the service operator would know.  This includes the
@@ -603,7 +830,82 @@ Many Users                        Transparency Log               Auditor
    history.  It also includes traffic patterns, such as how often a
    specific key is looked up.
 
-7.  Implementation Guidance
+9.  Privacy Law Considerations
+
+   Consumer privacy laws often provide a 'right to erasure', meaning
+   that when a consumer requests that a service provider delete their
+   personal information, the service provider is legally obligated to do
+   so.  This may seem to be incompatible with the description of KT in
+   Section 1 as an 'append-only log'.  Once an entry is added to a
+   transparency log, it indeed can not be removed.
+
+   The important caveat here is that user data is not directly stored in
+   the append-only log.  Instead, the log consists of privacy-preserving
+   cryptographic commitments.  By logging commitments instead of
+   plaintext user data, users interacting with the log are unable to
+   infer anything about an entry's contents until the service provider
+   explicitly provides the commitment's opening.  A service provider
+   responding to an erasure request can delete the commitment opening
+   and the associated data, effectively anonymizing the entry.
+
+   Other than the log, the second place where user information is stored
+   is in the _prefix tree_. This is a cryptographic index provided to
+   users to allow them to efficiently query the log, which contains
+   information about which lookup keys exist and where.  These lookup
+   keys are usually serialized end-user identifiers, although it varies
+   by application.  To minimize leakage, all lookup keys are processed
+   through a Verifiable Random Function, or VRF [RFC9381].
+
+   A VRF deterministically maps each lookup key to the fixed-length
+   pseudorandom value.  The VRF can only be executed by the service
+   operator, who holds a private key.  But critically, VRFs can still
+   provide a proof that an input-output pair is valid, which users
+   verify with a public key.  When a user tries to search for or update
+   a key, the service operator first executes its VRF on the input
+   lookup key to obtain the output key that will actually be looked up
+   or stored in the prefix tree.  The service operator then provides the
+   output key, along with a proof that the output key is correct, in its
+   response to the user.
+
+   The pseudorandom output of VRFs means that even if a user indirectly
+   observes that a search key exists in the prefix tree, they can't
+   immediately learn which user the search key identifies.  The
+   inability of users to execute the VRF themselves also prevents
+   offline "password cracking" approaches, where an attacker tries all
+   possibilities in a low entropy space (like the set of phone numbers)
+   to find the input that produces a given search key.
+
+   A service provider responding to an erasure request can 'trim' the
+   prefix tree, by no longer storing the full VRF output for any lookup
+   keys corresponding to an end-user's identifiers.  With only a small
+   amount of the VRF output left in storage, even if the transparency
+   log is later compromised, it would be unable to recover deleted
+   identifiers.  If the same lookup keys were reinserted into the log at
+   a later time, it would appear as if they were being inserted for the
+   first time.
+
+   As an example, consider the information stored in a transparency log
+   after inserting a key K with value V.  The value stored in the prefix
+   tree would roughly correspond to VRF(key K) = pseudorandom bytes, and
+   the value stored in the append-only log would roughly correspond to:
+
+   Commit(nonce: random bytes, body: version N of key K is V)
+
+   After receiving an erasure request, the transparency log deletes the
+   key, value, and random commitment nonce.  It also trims the VRF
+   output to the minimum size necessary.  The commitment scheme
+   guarantees that, without the high-entropy random nonce, the remaining
+   commitment reveals nothing about the key or value.
+
+   Assuming that the prefix tree is well-balanced (which is extremely
+   likely due to VRFs being pseudorandom), the number of VRF output bits
+   retained is approximately equal to the logarithm of the total number
+   of keys logged.  This means that while the VRF's full output may be
+   256 bits, in a log with one million keys, only 20 output bits would
+   need to be retained.  This would be insufficient for recovering even
+   a very low-entropy identifier like a phone number.
+
+10.  Implementation Guidance
 
    Fundamentally, KT can be thought of as guaranteeing that all the
    users of a service agree on the contents of a key-value database.
@@ -658,24 +960,46 @@ Many Users                        Transparency Log               Auditor
    the semantics of identity in their application with the key-value
    structure they put in KT.
 
-8.  IANA Considerations
+11.  IANA Considerations
 
    This document has no IANA actions.
 
-9.  Normative References
+12.  References
+
+12.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/rfc/rfc2119>.
 
-   [RFC6962]  Laurie, B., Langley, A., and E. Kasper, "Certificate
-              Transparency", RFC Editor, DOI 10.17487/rfc6962, June
-              2013, <https://doi.org/10.17487/rfc6962>.
-
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+12.2.  Informative References
+
+   [RFC6962]  Laurie, B., Langley, A., and E. Kasper, "Certificate
+              Transparency", RFC 6962, DOI 10.17487/RFC6962, June 2013,
+              <https://www.rfc-editor.org/rfc/rfc6962>.
+
+   [RFC9381]  Goldberg, S., Reyzin, L., Papadopoulos, D., and J. Včelák,
+              "Verifiable Random Functions (VRFs)", RFC 9381,
+              DOI 10.17487/RFC9381, August 2023,
+              <https://www.rfc-editor.org/rfc/rfc9381>.
+
+   [RFC9420]  Barnes, R., Beurdouche, B., Robert, R., Millican, J.,
+              Omara, E., and K. Cohn-Gordon, "The Messaging Layer
+              Security (MLS) Protocol", RFC 9420, DOI 10.17487/RFC9420,
+              July 2023, <https://www.rfc-editor.org/rfc/rfc9420>.
+
+   [RFC9458]  Thomson, M. and C. A. Wood, "Oblivious HTTP", RFC 9458,
+              DOI 10.17487/RFC9458, January 2024,
+              <https://www.rfc-editor.org/rfc/rfc9458>.
+
+   [sealed-sender]
+              "Technology preview: Sealed sender for Signal", 29 October
+              2018, <https://signal.org/blog/sealed-sender/>.
 
 Acknowledgments
 
