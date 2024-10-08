@@ -912,7 +912,7 @@ Many Users                        Transparency Log               Auditor
 
    Fundamentally, KT can be thought of as guaranteeing that all the
    users of a service agree on the contents of a key-value database
-   (noting that this document refers to these keys as labels).  Using
+   (noting that this document refers to these keys as "labels").  Using
    this guarantee, that all users agree on a set of labels and values,
    to authenticate the relationship between end-user identities and the
    end-users of a communication service takes special care.  Critically,
