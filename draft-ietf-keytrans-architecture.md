@@ -211,7 +211,7 @@ potentially several encryption or signature public keys, and are meant to be
 verified with no/minimal network requests by the receiving users.
 
 In particular, credentials that can be verified with minimal network access are
-often required by applications that provide anonymous communication. These
+often required by applications providing anonymous communication. These
 applications provide end-to-end encryption with a protocol
 like the Messaging Layer Security protocol {{?RFC9420}} (with the encryption of
 handshake messages required), or Sealed Sender {{sealed-sender}}. When a user
@@ -677,7 +677,7 @@ that log entry.
 When a user was previously allowed to lookup or change a label's value but no
 longer is, KT prevents the user from learning whether or not the label's value
 has changed since the user's access was revoked. Note however that in Contact
-Monitoring mode, users will still be permitted to perform monitoring to
+Monitoring mode, users SHOULD be permitted to perform monitoring to
 guarantee honest operation of the Transparency Log.
 
 Applications are primarily able to manage the privacy of their data in KT by
