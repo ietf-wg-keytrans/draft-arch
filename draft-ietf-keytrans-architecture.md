@@ -783,10 +783,10 @@ number.
 
 Fundamentally, KT can be thought of as guaranteeing that all the users of a
 service agree on the contents of a key-value database (noting that this document
-refers to these keys as "labels"). Using this guarantee,
-that all users agree on a set of labels and values, to authenticate the
-relationship between end-user identities and the end-users of a communication
-service takes special care. Critically, in order to authenticate an end-user
+refers to these keys as "labels"). It takes special care to turn the guarantee
+that all users agree on a set of labels and values into a guarantee that the
+mapping between end-users and their public keys is authentic.
+Critically, in order to authenticate an end-user
 identity, it must be both *unique* and *user-visible*. However, what exactly
 constitutes a unique and user-visible identifier varies greatly from application
 to application.
