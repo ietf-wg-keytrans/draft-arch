@@ -211,7 +211,7 @@ potentially several encryption or signature public keys, and are meant to be
 verified with no/minimal network requests by the receiving users.
 
 In particular, credentials that can be verified with minimal network access are
-often required by applications provide anonymous communication. These
+often required by applications providing anonymous communication. These
 applications provide end-to-end encryption with a protocol
 like the Messaging Layer Security protocol {{?RFC9420}} (with the encryption of
 handshake messages required), or Sealed Sender {{sealed-sender}}. When a user
@@ -414,6 +414,16 @@ request, they must check back in with the Transparency Log several times. These
 checks ensure that the data in the Search response wasn't later removed from the
 log. Overlap with the label owner's own monitoring guarantees a consistent view of
 data." }
+
+Note that Contact Monitoring impacts how the server is able to enforce access
+control on Monitor queries. While Search and Update queries can enforce access
+control on a "point-in-time" basis, where a user is allowed to execute the query
+at one point-in-time but maybe not the next, Monitor queries must have
+"accretive" access control. This is because, if a user is allowed to execute a
+Search or Update query for a label, the user will then need to issue Monitor
+queries for the label for some time into the future to maintain security. These
+Monitor queries must be permitted, regardless of whether or not the user could
+still execute the same Search or Update query now.
 
 ## Third-Party Auditing
 
@@ -664,6 +674,12 @@ Similarly, KT only allows users to learn about the contents of a log entry if
 the user obtains a valid search proof for the exact label and version stored at
 that log entry.
 
+When a user was previously allowed to lookup or change a label's value but no
+longer is, KT prevents the user from learning whether or not the label's value
+has changed since the user's access was revoked. Note however that in Contact
+Monitoring mode, users SHOULD be permitted to perform monitoring to
+guarantee honest operation of the Transparency Log.
+
 Applications determine the privacy of data in KT by
 relying on these properties when they enforce access control policies on the
 queries issued by users, as discussed in {{protocol-overview}}. For example if
@@ -682,12 +698,6 @@ KT allows a service operator to obscure the size of its userbase by padding the
 tree with fake entries. Similarly, it also allows a service operator to obscure
 the rate at which changes are made by padding real changes with fake ones,
 causing outsiders to observe a baseline constant rate of changes.
-
-<!--
-Unresolved privacy aspects to consider:
-- Whether hiding that a label has previously existed in the log or not, from new
-  owners of that label.
--->
 
 ### Leakage to Third-Party
 
