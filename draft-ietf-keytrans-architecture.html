@@ -1501,7 +1501,7 @@ their users. These credentials convey a binding between an end-user identity and
 potentially several encryption or signature public keys, and are meant to be
 verified with no/minimal network requests by the receiving users.<a href="#section-4-5" class="pilcrow">¶</a></p>
 <p id="section-4-6">In particular, credentials that can be verified with minimal network access are
-often required by applications provide anonymous communication. These
+often required by applications providing anonymous communication. These
 applications provide end-to-end encryption with a protocol
 like the Messaging Layer Security protocol <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span> (with the encryption of
 handshake messages required), or Sealed Sender <span>[<a href="#sealed-sender" class="cite xref">sealed-sender</a>]</span>. When a user
@@ -1818,6 +1818,15 @@ detect its removal.<a href="#section-5.1-3" class="pilcrow">¶</a></p>
 <a href="#name-contact-monitoring-when-use" class="selfRef">Contact Monitoring. When users make a Search request, they must check back in with the Transparency Log several times. These checks ensure that the data in the Search response wasn't later removed from the log. Overlap with the label owner's own monitoring guarantees a consistent view of data.</a>
           </figcaption></figure>
 </div>
+<p id="section-5.1-5">Note that Contact Monitoring impacts how the server is able to enforce access
+control on Monitor queries. While Search and Update queries can enforce access
+control on a "point-in-time" basis, where a user is allowed to execute the query
+at one point-in-time but maybe not the next, Monitor queries must have
+"accretive" access control. This is because, if a user is allowed to execute a
+Search or Update query for a label, the user will then need to issue Monitor
+queries for the label for some time into the future to maintain security. These
+Monitor queries must be permitted, regardless of whether or not the user could
+still execute the same Search or Update query now.<a href="#section-5.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="third-party-auditing">
@@ -2199,22 +2208,27 @@ Transparency Log if the user obtains a valid search proof for that label.
 Similarly, KT only allows users to learn about the contents of a log entry if
 the user obtains a valid search proof for the exact label and version stored at
 that log entry.<a href="#section-8.1-2" class="pilcrow">¶</a></p>
-<p id="section-8.1-3">Applications determine the privacy of data in KT by
+<p id="section-8.1-3">When a user was previously allowed to lookup or change a label's value but no
+longer is, KT prevents the user from learning whether or not the label's value
+has changed since the user's access was revoked. Note however that in Contact
+Monitoring mode, users <span class="bcp14">SHOULD</span> be permitted to perform monitoring to
+guarantee honest operation of the Transparency Log.<a href="#section-8.1-3" class="pilcrow">¶</a></p>
+<p id="section-8.1-4">Applications determine the privacy of data in KT by
 relying on these properties when they enforce access control policies on the
 queries issued by users, as discussed in <a href="#protocol-overview" class="auto internal xref">Section 3</a>. For example if
 two users aren't friends, an application can block these users from searching
 for each other's labels. This prevents the two users from learning about
 each other's existence. If the users were previously friends but no longer are,
 the application can prevent the users from searching for each other's labels and
-learning the contents of any subsequent account updates.<a href="#section-8.1-3" class="pilcrow">¶</a></p>
-<p id="section-8.1-4">Service operators also expect to be able to control sensitive population-level
+learning the contents of any subsequent account updates.<a href="#section-8.1-4" class="pilcrow">¶</a></p>
+<p id="section-8.1-5">Service operators also expect to be able to control sensitive population-level
 metrics about their users. These metrics include the size of their userbase, the
 frequency with which new users join, and the frequency with which existing users
-update their labels.<a href="#section-8.1-4" class="pilcrow">¶</a></p>
-<p id="section-8.1-5">KT allows a service operator to obscure the size of its userbase by padding the
+update their labels.<a href="#section-8.1-5" class="pilcrow">¶</a></p>
+<p id="section-8.1-6">KT allows a service operator to obscure the size of its userbase by padding the
 tree with fake entries. Similarly, it also allows a service operator to obscure
 the rate at which changes are made by padding real changes with fake ones,
-causing outsiders to observe a baseline constant rate of changes.<a href="#section-8.1-5" class="pilcrow">¶</a></p>
+causing outsiders to observe a baseline constant rate of changes.<a href="#section-8.1-6" class="pilcrow">¶</a></p>
 <div id="leakage-to-third-party">
 <section id="section-8.1.1">
           <h4 id="name-leakage-to-third-party">
