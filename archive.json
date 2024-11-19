@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-11-17T01:38:35.760584+00:00",
+  "timestamp": "2024-11-19T01:27:25.667359+00:00",
   "repo": "ietf-wg-keytrans/draft-arch",
   "labels": [
     {
@@ -894,24 +894,26 @@
       "id": "PR_kwDOKhdr7c59_h5z",
       "title": "Change 'lookup key' terminology to 'label'",
       "url": "https://github.com/ietf-wg-keytrans/draft-arch/pull/15",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "Bren2010",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2024-10-08T19:51:43Z",
-      "updatedAt": "2024-11-12T09:35:13Z",
+      "updatedAt": "2024-11-18T17:30:08Z",
       "baseRepository": "ietf-wg-keytrans/draft-arch",
       "baseRefName": "main",
       "baseRefOid": "b32f9091619252aa08ffa01fd7cebc2c660e39c2",
       "headRepository": "ietf-wg-keytrans/draft-arch",
       "headRefName": "brendan/labels",
-      "headRefOid": "9a2fa18a99dd2f59d04a97aa6140269979afa087",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "55bae51f7d16093c69f804dc3ea2a5d061c28ec6",
+      "closedAt": "2024-11-18T17:30:08Z",
+      "mergedAt": "2024-11-18T17:30:08Z",
+      "mergedBy": "Bren2010",
+      "mergeCommit": {
+        "oid": "44aa5c7bf3d575226d44e85a24489606c9baf72b"
+      },
       "comments": [],
       "reviews": [
         {
@@ -933,6 +935,39 @@
               "updatedAt": "2024-11-12T09:35:13Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOKhdr7c6RjWBg",
+          "commit": {
+            "abbreviatedOid": "9a2fa18"
+          },
+          "author": "thibmeu",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "aligns with what has been discussed in the interim. lgtm!",
+          "createdAt": "2024-11-18T09:20:45Z",
+          "updatedAt": "2024-11-18T09:20:45Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOKhdr7c6RoWqI",
+          "commit": {
+            "abbreviatedOid": "9a2fa18"
+          },
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-11-18T17:29:33Z",
+          "updatedAt": "2024-11-18T17:29:33Z",
+          "comments": [
+            {
+              "originalPosition": 432,
+              "body": "```suggestion\r\nrefers to these keys as \"labels\"). It takes special care to turn the guarantee\r\nthat all users agree on a set of labels and values into a guarantee that the\r\nmapping between end-users and their public keys is authentic.\r\nCritically, in order to authenticate an end-user\r\n```",
+              "createdAt": "2024-11-18T17:29:33Z",
+              "updatedAt": "2024-11-18T17:29:33Z"
+            }
+          ]
         }
       ]
     },
@@ -941,24 +976,26 @@
       "id": "PR_kwDOKhdr7c5-A0fi",
       "title": "Discuss exception to access control",
       "url": "https://github.com/ietf-wg-keytrans/draft-arch/pull/16",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "Bren2010",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2024-10-09T01:24:44Z",
-      "updatedAt": "2024-11-12T09:36:37Z",
+      "updatedAt": "2024-11-18T17:32:53Z",
       "baseRepository": "ietf-wg-keytrans/draft-arch",
       "baseRefName": "main",
-      "baseRefOid": "b32f9091619252aa08ffa01fd7cebc2c660e39c2",
+      "baseRefOid": "44aa5c7bf3d575226d44e85a24489606c9baf72b",
       "headRepository": "ietf-wg-keytrans/draft-arch",
       "headRefName": "brendan/access-control",
-      "headRefOid": "ffdd23b69289a91f519431f9ca3c785209109274",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "3cf24b630b1f04a6eebfde998b4ed2447826156e",
+      "closedAt": "2024-11-18T17:32:53Z",
+      "mergedAt": "2024-11-18T17:32:53Z",
+      "mergedBy": "Bren2010",
+      "mergeCommit": {
+        "oid": "bf48d082e1f6dccd442d4e723449a797aaef00c7"
+      },
       "comments": [],
       "reviews": [
         {
@@ -973,6 +1010,32 @@
           "createdAt": "2024-11-12T09:36:37Z",
           "updatedAt": "2024-11-12T09:36:37Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOKhdr7c6RjTI1",
+          "commit": {
+            "abbreviatedOid": "ffdd23b"
+          },
+          "author": "thibmeu",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "nits. change looks ok.\r\n",
+          "createdAt": "2024-11-18T09:15:50Z",
+          "updatedAt": "2024-11-18T09:19:06Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "maybe like this to avoid using `that + verb` twice in the same sentence?\r\n\r\n```suggestion\r\noften required by applications providing anonymous communication. These\r\n```",
+              "createdAt": "2024-11-18T09:15:50Z",
+              "updatedAt": "2024-11-18T09:19:06Z"
+            },
+            {
+              "originalPosition": 33,
+              "body": "```suggestion\r\nMonitoring mode, users SHOULD be permitted to perform monitoring to\r\n```",
+              "createdAt": "2024-11-18T09:18:05Z",
+              "updatedAt": "2024-11-18T09:19:06Z"
+            }
+          ]
         }
       ]
     }
