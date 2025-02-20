@@ -1,11 +1,11 @@
 # Key Transparency Architecture
 
-This is the working area for the individual Internet-Draft, "Key Transparency Architecture".
+This is the working area for the IETF [KEYTRANS Working Group](https://datatracker.ietf.org/group/keytrans/documents/) Internet-Draft, "Key Transparency Architecture".
 
 * [Editor's Copy](https://ietf-wg-keytrans.github.io/draft-arch/#go.draft-ietf-keytrans-architecture.html)
 * [Datatracker Page](https://datatracker.ietf.org/doc/draft-ietf-keytrans-architecture)
-* [Individual Draft](https://datatracker.ietf.org/doc/html/draft-ietf-keytrans-architecture)
-* [Compare Editor's Copy to Individual Draft](https://ietf-wg-keytrans.github.io/draft-arch/#go.draft-ietf-keytrans-architecture.diff)
+* [Working Group Draft](https://datatracker.ietf.org/doc/html/draft-ietf-keytrans-architecture)
+* [Compare Editor's Copy to Working Group Draft](https://ietf-wg-keytrans.github.io/draft-arch/#go.draft-ietf-keytrans-architecture.diff)
 
 
 ## Contributing
@@ -27,3 +27,4 @@ $ make
 
 Command line usage requires that you have the necessary software installed.  See
 [the instructions](https://github.com/martinthomson/i-d-template/blob/main/doc/SETUP.md).
+
