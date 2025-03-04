@@ -3,9 +3,9 @@
 
 
 Key Transparency                                            B. McMillion
-Internet-Draft                                          20 February 2025
+Internet-Draft                                              4 March 2025
 Intended status: Informational                                          
-Expires: 24 August 2025
+Expires: 5 September 2025
 
 
                      Key Transparency Architecture
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 August 2025.
+   This Internet-Draft will expire on 5 September 2025.
 
 Copyright Notice
 
@@ -198,7 +198,7 @@ Table of Contents
    where, for example, the key is their username and the value is their
    public key.  Users can update a key by inserting a new version with
    new data.  They can also look up the most recent version of a key or
-   any past version.  Users are considered to *own* a key if, in the
+   any previous version.  Users are considered to *own* a key if, in the
    normal operation of the application, they should be the only one
    making changes to it.  From this point forward, the term *label* will
    be used to refer to lookup keys in the key-value database that a
@@ -216,7 +216,7 @@ Table of Contents
    logged in to make KT requests, only allowing a user to lookup the
    labels of another user if they're "friends", or simply applying a
    rate limit.  Applications SHOULD prevent users from modifying labels
-   that they don't own.  The exact mechanism for rejecting requests, and
+   they do not own.  The exact mechanism for rejecting requests, and
    possibly explaining the reason for rejection, is left to the
    application.
 
@@ -550,11 +550,11 @@ Many Users                        Transparency Log               Auditor
 
    With the Third-Party Management deployment mode, a third party is
    responsible for the majority of the work of storing and operating the
-   log, while the transparency log serves mainly to enforce access
-   control and authenticate the addition of new entries to the log.  All
-   user queries are initially sent by users directly to the transparency
-   log, and the log operator proxies them to the third-party manager if
-   they pass access control.
+   log.  The transparency log serves mainly to enforce access control
+   and authenticate the addition of new entries to the log.  All user
+   queries are initially sent by users directly to the transparency log,
+   and the log operator proxies them to the third-party manager if they
+   pass access control.
 
    Alice                  Transparency Log                  Manager
    |                             |                                |
@@ -811,7 +811,7 @@ Many Users                        Transparency Log               Auditor
    properties when they enforce access control policies on the queries
    issued by users, as discussed in Section 3.  For example if two users
    aren't friends, an application can block these users from searching
-   for each other's labels.  This prevents the two users from learning
+   for each other's labels.  This prevents both users from learning
    about each other's existence.  If the users were previously friends
    but no longer are, the application can prevent the users from
    searching for each other's labels and learning the contents of any
@@ -819,10 +819,10 @@ Many Users                        Transparency Log               Auditor
 
    Service operators also expect to be able to control sensitive
    population-level metrics about their users.  These metrics include
-   the size of their userbase, the frequency with which new users join,
+   the size of their user base, the frequency with which new users join,
    and the frequency with which existing users update their labels.
 
-   KT allows a service operator to obscure the size of its userbase by
+   KT allows a service operator to obscure the size of its user base by
    padding the tree with fake entries.  Similarly, it also allows a
    service operator to obscure the rate at which changes are made by
    padding real changes with fake ones, causing outsiders to observe a
@@ -853,7 +853,7 @@ Many Users                        Transparency Log               Auditor
 
 9.  Privacy Law Considerations
 
-   Consumer privacy laws often provide a 'right to erasure', meaning
+   Consumer privacy laws often provide a 'right to erasure'.  This means
    that when a consumer requests that a service provider delete their
    personal information, the service provider is legally obligated to do
    so.  This may seem to be incompatible with the description of KT in
@@ -871,22 +871,21 @@ Many Users                        Transparency Log               Auditor
 
    Other than the log, the second place where user information is stored
    is in the _prefix tree_. This is a cryptographic index provided to
-   users to allow them to efficiently query the log, which contains
+   users to enable them to efficiently query the log, which contains
    information about which labels exist and where.  These labels are
    usually serialized end-user identifiers, although it varies by
    application.  To minimize leakage, all labels are processed through a
    Verifiable Random Function, or VRF [RFC9381].
 
    A VRF deterministically maps each label to the fixed-length
-   pseudorandom value.  The VRF can only be executed by the service
-   operator, who holds a private key.  But critically, VRFs can still
-   provide a proof that an input-output pair is valid, which users
-   verify with a public key.  When a user tries to search for or update
-   a label, the service operator first executes its VRF on the input
-   label to obtain the index that will actually be looked up or stored
-   in the prefix tree.  The service operator then provides the VRF
-   output, along with a proof that the output is correct, in its
-   response to the user.
+   pseudorandom value.  Only the service operator, who holds a private
+   key, can execute the VRF.  Critically though, VRFs can provide proof
+   that an input-output pair is valid, which users verify with a public
+   key.  When a user tries to search for or update a label, the service
+   operator first executes its VRF on the input label to obtain the
+   index that will actually be looked up or stored in the prefix tree.
+   The service operator then provides the VRF output, along with a proof
+   that the output is correct, in its response to the user.
 
    The pseudorandom property of VRFs means that even if a user
    indirectly observes that a specific VRF output exists in the prefix
@@ -933,8 +932,8 @@ Many Users                        Transparency Log               Auditor
    (noting that this document refers to these keys as "labels").  It
    takes special care to turn the guarantee that all users agree on a
    set of labels and values into a guarantee that the mapping between
-   end-users and their public keys is authentic.  Critically, in order
-   to authenticate an end-user identity, it must be both _unique_ and
+   end-users and their public keys is authentic.  Critically, to
+   authenticate an end-user identity, it must be both _unique_ and
    _user-visible_. However, what exactly constitutes a unique and user-
    visible identifier varies greatly from application to application.
 
@@ -955,7 +954,7 @@ Many Users                        Transparency Log               Auditor
    fixed username and instead rely on their UI (underpinned internally
    by a UUID) to indicate to users whether a conversation is with a new
    person or someone they've previously contacted.  The fact that the UI
-   behaves in this way makes the UUID a user-visible identifer, even if
+   behaves in this way makes the UUID a user-visible identifier, even if
    a user may not be able to actually see it written out.  An example of
    this kind of application would be Slack.
 

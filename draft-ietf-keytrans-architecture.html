@@ -13,11 +13,11 @@ infrastructure, and specifies the security properties that the protocol
 provides. It also gives more general, non-prescriptive guidance on how to
 securely apply KT to a number of common applications. 
     " name="description">
-<meta content="xml2rfc 3.27.0" name="generator">
+<meta content="xml2rfc 3.28.0" name="generator">
 <meta content="key transparency" name="keyword">
 <meta content="draft-ietf-keytrans-architecture-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.27.0
+  xml2rfc 3.28.0
     Python 3.12.9
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
@@ -1048,11 +1048,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Key Transparency Architecture</td>
-<td class="right">February 2025</td>
+<td class="right">March 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">McMillion</td>
-<td class="center">Expires 24 August 2025</td>
+<td class="center">Expires 5 September 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1065,12 +1065,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-keytrans-architecture-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-02-20" class="published">20 February 2025</time>
+<time datetime="2025-03-04" class="published">4 March 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-08-24">24 August 2025</time></dd>
+<dd class="expires"><time datetime="2025-09-05">5 September 2025</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1123,7 +1123,7 @@ securely apply KT to a number of common applications.<a href="#section-abstract-
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 24 August 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 5 September 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1359,7 +1359,7 @@ honestly.<a href="#section-3-1" class="pilcrow">¶</a></p>
 database. Users insert key-value pairs into the database where, for example, the
 key is their username and the value is their public key. Users can update a key
 by inserting a new version with new data. They can also look up the most recent
-version of a key or any past version. Users are considered to <strong>own</strong> a key if,
+version of a key or any previous version. Users are considered to <strong>own</strong> a key if,
 in the normal operation of the application, they should be the only one making
 changes to it. From this point forward, the term <strong>label</strong> will be used to refer
 to lookup keys in the key-value database that a Transparency Log represents, to
@@ -1371,7 +1371,7 @@ relying on their existing access control system.<a href="#section-3-3" class="pi
 <p id="section-3-4">With some small exceptions, applications may enforce arbitrary access control rules on top of KT.
 This may include requiring a user to be logged in to make KT requests, only allowing a user to
 lookup the labels of another user if they're "friends", or simply applying a rate
-limit. Applications <span class="bcp14">SHOULD</span> prevent users from modifying labels that they don't
+limit. Applications <span class="bcp14">SHOULD</span> prevent users from modifying labels they do not
 own. The exact mechanism for rejecting requests, and possibly explaining the
 reason for rejection, is left to the application.<a href="#section-3-4" class="pilcrow">¶</a></p>
 </section>
@@ -1863,7 +1863,7 @@ bottleneck for the transparency log.<a href="#section-5.2-2" class="pilcrow">¶<
 <a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-third-party-management" class="section-name selfRef">Third-Party Management</a>
         </h3>
 <p id="section-5.3-1">With the Third-Party Management deployment mode, a third party is responsible
-for the majority of the work of storing and operating the log, while the
+for the majority of the work of storing and operating the log. The
 transparency log serves mainly to enforce access control and authenticate the addition
 of new entries to the log. All user queries are initially sent by users directly
 to the transparency log, and the log operator proxies them to the
@@ -2184,15 +2184,15 @@ guarantee honest operation of the Transparency Log.<a href="#section-8.1-3" clas
 relying on these properties when they enforce access control policies on the
 queries issued by users, as discussed in <a href="#protocol-overview" class="auto internal xref">Section 3</a>. For example if
 two users aren't friends, an application can block these users from searching
-for each other's labels. This prevents the two users from learning about
+for each other's labels. This prevents both users from learning about
 each other's existence. If the users were previously friends but no longer are,
 the application can prevent the users from searching for each other's labels and
 learning the contents of any subsequent account updates.<a href="#section-8.1-4" class="pilcrow">¶</a></p>
 <p id="section-8.1-5">Service operators also expect to be able to control sensitive population-level
-metrics about their users. These metrics include the size of their userbase, the
+metrics about their users. These metrics include the size of their user base, the
 frequency with which new users join, and the frequency with which existing users
 update their labels.<a href="#section-8.1-5" class="pilcrow">¶</a></p>
-<p id="section-8.1-6">KT allows a service operator to obscure the size of its userbase by padding the
+<p id="section-8.1-6">KT allows a service operator to obscure the size of its user base by padding the
 tree with fake entries. Similarly, it also allows a service operator to obscure
 the rate at which changes are made by padding real changes with fake ones,
 causing outsiders to observe a baseline constant rate of changes.<a href="#section-8.1-6" class="pilcrow">¶</a></p>
@@ -2226,7 +2226,7 @@ patterns, such as how often a specific label is looked up.<a href="#section-8.1.
       <h2 id="name-privacy-law-considerations">
 <a href="#section-9" class="section-number selfRef">9. </a><a href="#name-privacy-law-considerations" class="section-name selfRef">Privacy Law Considerations</a>
       </h2>
-<p id="section-9-1">Consumer privacy laws often provide a 'right to erasure', meaning that when a
+<p id="section-9-1">Consumer privacy laws often provide a 'right to erasure'. This means that when a
 consumer requests that a service provider delete their personal information, the
 service provider is legally obligated to do so. This may seem to be incompatible
 with the description of KT in <a href="#introduction" class="auto internal xref">Section 1</a> as an 'append-only log'. Once an
@@ -2239,14 +2239,14 @@ until the service provider explicitly provides the commitment's opening. A
 service provider responding to an erasure request can delete the commitment
 opening and the associated data, effectively anonymizing the entry.<a href="#section-9-2" class="pilcrow">¶</a></p>
 <p id="section-9-3">Other than the log, the second place where user information is stored is in the
-<em>prefix tree</em>. This is a cryptographic index provided to users to allow them to
+<em>prefix tree</em>. This is a cryptographic index provided to users to enable them to
 efficiently query the log, which contains information about which labels
 exist and where. These labels are usually serialized end-user identifiers,
 although it varies by application. To minimize leakage, all labels are
 processed through a Verifiable Random Function, or VRF <span>[<a href="#RFC9381" class="cite xref">RFC9381</a>]</span>.<a href="#section-9-3" class="pilcrow">¶</a></p>
 <p id="section-9-4">A VRF deterministically maps each label to the fixed-length pseudorandom
-value. The VRF can only be executed by the service operator, who holds a private
-key. But critically, VRFs can still provide a proof that an input-output pair is
+value. Only the service operator, who holds a private key, can execute the VRF.
+Critically though, VRFs can provide proof that an input-output pair is
 valid, which users verify with a public key. When a user tries to search for or
 update a label, the service operator first executes its VRF on the input label
 to obtain the index that will actually be looked up or stored in the
@@ -2297,7 +2297,7 @@ service agree on the contents of a key-value database (noting that this document
 refers to these keys as "labels"). It takes special care to turn the guarantee
 that all users agree on a set of labels and values into a guarantee that the
 mapping between end-users and their public keys is authentic.
-Critically, in order to authenticate an end-user
+Critically, to authenticate an end-user
 identity, it must be both <em>unique</em> and <em>user-visible</em>. However, what exactly
 constitutes a unique and user-visible identifier varies greatly from application
 to application.<a href="#section-10-1" class="pilcrow">¶</a></p>
@@ -2316,7 +2316,7 @@ appropriate. For example, many applications don't have this type of fixed
 username and instead rely on their UI (underpinned internally by a UUID) to indicate
 to users whether a conversation is with a new person or someone they've
 previously contacted. The fact that the UI behaves in this way makes the UUID a
-user-visible identifer, even if a user may not be able to actually see it
+user-visible identifier, even if a user may not be able to actually see it
 written out. An example of this kind of application would be Slack.<a href="#section-10-3" class="pilcrow">¶</a></p>
 <p id="section-10-4">A <strong>primary end-user identity</strong> is one that is unique, user-visible, and unable
 to change. (Or equivalently, if it changes, it appears in the application UI as
