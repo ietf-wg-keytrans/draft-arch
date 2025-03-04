@@ -139,7 +139,7 @@ From an application perspective, KT can be thought of as a versioned key-value
 database. Users insert key-value pairs into the database where, for example, the
 key is their username and the value is their public key. Users can update a key
 by inserting a new version with new data. They can also look up the most recent
-version of a key or any past version. Users are considered to **own** a key if,
+version of a key or any previous version. Users are considered to **own** a key if,
 in the normal operation of the application, they should be the only one making
 changes to it. From this point forward, the term **label** will be used to refer
 to lookup keys in the key-value database that a Transparency Log represents, to
@@ -153,7 +153,7 @@ relying on their existing access control system.
 With some small exceptions, applications may enforce arbitrary access control rules on top of KT.
 This may include requiring a user to be logged in to make KT requests, only allowing a user to
 lookup the labels of another user if they're "friends", or simply applying a rate
-limit. Applications SHOULD prevent users from modifying labels that they don't
+limit. Applications SHOULD prevent users from modifying labels they do not
 own. The exact mechanism for rejecting requests, and possibly explaining the
 reason for rejection, is left to the application.
 
@@ -456,7 +456,7 @@ the background." }
 ## Third-Party Management
 
 With the Third-Party Management deployment mode, a third party is responsible
-for the majority of the work of storing and operating the log, while the
+for the majority of the work of storing and operating the log. The
 transparency log serves mainly to enforce access control and authenticate the addition
 of new entries to the log. All user queries are initially sent by users directly
 to the transparency log, and the log operator proxies them to the
@@ -684,17 +684,17 @@ Applications determine the privacy of data in KT by
 relying on these properties when they enforce access control policies on the
 queries issued by users, as discussed in {{protocol-overview}}. For example if
 two users aren't friends, an application can block these users from searching
-for each other's labels. This prevents the two users from learning about
+for each other's labels. This prevents both users from learning about
 each other's existence. If the users were previously friends but no longer are,
 the application can prevent the users from searching for each other's labels and
 learning the contents of any subsequent account updates.
 
 Service operators also expect to be able to control sensitive population-level
-metrics about their users. These metrics include the size of their userbase, the
+metrics about their users. These metrics include the size of their user base, the
 frequency with which new users join, and the frequency with which existing users
 update their labels.
 
-KT allows a service operator to obscure the size of its userbase by padding the
+KT allows a service operator to obscure the size of its user base by padding the
 tree with fake entries. Similarly, it also allows a service operator to obscure
 the rate at which changes are made by padding real changes with fake ones,
 causing outsiders to observe a baseline constant rate of changes.
@@ -721,7 +721,7 @@ patterns, such as how often a specific label is looked up.
 
 # Privacy Law Considerations
 
-Consumer privacy laws often provide a 'right to erasure', meaning that when a
+Consumer privacy laws often provide a 'right to erasure'. This means that when a
 consumer requests that a service provider delete their personal information, the
 service provider is legally obligated to do so. This may seem to be incompatible
 with the description of KT in {{introduction}} as an 'append-only log'. Once an
@@ -736,15 +736,15 @@ service provider responding to an erasure request can delete the commitment
 opening and the associated data, effectively anonymizing the entry.
 
 Other than the log, the second place where user information is stored is in the
-*prefix tree*. This is a cryptographic index provided to users to allow them to
+*prefix tree*. This is a cryptographic index provided to users to enable them to
 efficiently query the log, which contains information about which labels
 exist and where. These labels are usually serialized end-user identifiers,
 although it varies by application. To minimize leakage, all labels are
 processed through a Verifiable Random Function, or VRF {{?RFC9381}}.
 
 A VRF deterministically maps each label to the fixed-length pseudorandom
-value. The VRF can only be executed by the service operator, who holds a private
-key. But critically, VRFs can still provide a proof that an input-output pair is
+value. Only the service operator, who holds a private key, can execute the VRF.
+Critically though, VRFs can provide proof that an input-output pair is
 valid, which users verify with a public key. When a user tries to search for or
 update a label, the service operator first executes its VRF on the input label
 to obtain the index that will actually be looked up or stored in the
@@ -796,7 +796,7 @@ service agree on the contents of a key-value database (noting that this document
 refers to these keys as "labels"). It takes special care to turn the guarantee
 that all users agree on a set of labels and values into a guarantee that the
 mapping between end-users and their public keys is authentic.
-Critically, in order to authenticate an end-user
+Critically, to authenticate an end-user
 identity, it must be both *unique* and *user-visible*. However, what exactly
 constitutes a unique and user-visible identifier varies greatly from application
 to application.
@@ -817,7 +817,7 @@ appropriate. For example, many applications don't have this type of fixed
 username and instead rely on their UI (underpinned internally by a UUID) to indicate
 to users whether a conversation is with a new person or someone they've
 previously contacted. The fact that the UI behaves in this way makes the UUID a
-user-visible identifer, even if a user may not be able to actually see it
+user-visible identifier, even if a user may not be able to actually see it
 written out. An example of this kind of application would be Slack.
 
 A **primary end-user identity** is one that is unique, user-visible, and unable
