@@ -8,27 +8,27 @@
 <meta content="Brendan McMillion" name="author">
 <meta content="
        This document defines the terminology and interaction patterns involved in the
-deployment of Key Transparency (KT) in a general secure group messaging
+deployment of Key Transparency in a general secure group messaging
 infrastructure, and specifies the security properties that the protocol
 provides. It also gives more general, non-prescriptive guidance on how to
-securely apply KT to a number of common applications. 
+securely apply Key Transparency to a number of common applications. 
     " name="description">
-<meta content="xml2rfc 3.28.0" name="generator">
+<meta content="xml2rfc 3.28.1" name="generator">
 <meta content="key transparency" name="keyword">
 <meta content="draft-ietf-keytrans-architecture-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.28.0
-    Python 3.12.9
+  xml2rfc 3.28.1
+    Python 3.12.10
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
-    Jinja2 3.1.5
-    lxml 5.3.0
-    platformdirs 4.3.6
+    Jinja2 3.1.6
+    lxml 5.3.1
+    platformdirs 4.3.8
     pycountry 24.6.1
     PyYAML 6.0.2
     requests 2.32.3
-    setuptools 70.3.0
+    setuptools 80.9.0
     wcwidth 0.2.13
 -->
 <link href="draft-ietf-keytrans-architecture.xml" rel="alternate" type="application/rfc+xml">
@@ -1048,11 +1048,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Key Transparency Architecture</td>
-<td class="right">March 2025</td>
+<td class="right">June 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">McMillion</td>
-<td class="center">Expires 5 September 2025</td>
+<td class="center">Expires 15 December 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1065,12 +1065,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-keytrans-architecture-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-03-04" class="published">4 March 2025</time>
+<time datetime="2025-06-13" class="published">13 June 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-09-05">5 September 2025</time></dd>
+<dd class="expires"><time datetime="2025-12-15">15 December 2025</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1083,10 +1083,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
 <p id="section-abstract-1">This document defines the terminology and interaction patterns involved in the
-deployment of Key Transparency (KT) in a general secure group messaging
+deployment of Key Transparency in a general secure group messaging
 infrastructure, and specifies the security properties that the protocol
 provides. It also gives more general, non-prescriptive guidance on how to
-securely apply KT to a number of common applications.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+securely apply Key Transparency to a number of common applications.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1123,7 +1123,7 @@ securely apply KT to a number of common applications.<a href="#section-abstract-
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 5 September 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 15 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1266,16 +1266,15 @@ can provide fake public keys which it knows the private keys for, associate
 those public keys with a user's account without the user's knowledge, and then
 use them to impersonate or eavesdrop on conversations with that user.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4">Key Transparency (KT) solves this problem by requiring the service operator to
-store user public keys in a cryptographically-protected append-only log. Any
+store user public keys in a cryptographically protected append-only log. Any
 malicious entries added to such a log will generally be equally visible to both
-the key's owner and the owner's contacts,
-in which case a user can detect that they are being impersonated
+the affected user and the user's contacts,
+in which case the user can detect that they are being impersonated
 by viewing the public keys attached to their account. If the service
 operator attempts to conceal some entries of the log from some users but not
-others, this creates a "forked view" which is permanent and easily detectable
-with out-of-band communication.<a href="#section-1-4" class="pilcrow">¶</a></p>
+others, this creates a "forked view" which is permanent and easily detectable.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <p id="section-1-5">The critical improvement of KT over related protocols like Certificate
-Transparency  <span>[<a href="#RFC6962" class="cite xref">RFC6962</a>]</span> is that KT includes an efficient
+Transparency <span>[<a href="#RFC6962" class="cite xref">RFC6962</a>]</span> is that KT includes an efficient
 protocol to search the log for entries related to a specific participant. This
 means users don't need to download the entire log, which may be substantial, to
 find all entries that are relevant to them. It also means that KT can better
@@ -1293,22 +1292,22 @@ genuinely need to see them.<a href="#section-1-5" class="pilcrow">¶</a></p>
 described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
 appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlParallel" id="section-2-2">
-        <dt id="section-2-2.1"><strong>End-to-end Encrypted Communication Service:</strong></dt>
+        <dt id="section-2-2.1"><strong>End-to-End Encrypted Communication Service:</strong></dt>
         <dd style="margin-left: 1.5em" id="section-2-2.2">
-          <p id="section-2-2.2.1">A communications service that allows end-users to engage in text, voice,
-video, or other forms of communication over the Internet, that uses public key
+          <p id="section-2-2.2.1">A communication service that allows end-users to engage in text, voice,
+video, or other forms of communication over the internet, that uses public key
 cryptography to ensure that communications are only accessible to their
 intended recipients.<a href="#section-2-2.2.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-2-2.3"><strong>End-user Device:</strong></dt>
+<dt id="section-2-2.3"><strong>End-User Device:</strong></dt>
         <dd style="margin-left: 1.5em" id="section-2-2.4">
           <p id="section-2-2.4.1">The device at the final point in a digital communication, which may either
 send or receive encrypted data in an end-to-end encrypted communication
 service.<a href="#section-2-2.4.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-2-2.5"><strong>End-user Identity:</strong></dt>
+<dt id="section-2-2.5"><strong>End-User Identity:</strong></dt>
         <dd style="margin-left: 1.5em" id="section-2-2.6">
           <p id="section-2-2.6.1">A unique and user-visible identity associated with an account (and therefore
 one or more end-user devices) in an end-to-end encrypted communication
@@ -1351,7 +1350,7 @@ log is usually run either entirely or partially by the service operator.<a href=
 central <em>Transparency Log</em>, acting as a server, which holds the authoritative
 copy of all information and exposes endpoints that allow users to query or
 modify stored data. Users coordinate with each other through the server by
-uploading their own public keys and/or downloading the public keys of other
+uploading their own public keys and downloading the public keys of other
 users. Users are expected to maintain relatively little state, limited only
 to what is required to interact with the log and ensure that it is behaving
 honestly.<a href="#section-3-1" class="pilcrow">¶</a></p>
@@ -1363,7 +1362,7 @@ version of a key or any previous version. Users are considered to <strong>own</s
 in the normal operation of the application, they should be the only one making
 changes to it. From this point forward, the term <strong>label</strong> will be used to refer
 to lookup keys in the key-value database that a Transparency Log represents, to
-avoid confusion with cryptographic public/private keys.<a href="#section-3-2" class="pilcrow">¶</a></p>
+avoid confusion with cryptographic public or private keys.<a href="#section-3-2" class="pilcrow">¶</a></p>
 <p id="section-3-3">KT does not require the use of a specific transport protocol. This is intended
 to allow applications to layer KT on top of whatever transport protocol their
 application already uses. In particular, this allows applications to continue
@@ -1386,7 +1385,7 @@ This means users generally interact directly with the transparency log. The
 operations that can be executed by a user are as follows:<a href="#section-4-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-4-2">
 <li id="section-4-2.1">
-          <p id="section-4-2.1.1"><strong>Search:</strong> Performs a lookup on a specific label in the most recent version of
+          <p id="section-4-2.1.1"><strong>Search:</strong> Looks up the value of a specific label in the most recent version of
 the log. Users may request either a specific version of the label, or the
 most recent version available. If the label-version pair exists, the server
 returns the corresponding value and a proof of inclusion.<a href="#section-4-2.1.1" class="pilcrow">¶</a></p>
@@ -1407,7 +1406,7 @@ user without the user's knowledge.<a href="#section-4-2.3.1" class="pilcrow">¶<
 <p id="section-4-3">These operations are executed over an application-provided transport layer,
 where the transport layer enforces access control by blocking queries which are
 not allowed:<a href="#section-4-3" class="pilcrow">¶</a></p>
-<span id="name-example-request-response-fl"></span><div id="request-response">
+<span id="name-example-request-and-respons"></span><div id="request-response">
 <figure id="figure-1">
         <div id="section-4-4.1">
           <div class="alignLeft art-svg artwork" id="section-4-4.1.1">
@@ -1459,14 +1458,14 @@ not allowed:<a href="#section-4-3" class="pilcrow">¶</a></p>
 </div>
 </div>
 <figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
-<a href="#name-example-request-response-fl" class="selfRef">Example request/response flow. Valid requests receive a response while invalid requests are blocked by the transport layer.</a>
+<a href="#name-example-request-and-respons" class="selfRef">Example request and response flow. Valid requests receive a response while invalid requests are blocked by the transport layer.</a>
         </figcaption></figure>
 </div>
 <p id="section-4-5">An important caveat to the client-server architecture is that many end-to-end
 encrypted communication services require the ability to provide <em>credentials</em> to
 their users. These credentials convey a binding between an end-user identity and
 potentially several encryption or signature public keys, and are meant to be
-verified with no/minimal network requests by the receiving users.<a href="#section-4-5" class="pilcrow">¶</a></p>
+verified with no or minimal network requests by the receiving users.<a href="#section-4-5" class="pilcrow">¶</a></p>
 <p id="section-4-6">In particular, credentials that can be verified with minimal network access are
 often required by applications providing anonymous communication. These
 applications provide end-to-end encryption with a protocol
@@ -1475,9 +1474,9 @@ handshake messages required), or Sealed Sender <span>[<a href="#sealed-sender" c
 receives a message, these protocols have senders provide their own credential in
 an encrypted portion of the message. Encrypting the sender's credential prevents
 it from being visible to the service provider, while still assuring the
-recipient of the sender's identity. If users were to authenticate the sender's
+recipient of the sender's identity. If recipient users were to authenticate the sender's
 public key directly with the service provider, they would leak to the service
-provider who the they are communicating with.<a href="#section-4-6" class="pilcrow">¶</a></p>
+provider who they are communicating with.<a href="#section-4-6" class="pilcrow">¶</a></p>
 <p id="section-4-7">Key Transparency credentials can be created by serializing one or more Search
 request-response pairs. These Search operations would correspond to the lookups
 a user needs to do to prove the relationship between their end-user identity and
@@ -1554,8 +1553,8 @@ they hold on to this forked view forever and reject the output of any subsequent
 queries that are inconsistent with it.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
 <p id="section-4.1-3">This provides ample opportunity for users to detect when a fork has been
 presented, but isn't in itself sufficient for detection. To detect forks, users
-must either use <strong>peer-to-peer communication</strong> or <strong>anonymous communication</strong>
-with the Transparency Log.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
+require either <strong>anonymous communication</strong> with the Transparency Log or
+<strong>peer-to-peer communication</strong>.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
 <p id="section-4.1-4">With peer-to-peer communication, two users gossip with each other to establish
 that they both have the same view of the log's data. This gossip is able to
 happen over any supported out-of-band channel, even if it is heavily
@@ -1621,7 +1620,7 @@ non-repudiable proof of log misbehavior which can be published.<a href="#section
 </div>
 </div>
 <figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
-<a href="#name-users-receive-tree-heads-wh" class="selfRef">Users receive tree heads while making authenticated requests to a Transparency Log. Users ensure consistency of tree heads by either comparing amongst themselves, or by contacting the Transparency Log over an anonymous channel. Requests that require authorization are not available over the anonymous channel.</a>
+<a href="#name-users-receive-tree-heads-wh" class="selfRef">Users receive tree heads while making authenticated requests to a Transparency Log. Users ensure consistency of tree heads by either comparing amongst themselves, or by contacting the Transparency Log over an anonymous channel. Requests that require authentication do not need to be available over the anonymous channel.</a>
           </figcaption></figure>
 </div>
 </section>
@@ -1653,12 +1652,14 @@ log performs the majority of the work of storing and operating the service, and
 obtains signatures from a lightweight third-party auditor at regular intervals
 asserting that the tree has been constructed correctly.<a href="#section-5-4" class="pilcrow">¶</a></p>
 <p id="section-5-5"><strong>Contact Monitoring</strong>, on the other hand, supports a single-party deployment
-with no third party. The cost of this is that executing the background monitoring
-protocol requires an amount of work that's proportional to the number of labels a
-user has looked up in the past. As such, it's less suited to use-cases where
-users look up a large number of ephemeral labels, but would work well in a
-use-case where users look up a limited number of labels repeatedly (for example, the
-labels of regular contacts).<a href="#section-5-5" class="pilcrow">¶</a></p>
+with no third party. The cost of this is that executing the background
+monitoring protocol requires an amount of work that's proportional to the number
+of labels a user has looked up in the recent past. As such, it's less suited to
+use-cases where users look up a large number of labels whose values change
+frequently. However, if applications generally expect users to look up a limited
+number of labels repeatedly (for example, the labels of regular contacts), or if
+label values are expected to change infrequently, then Contact Monitoring has a
+similar efficiency as the the third-party deployment modes.<a href="#section-5-5" class="pilcrow">¶</a></p>
 <span id="name-comparison-of-deployment-mo"></span><table class="center" id="table-1">
         <caption>
 <a href="#table-1" class="selfRef">Table 1</a>:
@@ -1956,7 +1957,7 @@ policy for executing Search, Update, and Monitor queries against the logs in a
 way that maintains the high-level security guarantees of KT:<a href="#section-6-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-6-5.1">
-          <p id="section-6-5.1.1">If all logs behave honestly, then users observe a globally-consistent view of
+          <p id="section-6-5.1.1">If all logs behave honestly, then users observe a globally consistent view of
 the data associated with each label.<a href="#section-6-5.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-6-5.2">
@@ -2021,7 +2022,7 @@ only the new log.<a href="#section-6.2-2.3.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <p id="section-6.2-3">The final tree size and root hash of the prior log must be distributed to users
-in a way that guarantees all users have a globally-consistent view. This can be
+in a way that guarantees all users have a globally consistent view. This can be
 done either by storing them in a well-known label of the new log, or with the
 application's code distribution mechanism.<a href="#section-6.2-3" class="pilcrow">¶</a></p>
 </section>
