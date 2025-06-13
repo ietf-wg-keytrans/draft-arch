@@ -37,10 +37,10 @@ informative:
 --- abstract
 
 This document defines the terminology and interaction patterns involved in the
-deployment of Key Transparency (KT) in a general secure group messaging
+deployment of Key Transparency in a general secure group messaging
 infrastructure, and specifies the security properties that the protocol
 provides. It also gives more general, non-prescriptive guidance on how to
-securely apply KT to a number of common applications.
+securely apply Key Transparency to a number of common applications.
 
 --- middle
 
@@ -67,17 +67,16 @@ those public keys with a user's account without the user's knowledge, and then
 use them to impersonate or eavesdrop on conversations with that user.
 
 Key Transparency (KT) solves this problem by requiring the service operator to
-store user public keys in a cryptographically-protected append-only log. Any
+store user public keys in a cryptographically protected append-only log. Any
 malicious entries added to such a log will generally be equally visible to both
-the key's owner and the owner's contacts,
-in which case a user can detect that they are being impersonated
+the affected user and the user's contacts,
+in which case the user can detect that they are being impersonated
 by viewing the public keys attached to their account. If the service
 operator attempts to conceal some entries of the log from some users but not
-others, this creates a "forked view" which is permanent and easily detectable
-with out-of-band communication.
+others, this creates a "forked view" which is permanent and easily detectable.
 
 The critical improvement of KT over related protocols like Certificate
-Transparency  {{RFC6962}} is that KT includes an efficient
+Transparency {{RFC6962}} is that KT includes an efficient
 protocol to search the log for entries related to a specific participant. This
 means users don't need to download the entire log, which may be substantial, to
 find all entries that are relevant to them. It also means that KT can better
@@ -89,18 +88,18 @@ genuinely need to see them.
 
 {::boilerplate bcp14-tagged}
 
-**End-to-end Encrypted Communication Service:**
-: A communications service that allows end-users to engage in text, voice,
-  video, or other forms of communication over the Internet, that uses public key
+**End-to-End Encrypted Communication Service:**
+: A communication service that allows end-users to engage in text, voice,
+  video, or other forms of communication over the internet, that uses public key
   cryptography to ensure that communications are only accessible to their
   intended recipients.
 
-**End-user Device:**
+**End-User Device:**
 : The device at the final point in a digital communication, which may either
   send or receive encrypted data in an end-to-end encrypted communication
   service.
 
-**End-user Identity:**
+**End-User Identity:**
 : A unique and user-visible identity associated with an account (and therefore
   one or more end-user devices) in an end-to-end encrypted communication
   service. In the case where an end-user explicitly requests to communicate with
@@ -130,7 +129,7 @@ From a networking perspective, KT follows a client-server architecture with a
 central *Transparency Log*, acting as a server, which holds the authoritative
 copy of all information and exposes endpoints that allow users to query or
 modify stored data. Users coordinate with each other through the server by
-uploading their own public keys and/or downloading the public keys of other
+uploading their own public keys and downloading the public keys of other
 users. Users are expected to maintain relatively little state, limited only
 to what is required to interact with the log and ensure that it is behaving
 honestly.
@@ -143,7 +142,7 @@ version of a key or any previous version. Users are considered to **own** a key 
 in the normal operation of the application, they should be the only one making
 changes to it. From this point forward, the term **label** will be used to refer
 to lookup keys in the key-value database that a Transparency Log represents, to
-avoid confusion with cryptographic public/private keys.
+avoid confusion with cryptographic public or private keys.
 
 KT does not require the use of a specific transport protocol. This is intended
 to allow applications to layer KT on top of whatever transport protocol their
@@ -163,7 +162,7 @@ As discussed in {{protocol-overview}}, KT follows a client-server architecture.
 This means users generally interact directly with the transparency log. The
 operations that can be executed by a user are as follows:
 
-1. **Search:** Performs a lookup on a specific label in the most recent version of
+1. **Search:** Looks up the value of a specific label in the most recent version of
    the log. Users may request either a specific version of the label, or the
    most recent version available. If the label-version pair exists, the server
    returns the corresponding value and a proof of inclusion.
@@ -201,14 +200,14 @@ Alice                                   Transparency Log
   | Update(Bob, ...) ------------------> X     |
   |                                            |
 ~~~
-{: #request-response title="Example request/response flow. Valid requests
+{: #request-response title="Example request and response flow. Valid requests
 receive a response while invalid requests are blocked by the transport layer." }
 
 An important caveat to the client-server architecture is that many end-to-end
 encrypted communication services require the ability to provide *credentials* to
 their users. These credentials convey a binding between an end-user identity and
 potentially several encryption or signature public keys, and are meant to be
-verified with no/minimal network requests by the receiving users.
+verified with no or minimal network requests by the receiving users.
 
 In particular, credentials that can be verified with minimal network access are
 often required by applications providing anonymous communication. These
@@ -218,9 +217,9 @@ handshake messages required), or Sealed Sender {{sealed-sender}}. When a user
 receives a message, these protocols have senders provide their own credential in
 an encrypted portion of the message. Encrypting the sender's credential prevents
 it from being visible to the service provider, while still assuring the
-recipient of the sender's identity. If users were to authenticate the sender's
+recipient of the sender's identity. If recipient users were to authenticate the sender's
 public key directly with the service provider, they would leak to the service
-provider who the they are communicating with.
+provider who they are communicating with.
 
 Key Transparency credentials can be created by serializing one or more Search
 request-response pairs. These Search operations would correspond to the lookups
@@ -271,8 +270,8 @@ queries that are inconsistent with it.
 
 This provides ample opportunity for users to detect when a fork has been
 presented, but isn't in itself sufficient for detection. To detect forks, users
-must either use **peer-to-peer communication** or **anonymous communication**
-with the Transparency Log.
+require either **anonymous communication** with the Transparency Log or
+**peer-to-peer communication**.
 
 With peer-to-peer communication, two users gossip with each other to establish
 that they both have the same view of the log's data. This gossip is able to
@@ -308,7 +307,7 @@ Alice                      Bob                          Transparency Log
 {: #out-of-band-checking title="Users receive tree heads while making
 authenticated requests to a Transparency Log. Users ensure consistency of tree
 heads by either comparing amongst themselves, or by contacting the Transparency
-Log over an anonymous channel. Requests that require authorization are not
+Log over an anonymous channel. Requests that require authentication do not need to be
 available over the anonymous channel." }
 
 # Deployment Modes
@@ -337,12 +336,14 @@ obtains signatures from a lightweight third-party auditor at regular intervals
 asserting that the tree has been constructed correctly.
 
 **Contact Monitoring**, on the other hand, supports a single-party deployment
-with no third party. The cost of this is that executing the background monitoring
-protocol requires an amount of work that's proportional to the number of labels a
-user has looked up in the past. As such, it's less suited to use-cases where
-users look up a large number of ephemeral labels, but would work well in a
-use-case where users look up a limited number of labels repeatedly (for example, the
-labels of regular contacts).
+with no third party. The cost of this is that executing the background
+monitoring protocol requires an amount of work that's proportional to the number
+of labels a user has looked up in the recent past. As such, it's less suited to
+use-cases where users look up a large number of labels whose values change
+frequently. However, if applications generally expect users to look up a limited
+number of labels repeatedly (for example, the labels of regular contacts), or if
+label values are expected to change infrequently, then Contact Monitoring has a
+similar efficiency as the the third-party deployment modes.
 
 | Deployment Mode        | Supports ephemeral labels? | Single party? |
 |------------------------| ---------------------------|---------------|
@@ -503,7 +504,7 @@ When multiple logs are used, all users in the system MUST have a consistent
 policy for executing Search, Update, and Monitor queries against the logs in a
 way that maintains the high-level security guarantees of KT:
 
-- If all logs behave honestly, then users observe a globally-consistent view of
+- If all logs behave honestly, then users observe a globally consistent view of
   the data associated with each label.
 - If any log behaves dishonestly such that the prior guarantee is not met (some
   users observe data associated with a label that others do not), this will be
@@ -546,7 +547,7 @@ policy may look like:
    only the new log.
 
 The final tree size and root hash of the prior log must be distributed to users
-in a way that guarantees all users have a globally-consistent view. This can be
+in a way that guarantees all users have a globally consistent view. This can be
 done either by storing them in a well-known label of the new log, or with the
 application's code distribution mechanism.
 
