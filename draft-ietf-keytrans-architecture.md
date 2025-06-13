@@ -47,7 +47,7 @@ securely apply Key Transparency to a number of common applications.
 # Introduction
 
 Before any information can be exchanged in an end-to-end encrypted system, two
-things must happen. First, participants in the system must provide the service
+things must happen: First, participants in the system must provide the service
 operator with any public keys they wish to use to receive messages. Second, the
 service operator must somehow distribute these public keys amongst the
 participants that wish to communicate with each other.
@@ -59,7 +59,7 @@ the service operator needs to be trusted to provide the correct public keys,
 which means that the underlying encryption protocol can only protect users
 against passive eavesdropping on their messages.
 
-However most messaging systems are designed such that all messages exchanged
+However, most messaging systems are designed such that all messages exchanged
 between users flow through the service operator's servers, so it's extremely
 easy for an operator to launch an active attack. That is, the service operator
 can provide fake public keys which it knows the private keys for, associate
@@ -114,19 +114,20 @@ genuinely need to see them.
   devices (phone, laptop).
 
 **Service Operator:**
-: The primary organization that provides the infrastructure and software
-  resources necessary to operate an end-to-end encrypted communication service.
+: The primary organization that provides the infrastructure for an end-to-end
+  encrypted communication service and the software to participate in it.
 
 **Transparency Log:**
 : A specialized service capable of securely attesting to the information (such
-  as public keys) associated with a given end-user identity. The transparency
-  log is usually run either entirely or partially by the service operator.
+  as public keys) associated with a given end-user identity. A transparency
+  log is usually run either entirely or partially by the service operator but
+  could also be operated externally.
 
 
 # Protocol Overview
 
 From a networking perspective, KT follows a client-server architecture with a
-central *Transparency Log*, acting as a server, which holds the authoritative
+central *transparency log*, acting as a server, which holds the authoritative
 copy of all information and exposes endpoints that allow users to query or
 modify stored data. Users coordinate with each other through the server by
 uploading their own public keys and downloading the public keys of other
@@ -138,39 +139,44 @@ From an application perspective, KT can be thought of as a versioned key-value
 database. Users insert key-value pairs into the database where, for example, the
 key is their username and the value is their public key. Users can update a key
 by inserting a new version with new data. They can also look up the most recent
-version of a key or any previous version. Users are considered to **own** a key if,
-in the normal operation of the application, they should be the only one making
-changes to it. From this point forward, the term **label** will be used to refer
-to lookup keys in the key-value database that a Transparency Log represents, to
-avoid confusion with cryptographic public or private keys.
+version of a key or any previous version. From this point forward, the term
+**label** will be used to refer to lookup keys in the key-value database that a
+transparency log represents to avoid confusion with cryptographic public or
+private keys.
+
+Users are considered to **own** a label if they are understood to either
+initiate all changes to the label's value, or if they must be informed of all
+changes to the label's value. The latter situation may occur if, for example, KT
+is deployed in a way where the service operator makes automated modifications to
+stored data. The owning user would then be informed, after the fact, of
+modifications to verify that they were legal.
 
 KT does not require the use of a specific transport protocol. This is intended
 to allow applications to layer KT on top of whatever transport protocol their
 application already uses. In particular, this allows applications to continue
 relying on their existing access control system.
 
-With some small exceptions, applications may enforce arbitrary access control rules on top of KT.
-This may include requiring a user to be logged in to make KT requests, only allowing a user to
-lookup the labels of another user if they're "friends", or simply applying a rate
-limit. Applications SHOULD prevent users from modifying labels they do not
-own. The exact mechanism for rejecting requests, and possibly explaining the
-reason for rejection, is left to the application.
+With some small exceptions, applications may enforce arbitrary access control
+rules on top of KT. This may include requiring a user to be logged in to make KT
+requests, only allowing a user to lookup the labels of another user if they're
+"friends", or applying a rate limit. Applications SHOULD prevent users from
+modifying labels they do not own. The exact mechanism for rejecting requests,
+and possibly explaining the reason for rejection, is left to the application.
 
-# User Interactions
+## User Operations
 
-As discussed in {{protocol-overview}}, KT follows a client-server architecture.
-This means users generally interact directly with the transparency log. The
-operations that can be executed by a user are as follows:
+The operations that can be executed by a user are as follows:
 
-1. **Search:** Looks up the value of a specific label in the most recent version of
-   the log. Users may request either a specific version of the label, or the
+1. **Search:** Looks up the value of a specific label in the most recent version
+   of the log. Users may request either a specific version of the label, or the
    most recent version available. If the label-version pair exists, the server
-   returns the corresponding value and a proof of inclusion.
+   returns the corresponding value and an inclusion proof.
 2. **Update:** Adds a new label-value pair to the log, for which the server
-   returns a proof of inclusion. Note that this means that new values are added
-   to the log immediately and no provisional inclusion proof, such as an SCT as defined in {{Section 3 of ?RFC6962}}, is provided.
+   returns an inclusion proof. Note that this means that new values are added to
+   the log immediately and no provisional inclusion proof, such as an SCT as
+   defined in {{Section 3 of ?RFC6962}}, is provided.
 3. **Monitor:** While Search and Update are run by the user as necessary,
-   monitoring is done in the background on a recurring basis. It both checks
+   monitoring is done in the background on a recurring basis. It can both check
    that the log is continuing to behave honestly (all previously returned labels
    remain in the tree) and that no changes have been made to labels owned by the
    user without the user's knowledge.
@@ -203,34 +209,38 @@ Alice                                   Transparency Log
 {: #request-response title="Example request and response flow. Valid requests
 receive a response while invalid requests are blocked by the transport layer." }
 
-An important caveat to the client-server architecture is that many end-to-end
-encrypted communication services require the ability to provide *credentials* to
-their users. These credentials convey a binding between an end-user identity and
-potentially several encryption or signature public keys, and are meant to be
-verified with no or minimal network requests by the receiving users.
+## Credentials
+
+While users are generally understood to interact directly with the transparency
+log, many end-to-end encrypted communication services require the ability to
+provide *credentials* to their users. Credentials convey a binding between an
+end-user identity and public keys or other information, and can be verified with
+minimal network access.
 
 In particular, credentials that can be verified with minimal network access are
-often required by applications providing anonymous communication. These
-applications provide end-to-end encryption with a protocol
-like the Messaging Layer Security protocol {{?RFC9420}} (with the encryption of
-handshake messages required), or Sealed Sender {{sealed-sender}}. When a user
-receives a message, these protocols have senders provide their own credential in
-an encrypted portion of the message. Encrypting the sender's credential prevents
-it from being visible to the service provider, while still assuring the
-recipient of the sender's identity. If recipient users were to authenticate the sender's
-public key directly with the service provider, they would leak to the service
-provider who they are communicating with.
+often desired by applications that support anonymous communication. These
+applications provide end-to-end encryption with a protocol like the Messaging
+Layer Security Protocol {{?RFC9420}} (with the encryption of handshake messages
+required) or Sealed Sender {{sealed-sender}}. When a user sends a message, these
+protocols have the sender provide their own credential in an encrypted portion
+of the message.
 
-Key Transparency credentials can be created by serializing one or more Search
-request-response pairs. These Search operations would correspond to the lookups
-a user needs to do to prove the relationship between their end-user identity and
-their cryptographic keys. Recipients can verify the request-response pairs
-themselves without contacting the Transparency Log.
+Encrypting the sender's credential allows the sender to submit messages over an
+anonymous channel by specifying only the recipient's identity. The service
+operator can deliver the message to the intended recipient, who can decrypt it
+and validate the credential inside to be assured of the sender's identity. Note
+that the recipient does not need access to an anonymous channel to preserve the
+sender's anonymity.
 
-Any future monitoring that may be required can be provided to recipients
-proactively by the sender. However if this fails, the recipient can still
-perform the monitoring themselves (including over an anonymous channel if
-necessary).
+At a high level, KT credentials are created by serializing one or more Search
+request-response pairs. These Search operations correspond to the lookups the
+recipient would do to authenticate the relationship between the presented
+end-user identity and their public keys. Recipients can verify the
+request-response pairs themselves without contacting the transparency log.
+
+Any future monitoring that may be required should be provided to recipients
+proactively by the sender. However, if this fails, the recipient will need to
+perform the monitoring themselves over an anonymous channel.
 
 ~~~aasvg
 Transparency Log               Alice           Anonymous Group
@@ -247,17 +257,16 @@ Transparency Log               Alice           Anonymous Group
 |                                |                           |
 ~~~
 {: #anonymous title="Example message flow in an anonymous deployment. Users
-request their own label from the Transparency Log and provide the serialized
+request their own label from the transparency log and provide the serialized
 response, functioning as a credential, in encrypted messages to other users.
 Required monitoring is provided proactively." }
 
-
 ## Out-of-Band Communication
 
-It is sometimes possible for a Transparency Log to present forked views of data
+It is sometimes possible for a transparency log to present forked views of data
 to different users. This means that, from an individual user's perspective, a
 log may appear to be operating correctly in the sense that all of a user's
-requests succeed and proofs verify correctly. However, the Transparency Log has
+requests succeed and proofs verify correctly. However, the transparency log has
 presented a view to the user that's not globally consistent with what it has
 shown other users. As such, the log may be able to change a label's value
 without the label's owner becoming aware.
@@ -270,7 +279,7 @@ queries that are inconsistent with it.
 
 This provides ample opportunity for users to detect when a fork has been
 presented, but isn't in itself sufficient for detection. To detect forks, users
-require either **anonymous communication** with the Transparency Log or
+require either **anonymous communication** with the transparency log or
 **peer-to-peer communication**.
 
 With peer-to-peer communication, two users gossip with each other to establish
@@ -278,7 +287,7 @@ that they both have the same view of the log's data. This gossip is able to
 happen over any supported out-of-band channel, even if it is heavily
 bandwidth-limited, such as scanning a QR code or talking over the phone.
 
-With anonymous communication, a single user accesses the Transparency Log over
+With anonymous communication, a single user accesses the transparency log over
 an anonymous channel and tries to establish that the log is presenting the same
 view of data over the anonymous channel as it does over authenticated channels.
 
@@ -305,7 +314,7 @@ Alice                      Bob                          Transparency Log
 |                           |                                          |
 ~~~
 {: #out-of-band-checking title="Users receive tree heads while making
-authenticated requests to a Transparency Log. Users ensure consistency of tree
+authenticated requests to a transparency log. Users ensure consistency of tree
 heads by either comparing amongst themselves, or by contacting the Transparency
 Log over an anonymous channel. Requests that require authentication do not need to be
 available over the anonymous channel." }
@@ -313,7 +322,7 @@ available over the anonymous channel." }
 # Deployment Modes
 
 In the interest of satisfying the widest range of use-cases possible, three
-different modes for deploying a Transparency Log are supported. Each mode has
+different modes for deploying a transparency log are supported. Each mode has
 slightly different requirements and efficiency considerations for both the
 transparency log and the end-user.
 
@@ -352,19 +361,19 @@ similar efficiency as the the third-party deployment modes.
 | Third-Party Management | Yes                        | No            |
 {: title="Comparison of deployment modes" }
 
-Applications that rely on a Transparency Log deployed in Contact Monitoring mode
+Applications that rely on a transparency log deployed in Contact Monitoring mode
 MUST regularly engage in out-of-band communication
 ({{out-of-band-communication}}) to ensure that they detect forks in a timely
 manner.
 
-Applications that rely on a Transparency Log deployed in either of the
+Applications that rely on a transparency log deployed in either of the
 third-party modes SHOULD allow users to enable a "Contact Monitoring Mode". This
 mode, which affects only the individual client's behavior, would cause the
-client to behave as if its Transparency Log was deployed in Contact Monitoring
+client to behave as if its transparency log was deployed in Contact Monitoring
 mode. As such, it would start retaining state about previously looked-up labels
 and regularly engaging in out-of-band communication. Enabling this
 higher-security mode allows users to double-check that the third-party is not
-colluding with the Transparency Log to serve malicious data.
+colluding with the transparency log to serve malicious data.
 
 ## Contact Monitoring
 
@@ -411,7 +420,7 @@ Alice                        Transparency Log                        Bob
 |                                   |                                  |
 ~~~
 {: #contact-monitoring-fig title="Contact Monitoring. When users make a Search
-request, they must check back in with the Transparency Log several times. These
+request, they must check back in with the transparency log several times. These
 checks ensure that the data in the Search response wasn't later removed from the
 log. Overlap with the label owner's own monitoring guarantees a consistent view of
 data." }
@@ -477,7 +486,7 @@ Alice                  Transparency Log                  Manager
 |                             |                                |
 ~~~
 {: #manager-fig title="Third-Party Management. Valid requests are proxied by the
-Transparency Log to the Manager. Rejected requests are blocked." }
+transparency log to the Manager. Rejected requests are blocked." }
 
 
 # Combining Logs
@@ -572,16 +581,16 @@ logs with its own.
 # Pruning
 
 As part of the core infrastructure of an end-to-end encrypted communication
-service, Transparency Logs are required to operate seamlessly for several years.
+service, transparency logs are required to operate seamlessly for several years.
 This presents a problem for general append-only logs, as even moderate usage can
 cause the log to grow to an unmanageable size. This issue is further compounded
 by the fact that a substantial portion of the entries added to a log may be
 fake, having been added solely for the purpose of obscuring short-term update
-rates (as discussed in {{privacy-guarantees}}). Given this, Transparency Logs
+rates (as discussed in {{privacy-guarantees}}). Given this, transparency logs
 need to be able manage their footprint by pruning data which is no longer
 required by the communication service.
 
-Broadly speaking, a Transparency Log's database will contain two types of data:
+Broadly speaking, a transparency log's database will contain two types of data:
 
 1. Serialized user data (the values corresponding to labels in the log), and
 2. Cryptographic data, such as pre-computed portions of hash trees or commitment
@@ -604,15 +613,15 @@ depend on the protocol and implementation.
 The distinction between user data and cryptographic data provides a valuable
 separation of concerns, given that the protocol document does not provide a
 mechanism for a service operator to convey its access control policy to a
-Transparency Log. That is: pruning user data can be done entirely by
+transparency log. That is: pruning user data can be done entirely by
 application-defined code, while pruning cryptographic data can be done entirely
 by KT-specific code as a subsequent operation.
 
 
 # Security Guarantees
 
-A user that correctly verifies a proof from the Transparency Log (and does any
-required monitoring afterwards) receives a guarantee that the Transparency Log
+A user that correctly verifies a proof from the transparency log (and does any
+required monitoring afterwards) receives a guarantee that the transparency log
 operator executed the label-value lookup correctly, and in a way that's globally
 consistent with what it has shown all other users. That is, when a user searches
 for a label, they're guaranteed that the result they receive represents the same
@@ -620,8 +629,8 @@ result that any other user searching for the same label would've seen. When a us
 modifies a label, they're guaranteed that other users will see the modification
 the next time they search for the label.
 
-If the Transparency Log operator does not execute a label-value lookup correctly,
-then either:
+If the transparency log does not execute a label-value lookup correctly, then
+either:
 
 1. The user will detect the error immediately and reject the proof, or
 2. The user will permanently enter an invalid state.
@@ -632,7 +641,7 @@ communication is available. Importantly, this means that users must stay
 online for some bounded amount of time after entering an invalid state for it to
 be successfully detected.
 
-Alternatively, instead of executing a lookup incorrectly, the Transparency Log
+Alternatively, instead of executing a lookup incorrectly, the transparency log
 can attempt to prevent a user from learning about more recent states of the log.
 This would allow the log to continue executing queries correctly, but on
 outdated versions of data. To prevent this, applications configure an upper
@@ -640,7 +649,7 @@ bound on how stale a query response can be without being rejected.
 
 The exact caveats of the above guarantees depend naturally on the security of
 underlying cryptographic primitives, and also the deployment mode that the
-Transparency Log relies on:
+transparency log relies on:
 
 - Third-Party Management and Third-Party Auditing require an assumption that the
   transparency log and the third-party manager/auditor do not collude
@@ -651,7 +660,7 @@ Transparency Log relies on:
 In short, assuming that the underlying cryptographic primitives used are secure,
 any deployment-specific assumptions hold (such as non-collusion), and that user
 devices don't go permanently offline, then malicious behavior by the
-Transparency Log is always detected within a bounded amount of time. The
+transparency log is always detected within a bounded amount of time. The
 parameters that determine the maximum amount of time before malicious behavior
 is detected are as follows:
 
@@ -670,7 +679,7 @@ only reveal that a user is a member of their service, and information about that
 user's account, to that user's friends or contacts.
 
 KT only allows users to learn whether or not a label exists in the
-Transparency Log if the user obtains a valid search proof for that label.
+transparency log if the user obtains a valid search proof for that label.
 Similarly, KT only allows users to learn about the contents of a log entry if
 the user obtains a valid search proof for the exact label and version stored at
 that log entry.
@@ -679,7 +688,7 @@ When a user was previously allowed to lookup or change a label's value but no
 longer is, KT prevents the user from learning whether or not the label's value
 has changed since the user's access was revoked. Note however that in Contact
 Monitoring mode, users SHOULD be permitted to perform monitoring to
-guarantee honest operation of the Transparency Log.
+guarantee honest operation of the transparency log.
 
 Applications determine the privacy of data in KT by
 relying on these properties when they enforce access control policies on the
