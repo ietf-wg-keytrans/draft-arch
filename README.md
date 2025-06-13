@@ -1,3 +1,5 @@
+<!-- regenerate: on (set to off if you edit this file) -->
+
 # Key Transparency Architecture
 
 This is the working area for the IETF [KEYTRANS Working Group](https://datatracker.ietf.org/group/keytrans/documents/) Internet-Draft, "Key Transparency Architecture".
