@@ -75,7 +75,7 @@ Table of Contents
    3.  Protocol Overview
      3.1.  User Operations
      3.2.  Credentials
-     3.3.  Out-of-Band Communication
+     3.3.  Detecting Forks
    4.  Deployment Modes
      4.1.  Contact Monitoring
      4.2.  Third-Party Auditing
@@ -313,7 +313,7 @@ Table of Contents
 
    Any future monitoring that may be required should be provided to
    recipients proactively by the sender.  However, if this fails, the
-   recipient will need to perform the monitoring themselves over an
+   recipient will need to perform the monitoring themself over an
    anonymous channel.
 
    Transparency Log               Alice           Anonymous Group
@@ -335,7 +335,7 @@ Table of Contents
          messages to other users.  Required monitoring is provided
                                 proactively.
 
-3.3.  Out-of-Band Communication
+3.3.  Detecting Forks
 
    It is sometimes possible for a transparency log to present forked
    views of data to different users.  This means that, from an
@@ -354,24 +354,44 @@ Table of Contents
    inconsistent with it.
 
    This provides ample opportunity for users to detect when a fork has
-   been presented, but isn't in itself sufficient for detection.  To
-   detect forks, users require either *anonymous communication* with the
-   transparency log or *peer-to-peer communication*.
+   been presented but isn't in itself sufficient for detection.  To
+   detect forks, users require either a *trusted third party*,
+   *anonymous communication* with the transparency log, or *peer-to-peer
+   communication*.
 
-   With peer-to-peer communication, two users gossip with each other to
-   establish that they both have the same view of the log's data.  This
-   gossip is able to happen over any supported out-of-band channel, even
-   if it is heavily bandwidth-limited, such as scanning a QR code or
-   talking over the phone.
+   With a trusted third party, such as a Third-Party Auditor or Manager
+   as described in Section 4.2 and Section 4.3, an outside organization
+   monitors the operation of the transparency log.  This third party
+   verifies, among other things, that the transparency log is growing in
+   an append-only manner and produces a signature on the most recent
+   tree head if this verification is successful.  The transparency log
+   provides this signature to users with their query responses as proof
+   that they have not been shown a fork.  This approach relies on an
+   assumption that the third party is trusted not to collude with the
+   transparency log to sign a fork.
 
    With anonymous communication, a single user accesses the transparency
-   log over an anonymous channel and tries to establish that the log is
-   presenting the same view of data over the anonymous channel as it
-   does over authenticated channels.
+   log over an anonymous channel and checks that the transparency log is
+   presenting the same tree head over the anonymous channel as it does
+   over an authenticated channel.  The security of this approach relies
+   on the fact that, if the transparency log doesn't know which user is
+   making the request, it will show the user the wrong fork with high
+   probability.  Repeating this check over time makes it overwhelmingly
+   likely that any fork presented to any user will be detected.
 
-   In the event that a fork is successfully detected, the user is able
-   to produce non-repudiable proof of log misbehavior which can be
-   published.
+   With peer-to-peer communication, two users gossip with each other to
+   establish that they both have the same view of the transparency log.
+   This gossip is able to happen over any supported out-of-band channel
+   even if it is heavily bandwidth-constrained, such as scanning a QR
+   code.  However, this approach is only secure if gossip can be
+   implemented such that gossipping users are reasonably expected to
+   form a connected graph of all users.  If not, then the transparency
+   log can attempt to partition users into subsets that do not gossip
+   and can present each subset of users with different forks.
+
+   Regardless of approach, in the event that a fork is successfully
+   detected, the user is able to produce non-repudiable proof of log
+   misbehavior which can be published.
 
 Alice                      Bob                          Transparency Log
 |                           |                                          |
@@ -453,8 +473,9 @@ Alice                      Bob                          Transparency Log
                   Table 1: Comparison of deployment modes
 
    Applications that rely on a transparency log deployed in Contact
-   Monitoring mode MUST regularly engage in out-of-band communication
-   (Section 3.3) to ensure that they detect forks in a timely manner.
+   Monitoring mode MUST regularly attempt to detect forks through
+   anonymous communication with the transparency log or peer-to-peer
+   communication, as described in Section 3.3.
 
    Applications that rely on a transparency log deployed in either of
    the third-party modes SHOULD allow users to enable a "Contact
