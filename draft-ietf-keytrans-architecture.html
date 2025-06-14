@@ -1940,41 +1940,36 @@ values.<a href="#section-4.3-4" class="pilcrow">¶</a></p>
       <h2 id="name-combining-logs">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-combining-logs" class="section-name selfRef">Combining Logs</a>
       </h2>
-<p id="section-5-1">There are many cases where it makes sense to operate multiple cooperating log
-instances, for example:<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-1">There are many cases where it makes sense to operate multiple cooperating
+transparency log instances, for example:<a href="#section-5-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5-2.1">
-          <p id="section-5-2.1.1">A service provider may decide that it's prudent to rotate its cryptographic
-keys, or migrate to a new deployment mode. They can do this by creating a new
-log instance with new cryptographic keys, operating under a new
-deployment mode if desired, and migrating their data from the old log to the
-new log while users are able to query both.<a href="#section-5-2.1.1" class="pilcrow">¶</a></p>
+          <p id="section-5-2.1.1">A service provider may wish to gradually migrate to a transparency log that
+uses a different deployment mode.<a href="#section-5-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-5-2.2">
-          <p id="section-5-2.2.1">A service provider may choose to operate multiple logs to improve their
-ability to scale or provide higher availability.<a href="#section-5-2.2.1" class="pilcrow">¶</a></p>
+          <p id="section-5-2.2.1">A service provider may operate multiple logs to improve their ability to scale
+or provide higher availability.<a href="#section-5-2.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-5-2.3">
           <p id="section-5-2.3.1">A federated system may allow each participant in the federation to operate
-their own log for their own users.<a href="#section-5-2.3.1" class="pilcrow">¶</a></p>
+their own transparency log for their own users.<a href="#section-5-2.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-5-3">Client implementations should generally be prepared to interact with multiple
-logs simultaneously. In particular, clients <span class="bcp14">SHOULD</span> namespace any configuration
-or state related to a particular log, such that information related to different
-logs do not conflict.<a href="#section-5-3" class="pilcrow">¶</a></p>
-<p id="section-5-4">When multiple logs are used, all users in the system <span class="bcp14">MUST</span> have a consistent
-policy for executing Search, Update, and Monitor queries against the logs in a
-way that maintains the high-level security guarantees of KT:<a href="#section-5-4" class="pilcrow">¶</a></p>
+independent transparency logs. When multiple transparency logs are used as part
+of one application, all users <span class="bcp14">MUST</span> have a consistent policy for executing
+Search, Update, and Monitor queries against the logs in a way that maintains the
+high-level security guarantees of KT:<a href="#section-5-3" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5-5.1">
-          <p id="section-5-5.1.1">If all logs behave honestly, then users observe a globally consistent view of
-the data associated with each label.<a href="#section-5-5.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5-4.1">
+          <p id="section-5-4.1.1">If all transparency logs behave honestly, then users observe a globally
+consistent view of the data associated with each label.<a href="#section-5-4.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-5-5.2">
-          <p id="section-5-5.2.1">If any log behaves dishonestly such that the prior guarantee is not met (some
-users observe data associated with a label that others do not), this will be
-detected either immediately or in a timely manner by background monitoring.<a href="#section-5-5.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-5-4.2">
+          <p id="section-5-4.2.1">If any transparency log behaves dishonestly such that the prior guarantee is
+not met, this will be detected in a timely manner by background monitoring or
+out-of-band communication.<a href="#section-5-4.2.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <div id="gradual-migration">
@@ -1982,30 +1977,33 @@ detected either immediately or in a timely manner by background monitoring.<a hr
         <h3 id="name-gradual-migration">
 <a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-gradual-migration" class="section-name selfRef">Gradual Migration</a>
         </h3>
-<p id="section-5.1-1">In the case of gradually migrating from an old log to a new one, this policy may
-look like:<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.1-1">In the case of gradually migrating from an old transparency log to a new one,
+this policy may look like:<a href="#section-5.1-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-5.1-2">
 <li id="section-5.1-2.1">
-            <p id="section-5.1-2.1.1">Search queries should be executed against the old log first, and then against
-the new log only if the most recent version of a label in the old log is a
-special application-defined 'tombstone' entry.<a href="#section-5.1-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-2.1.1">Search queries should be executed against the old transparency log first, and
+then against the new transparency log only if the most recent version of a
+label in the old transparency log is a special application-defined
+'tombstone' entry.<a href="#section-5.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.1-2.2">
-            <p id="section-5.1-2.2.1">Update queries should only be executed against the new log, adding a
-tombstone entry to the old log if one hasn't been already created.<a href="#section-5.1-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-2.2.1">Update queries should only be executed against the new transparency log,
+adding a tombstone entry to the old transparency log if one hasn't been
+created already.<a href="#section-5.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.1-2.3">
-            <p id="section-5.1-2.3.1">Both logs should be monitored as they would be if they were run individually.
-Once the migration has completed and the old log has stopped accepting
-changes, the old log <span class="bcp14">MUST</span> stay operational long enough for all users to
-complete their monitoring of it (keeping in mind that some users may be
-offline for a significant amount of time).<a href="#section-5.1-2.3.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-2.3.1">Both transparency logs should be monitored as they would be if they were run
+individually. Once the migration has completed and the old transparency log
+has stopped accepting modifications, the old transparency log <span class="bcp14">MUST</span> stay
+operational long enough for all users to complete their monitoring of it
+(keeping in mind that some users may be offline for a significant amount of
+time).<a href="#section-5.1-2.3.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
-<p id="section-5.1-3">Placing a tombstone entry for each label in the old log gives users a clear
-indication as to which log contains the most recent version of a label and
-prevents them from incorrectly accepting a stale version if the new log rejects
-a search query.<a href="#section-5.1-3" class="pilcrow">¶</a></p>
+<p id="section-5.1-3">Placing a tombstone entry for each label in the old transparency log gives users
+a clear indication as to which transparency log contains the most recent version
+of a label. Importantly, it prevents users from incorrectly accepting a stale
+version of a label if the new transparency log is unreachable.<a href="#section-5.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="immediate-migration">
@@ -2013,29 +2011,31 @@ a search query.<a href="#section-5.1-3" class="pilcrow">¶</a></p>
         <h3 id="name-immediate-migration">
 <a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-immediate-migration" class="section-name selfRef">Immediate Migration</a>
         </h3>
-<p id="section-5.2-1">In the event of a key compromise, the service provider may instead choose to
-stop adding new entries to a log immediately and provide a new log that is
-pre-populated with the most recent versions of all labels. In this case, the
-policy may look like:<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2-1">In some situations, the service provider may instead choose to stop adding new
+entries to a transparency log immediately and provide a new transparency log
+that is pre-populated with the most recent versions of all labels. In this case,
+the policy may look like:<a href="#section-5.2-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-5.2-2">
 <li id="section-5.2-2.1">
-            <p id="section-5.2-2.1.1">Search queries must be executed against the new log.<a href="#section-5.2-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-5.2-2.1.1">Search queries must be executed against the new transparency log.<a href="#section-5.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.2-2.2">
-            <p id="section-5.2-2.2.1">Update queries must be executed against the new log.<a href="#section-5.2-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-5.2-2.2.1">Update queries must be executed against the new transparency log.<a href="#section-5.2-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.2-2.3">
-            <p id="section-5.2-2.3.1">The final tree size and root hash of the old log should be provided to users
-over a trustworthy channel. Users will use this to do any final monitoring of
-the old log, and then ensure that the most recent versions of the labels they
-own are properly represented in the new log. From then on, users will monitor
-only the new log.<a href="#section-5.2-2.3.1" class="pilcrow">¶</a></p>
+            <p id="section-5.2-2.3.1">The final tree size and root hash of the old transparency log is provided to
+users over a trustworthy channel. Label owners issue final Monitor queries to
+complete monitoring up to this point. Label owners initiate monitoring state
+for the new transparency log by processing an Update for the migrated
+versions of their labels and verifying that the migration was done properly.
+From then on, users will monitor only the new transparency log.<a href="#section-5.2-2.3.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
-<p id="section-5.2-3">The final tree size and root hash of the prior log must be distributed to users
-in a way that guarantees all users have a globally consistent view. This can be
-done either by storing them in a well-known label of the new log, or with the
-application's code distribution mechanism.<a href="#section-5.2-3" class="pilcrow">¶</a></p>
+<p id="section-5.2-3">The final tree size and root hash of the prior transparency log need to be
+distributed to users in a way that guarantees all users have a globally
+consistent view. This can be done either by storing them in a well-known label
+of the new transparency log, or with the application's code distribution
+mechanism.<a href="#section-5.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="federation">
@@ -2052,9 +2052,9 @@ to the correct transparency log. Typically in such a system, the end-user
 identity directly specifies which entity requests should be directed to. For
 example, with an email end-user identity like <code>alice@example.com</code>, the
 controlling entity is <code>example.com</code>.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
-<p id="section-5.3-2">A controlling entity like <code>example.com</code> may act as an anonymizing proxy for its
-users when querying transparency logs run by other entities (in the manner of
-<span>[<a href="#RFC9458" class="cite xref">RFC9458</a>]</span>), but should not attempt to 'mirror' or combine other transparency
+<p id="section-5.3-2">A controlling entity like <code>example.com</code> <span class="bcp14">MAY</span> act as an anonymizing proxy for its
+users when they query transparency logs run by other entities (in the manner of
+<span>[<a href="#RFC9458" class="cite xref">RFC9458</a>]</span>), but <span class="bcp14">SHOULD NOT</span> attempt to 'mirror' or combine other transparency
 logs with its own.<a href="#section-5.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
