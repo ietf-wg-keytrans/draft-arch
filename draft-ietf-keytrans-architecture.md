@@ -334,8 +334,8 @@ Alice                      Bob                          Transparency Log
 ~~~
 {: #out-of-band-checking title="Users receive tree heads while making
 authenticated requests to a transparency log. Users ensure consistency of tree
-heads by either comparing amongst themselves, or by contacting the Transparency
-Log over an anonymous channel. Requests that require authentication do not need
+heads by either comparing amongst themselves, or by contacting the transparency
+log over an anonymous channel. Requests that require authentication do not need
 to be available over the anonymous channel." }
 
 # Deployment Modes
@@ -353,37 +353,28 @@ collude to trick them into accepting malicious results.
 
 With both third-party modes, all requests from end-users are initially routed to
 the transparency log and the log coordinates with the third party
-itself. End-users never contact the third party directly, however they will
+itself. End-users never contact the third party directly, although they will
 need a signature public key from the third party to verify its assertions.
 
 With Third-Party Management, the third party performs the majority of the work
 of actually storing and operating the service, and the transparency log only
 signs new entries as they're added. With Third-Party Auditing, the transparency
-log performs the majority of the work of storing and operating the service, and
-obtains signatures from a lightweight third-party auditor at regular intervals
+log performs the majority of the work of storing and operating the service, only
+obtaining signatures from a third-party auditor at regular intervals
 asserting that the tree has been constructed correctly.
 
 **Contact Monitoring**, on the other hand, supports a single-party deployment
-with no third party. The cost of this is that executing the background
-monitoring protocol requires an amount of work that's proportional to the number
-of labels a user has looked up in the recent past. As such, it's less suited to
-use-cases where users look up a large number of labels whose values change
-frequently. However, if applications generally expect users to look up a limited
-number of labels repeatedly (for example, the labels of regular contacts), or if
-label values are expected to change infrequently, then Contact Monitoring has a
-similar efficiency as the the third-party deployment modes.
+with no third party. The cost of this is that, when a user looks up a version of
+a label that was inserted very recently, the user may need to retain some
+additional state and monitor the label until it is included in a *distinguished
+log entry* (as defined in {{!PROTO=I-D.ietf-keytrans-protocol}}). If a user
+looks up many label-version pairs that were inserted very recently, monitoring
+may become relatively expensive.
 
-| Deployment Mode        | Supports ephemeral labels? | Single party? |
-|------------------------| ---------------------------|---------------|
-| Contact Monitoring     | No                         | Yes           |
-| Third-Party Auditing   | Yes                        | No            |
-| Third-Party Management | Yes                        | No            |
-{: title="Comparison of deployment modes" }
-
-Applications that rely on a transparency log deployed in Contact Monitoring mode
-MUST regularly attempt to detect forks through anonymous communication with the
-transparency log or peer-to-peer communication, as described in
-{{detecting-forks}}.
+Additionally, applications that rely on a transparency log deployed in Contact
+Monitoring mode MUST regularly attempt to detect forks through anonymous
+communication with the transparency log or peer-to-peer communication, as
+described in {{detecting-forks}}.
 
 Applications that rely on a transparency log deployed in either of the
 third-party modes SHOULD allow users to enable a "Contact Monitoring Mode". This
@@ -391,22 +382,22 @@ mode, which affects only the individual client's behavior, would cause the
 client to behave as if its transparency log was deployed in Contact Monitoring
 mode. As such, it would start retaining state about previously looked-up labels
 and regularly engaging in out-of-band communication. Enabling this
-higher-security mode allows users to double-check that the third-party is not
-colluding with the transparency log to serve malicious data.
+higher-security mode allows users to double-check that the third party is not
+colluding with the transparency log.
 
 ## Contact Monitoring
 
 With the Contact Monitoring deployment mode, the monitoring burden is split
-between both the owner of a label and those that look up the label. Stated as simply
-as possible, the monitoring obligations of each party are:
+between both the owner of a label and those that look up the label. Stated as
+simply as possible, the monitoring obligations of each party are:
 
-1. The label owner, on a regular basis, searches for the most recent version of
-   the label in the log. They verify that the label has not changed unexpectedly.
-2. The users that looked up a label, at some point in the future, verify that the
-   label-value pair they observed is still properly represented in the tree such
-   that other users would find it if they searched for it.
+1. On a regular basis, the label owner searches for the most recent version of
+   their label and verifies that it has not changed unexpectedly.
+2. When a user that looked up a label sees that it was inserted very recently,
+   they check back later to see that the label-version pair they observed was
+   not removed before it could be detected by the label owner.
 
-This guarantees that if a malicious label-value pair is added to the log, then
+This guarantees that if a malicious value for a label is added to the log, then
 either it is detected by the label owner, or if it is removed/obscured from the
 log before the label owner can detect it, then any users that observed it will
 detect its removal.
@@ -417,53 +408,46 @@ Alice                        Transparency Log                        Bob
 | Search(Bob) --------------------> |                                  |
 | <------------ SearchResponse(...) |                                  |
 |                                   |                                  |
-|                                   |                                  |
 |           (1 day later)           |                                  |
 |                                   |                                  |
 | Monitor(Bob) -------------------> |                                  |
 | <----------- MonitorResponse(...) |                                  |
 |                                   |                                  |
-|                                   |                                  |
-|          (2 days later)           |                                  |
-|                                   |                                  |
-| Monitor(Bob) -------------------> |                                  |
-| <----------- MonitorResponse(...) |                                  |
+|           (1 day later)           |                                  |
 |                                   |                                  |
 |                                   | <------------------ Monitor(Bob) |
-|          (4 days later)           | MonitorResponse(...) ----------> |
-|                                   |                                  |
-| Monitor(Bob) -------------------> |                                  |
-| <----------- MonitorResponse(...) |                                  |
-|                                   |                                  |
-|               ...                 |                                  |
+|                                   | MonitorResponse(...) ----------> |
 |                                   |                                  |
 ~~~
-{: #contact-monitoring-fig title="Contact Monitoring. When users make a Search
-request, they must check back in with the transparency log several times. These
-checks ensure that the data in the Search response wasn't later removed from the
-log. Overlap with the label owner's own monitoring guarantees a consistent view of
-data." }
+{: #contact-monitoring-fig title="Contact Monitoring. Alice searches for Bob's
+label. One day later, Alice verifies the label-version pair she observed
+remained in transparency log. Another day later, Bob comes online and monitors
+his own label. Note that Alice does not need to wait on Bob to make his Monitor
+request before making hers." }
 
-Note that Contact Monitoring impacts how the server is able to enforce access
+Importantly, Contact Monitoring impacts how the server is able to enforce access
 control on Monitor queries. While Search and Update queries can enforce access
-control on a "point-in-time" basis, where a user is allowed to execute the query
-at one point-in-time but maybe not the next, Monitor queries must have
+control on a "point in time" basis, where a user is allowed to execute the query
+at one point in time but maybe not the next, Monitor queries must have
 "accretive" access control. This is because, if a user is allowed to execute a
-Search or Update query for a label, the user will then need to issue Monitor
-queries for the label for some time into the future to maintain security. These
-Monitor queries must be permitted, regardless of whether or not the user could
-still execute the same Search or Update query now.
+Search or Update query for a label, the user may then need to issue at least one
+Monitor query for the label some time in the future. These Monitor queries must
+be permitted, regardless of whether or not the user is still permitted to
+execute such Search or Update queries.
 
 ## Third-Party Auditing
 
 With the Third-Party Auditing deployment mode, the transparency log obtains
-signatures from a lightweight third-party auditor attesting to the fact that the
-tree has been constructed correctly. These signatures are
-provided to users along with the responses for their queries.
+signatures from a third-party auditor attesting to the fact that the tree has
+been constructed correctly. These signatures are provided to users as part of
+the responses for their queries.
 
 The third-party auditor is expected to run asynchronously, downloading and
 authenticating a log's contents in the background, so as not to become a
-bottleneck for the transparency log.
+bottleneck for the transparency log. As a result, signatures from the auditor
+may lag behind the view presented by the transparency log. The maximum amount of
+time that the auditor may lag behind the transparency log without its signature
+being rejected by users is set in the transparency log's configuration.
 
 ~~~aasvg
 Many Users                        Transparency Log               Auditor
@@ -482,14 +466,23 @@ Many Users                        Transparency Log               Auditor
 auditor is provided to users. The auditor is updated on changes to the tree in
 the background." }
 
+Given the long-lived nature of transparency logs and the potentially short-lived
+nature of third-party auditing arrangements, KT allows third-party auditors to
+start auditing a log at any arbitrary point. This allows a new third-party
+auditor to start up quickly, without ingesting the transparency log's entire
+history. The point at which an auditor started auditing is provided to users in
+the transparency log's configuration. When verifying query responses, users
+verify that the auditor started auditing at or before the point necessary for
+the query to be secure.
+
 ## Third-Party Management
 
 With the Third-Party Management deployment mode, a third party is responsible
-for the majority of the work of storing and operating the log. The
-transparency log serves mainly to enforce access control and authenticate the addition
-of new entries to the log. All user queries are initially sent by users directly
-to the transparency log, and the log operator proxies them to the
-third-party manager if they pass access control.
+for the majority of the work of storing and operating the log. The transparency
+log serves mainly to enforce access control and authenticate the addition of new
+entries to the log. All user queries are initially sent by users directly to the
+transparency log, and the log operator proxies them to the third-party manager
+if they pass access control.
 
 ~~~aasvg
 Alice                  Transparency Log                  Manager
@@ -505,8 +498,23 @@ Alice                  Transparency Log                  Manager
 |                             |                                |
 ~~~
 {: #manager-fig title="Third-Party Management. Valid requests are proxied by the
-transparency log to the Manager. Rejected requests are blocked." }
+transparency log to the manager. Invalid requests are blocked." }
 
+The security of the Third-Party Management deployment mode comes from an
+assumption that the transparency log and the third-party manager do not collude
+to behave maliciously. If the third-party manager behaves honestly, then any
+improper modifications to a label's value that were requested by the
+transparency log will be properly published such that the label owner will
+detect them when monitoring. If the transparency log behaves honestly, the
+third-party manager will be unable to add any new unauthorized versions of a
+label such that a user will accept them, or remove any authorized version of a
+label without the label owner detecting it.
+
+The transparency log MUST implement some mechanism to detect when forks are
+presented by the third-party manager. Additionally, the transparency log MUST
+implement some mechanism to prevent the same version of a label from being
+submitted to the third-party manager multiple times with different associated
+values.
 
 # Combining Logs
 
