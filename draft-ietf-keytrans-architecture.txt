@@ -3,9 +3,9 @@
 
 
 Key Transparency                                            B. McMillion
-Internet-Draft                                              14 June 2025
+Internet-Draft                                              25 June 2025
 Intended status: Informational                                          
-Expires: 16 December 2025
+Expires: 27 December 2025
 
 
                      Key Transparency Architecture
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 December 2025.
+   This Internet-Draft will expire on 27 December 2025.
 
 Copyright Notice
 
@@ -109,24 +109,24 @@ Table of Contents
    Typically this is done by having users upload their public keys to a
    simple directory where other users can download them as necessary, or
    by providing public keys in-band with the communication being
-   secured.  With this approach, the service operator needs to be
-   trusted to provide the correct public keys, which means that the
-   underlying encryption protocol can only protect users against passive
+   secured.  If the service operator is simply trusted to correctly
+   forward public keys between users, this means that the underlying
+   encryption protocol can only protect users against passive
    eavesdropping on their messages.
 
    However, most messaging systems are designed such that all messages
-   exchanged between users flow through the service operator's servers,
-   so it's extremely easy for an operator to launch an active attack.
-   That is, the service operator can provide fake public keys which it
-   knows the private keys for, associate those public keys with a user's
-   account without the user's knowledge, and then use them to
-   impersonate or eavesdrop on conversations with that user.
+   are exchanged through the service operator's servers, which makes it
+   extremely easy for an operator to launch an active attack.  That is,
+   the service operator can take public keys for which it knows the
+   corresponding private keys, and associate those public keys with a
+   user's account without the user's knowledge to impersonate or
+   eavesdrop on conversations with that user.
 
    Key Transparency (KT) solves this problem by requiring the service
    operator to store user public keys in a cryptographically protected
    append-only log.  Any malicious entries added to such a log will
    generally be equally visible to both the affected user and the user's
-   contacts, in which case the user can detect that they are being
+   contacts.  This allows users to detect whether they are being
    impersonated by viewing the public keys attached to their account.
    If the service operator attempts to conceal some entries of the log
    from some users but not others, this creates a "forked view" which is
@@ -151,7 +151,7 @@ Table of Contents
 
    *End-to-End Encrypted Communication Service:*  A communication
       service that allows end-users to engage in text, voice, video, or
-      other forms of communication over the internet, that uses public
+      other forms of communication over the internet, and uses public
       key cryptography to ensure that communications are only accessible
       to their intended recipients.
 
@@ -180,7 +180,7 @@ Table of Contents
    *Transparency Log:*  A specialized service capable of securely
       attesting to the information (such as public keys) associated with
       a given end-user identity.  A transparency log is usually run
-      either entirely or partially by the service operator but could
+      either entirely or partially by the service operator, but could
       also be operated externally.
 
 3.  Protocol Overview
@@ -233,7 +233,7 @@ Table of Contents
 
    1.  *Search:* Looks up the value of a specific label in the most
        recent version of the log.  Users may request either a specific
-       version of the label, or the most recent version available.  If
+       version of the label or the most recent version available.  If
        the label-version pair exists, the server returns the
        corresponding value and an inclusion proof.
 
@@ -251,7 +251,7 @@ Table of Contents
        without the user's knowledge.
 
    These operations are executed over an application-provided transport
-   layer, where the transport layer enforces access control by blocking
+   layer.  The transport layer enforces access control by blocking
    queries which are not allowed:
 
    Alice                                   Transparency Log
@@ -363,12 +363,12 @@ Table of Contents
    as described in Section 4.2 and Section 4.3, an outside organization
    monitors the operation of the transparency log.  This third party
    verifies, among other things, that the transparency log is growing in
-   an append-only manner and produces a signature on the most recent
-   tree head if this verification is successful.  The transparency log
-   provides this signature to users with their query responses as proof
-   that they have not been shown a fork.  This approach relies on an
-   assumption that the third party is trusted not to collude with the
-   transparency log to sign a fork.
+   an append-only manner.  If verification is successful, the third
+   party and produces a signature on the most recent tree head.  The
+   transparency log provides this signature to users in-line with their
+   query responses as proof that they are not being shown a fork.  This
+   approach relies on an assumption that the third party is trusted not
+   to collude with the transparency log to sign a fork.
 
    With anonymous communication, a single user accesses the transparency
    log over an anonymous channel and checks that the transparency log is
@@ -476,9 +476,8 @@ Alice                      Bob                          Transparency Log
    label.  Stated as simply as possible, the monitoring obligations of
    each party are:
 
-   1.  On a regular basis, the label owner searches for the most recent
-       version of their label and verifies that it has not changed
-       unexpectedly.
+   1.  On a regular basis, the label owner verifies that the most recent
+       version of their label has not changed unexpectedly.
 
    2.  When a user that looked up a label sees that it was inserted very
        recently, they check back later to see that the label-version
@@ -546,8 +545,8 @@ Many Users                        Transparency Log               Auditor
 | <===== Response{AuditorSig: 66bf, ...} |                             |
 |                                        |                             |
 |                                        |                             |
-|                                        | BatchUpdate --------------> |
-|                                        | <---------- NewSig: 53c1035 |
+|                                        | [AuditorUpdate] ----------> |
+|                                        | <---------- AuditorTreeHead |
 |                                        |                             |
 
      Figure 5: Third-Party Auditing.  A recent signature from the
@@ -557,12 +556,12 @@ Many Users                        Transparency Log               Auditor
    Given the long-lived nature of transparency logs and the potentially
    short-lived nature of third-party auditing arrangements, KT allows
    third-party auditors to start auditing a log at any arbitrary point.
-   This allows a new third-party auditor to start up quickly, without
-   ingesting the transparency log's entire history.  The point at which
-   an auditor started auditing is provided to users in the transparency
-   log's configuration.  When verifying query responses, users verify
-   that the auditor started auditing at or before the point necessary
-   for the query to be secure.
+   This allows a new third-party auditor to start up without ingesting
+   the transparency log's entire history.  The point at which an auditor
+   started auditing is provided to users in the transparency log's
+   configuration.  When verifying query responses, users verify that the
+   auditor started auditing at or before the point necessary for the
+   query to be secure.
 
 4.3.  Third-Party Management
 
@@ -571,8 +570,8 @@ Many Users                        Transparency Log               Auditor
    log.  The transparency log serves mainly to enforce access control
    and authenticate the addition of new entries to the log.  All user
    queries are initially sent by users directly to the transparency log,
-   and the log operator proxies them to the third-party manager if they
-   pass access control.
+   and the transparency log proxies them to the third-party manager if
+   they pass access control.
 
    Alice                  Transparency Log                  Manager
    |                             |                                |
@@ -612,7 +611,8 @@ Many Users                        Transparency Log               Auditor
    cooperating transparency log instances, for example:
 
    *  A service provider may wish to gradually migrate to a transparency
-      log that uses a different deployment mode.
+      log that uses different cryptographic keys, a different cipher
+      suite, or different deployment mode.
 
    *  A service provider may operate multiple logs to improve their
       ability to scale or provide higher availability.
@@ -677,13 +677,13 @@ Many Users                        Transparency Log               Auditor
        final Monitor queries to complete monitoring up to this point.
        Label owners initiate monitoring state for the new transparency
        log by processing an Update for the migrated versions of their
-       labels and verifying that the migration was done properly.  From
+       labels and verifying that the migration was done correctly.  From
        then on, users will monitor only the new transparency log.
 
    The final tree size and root hash of the prior transparency log need
    to be distributed to users in a way that guarantees all users have a
    globally consistent view.  This can be done either by storing them in
-   a well-known label of the new transparency log, or with the
+   a well-known label of the new transparency log or with the
    application's code distribution mechanism.
 
 5.3.  Federation

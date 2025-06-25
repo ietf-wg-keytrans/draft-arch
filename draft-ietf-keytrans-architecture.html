@@ -13,12 +13,12 @@ infrastructure, and specifies the security properties that the protocol
 provides. It also gives more general, non-prescriptive guidance on how to
 securely apply Key Transparency to a number of common applications. 
     " name="description">
-<meta content="xml2rfc 3.28.1" name="generator">
+<meta content="xml2rfc 3.29.0" name="generator">
 <meta content="key transparency" name="keyword">
 <meta content="draft-ietf-keytrans-architecture-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.28.1
-    Python 3.12.10
+  xml2rfc 3.29.0
+    Python 3.12.11
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
@@ -27,7 +27,7 @@ securely apply Key Transparency to a number of common applications.
     platformdirs 4.3.8
     pycountry 24.6.1
     PyYAML 6.0.2
-    requests 2.32.3
+    requests 2.32.4
     setuptools 80.9.0
     wcwidth 0.2.13
 -->
@@ -1052,7 +1052,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">McMillion</td>
-<td class="center">Expires 16 December 2025</td>
+<td class="center">Expires 27 December 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1065,12 +1065,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-keytrans-architecture-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-06-14" class="published">14 June 2025</time>
+<time datetime="2025-06-25" class="published">25 June 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-12-16">16 December 2025</time></dd>
+<dd class="expires"><time datetime="2025-12-27">27 December 2025</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1123,7 +1123,7 @@ securely apply Key Transparency to a number of common applications.<a href="#sec
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 16 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 27 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1258,24 +1258,24 @@ service operator must somehow distribute these public keys amongst the
 participants that wish to communicate with each other.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">Typically this is done by having users upload their public keys to a simple
 directory where other users can download them as necessary, or by providing
-public keys in-band with the communication being secured. With this approach,
-the service operator needs to be trusted to provide the correct public keys,
-which means that the underlying encryption protocol can only protect users
-against passive eavesdropping on their messages.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">However, most messaging systems are designed such that all messages exchanged
-between users flow through the service operator's servers, so it's extremely
-easy for an operator to launch an active attack. That is, the service operator
-can provide fake public keys which it knows the private keys for, associate
-those public keys with a user's account without the user's knowledge, and then
-use them to impersonate or eavesdrop on conversations with that user.<a href="#section-1-3" class="pilcrow">¶</a></p>
+public keys in-band with the communication being secured. If the service
+operator is simply trusted to correctly forward public keys between users, this
+means that the underlying encryption protocol can only protect users against
+passive eavesdropping on their messages.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">However, most messaging systems are designed such that all messages are
+exchanged through the service operator's servers, which makes it extremely easy
+for an operator to launch an active attack. That is, the service operator can
+take public keys for which it knows the corresponding private keys, and
+associate those public keys with a user's account without the user's knowledge
+to impersonate or eavesdrop on conversations with that user.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4">Key Transparency (KT) solves this problem by requiring the service operator to
 store user public keys in a cryptographically protected append-only log. Any
 malicious entries added to such a log will generally be equally visible to both
-the affected user and the user's contacts,
-in which case the user can detect that they are being impersonated
-by viewing the public keys attached to their account. If the service
-operator attempts to conceal some entries of the log from some users but not
-others, this creates a "forked view" which is permanent and easily detectable.<a href="#section-1-4" class="pilcrow">¶</a></p>
+the affected user and the user's contacts. This allows users to detect whether
+they are being impersonated by viewing the public keys attached to their
+account. If the service operator attempts to conceal some entries of the log
+from some users but not others, this creates a "forked view" which is permanent
+and easily detectable.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <p id="section-1-5">The critical improvement of KT over related protocols like Certificate
 Transparency <span>[<a href="#RFC6962" class="cite xref">RFC6962</a>]</span> is that KT includes an efficient
 protocol to search the log for entries related to a specific participant. This
@@ -1298,7 +1298,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
         <dt id="section-2-2.1"><strong>End-to-End Encrypted Communication Service:</strong></dt>
         <dd style="margin-left: 1.5em" id="section-2-2.2">
           <p id="section-2-2.2.1">A communication service that allows end-users to engage in text, voice,
-video, or other forms of communication over the internet, that uses public key
+video, or other forms of communication over the internet, and uses public key
 cryptography to ensure that communications are only accessible to their
 intended recipients.<a href="#section-2-2.2.1" class="pilcrow">¶</a></p>
 </dd>
@@ -1338,7 +1338,7 @@ encrypted communication service and the software to participate in it.<a href="#
         <dd style="margin-left: 1.5em" id="section-2-2.12">
           <p id="section-2-2.12.1">A specialized service capable of securely attesting to the information (such
 as public keys) associated with a given end-user identity. A transparency
-log is usually run either entirely or partially by the service operator but
+log is usually run either entirely or partially by the service operator, but
 could also be operated externally.<a href="#section-2-2.12.1" class="pilcrow">¶</a></p>
 </dd>
       <dd class="break"></dd>
@@ -1391,7 +1391,7 @@ and possibly explaining the reason for rejection, is left to the application.<a 
 <ol start="1" type="1" class="normal type-1" id="section-3.1-2">
 <li id="section-3.1-2.1">
             <p id="section-3.1-2.1.1"><strong>Search:</strong> Looks up the value of a specific label in the most recent version
-of the log. Users may request either a specific version of the label, or the
+of the log. Users may request either a specific version of the label or the
 most recent version available. If the label-version pair exists, the server
 returns the corresponding value and an inclusion proof.<a href="#section-3.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
@@ -1409,8 +1409,8 @@ remain in the tree) and that no changes have been made to labels owned by the
 user without the user's knowledge.<a href="#section-3.1-2.3.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
-<p id="section-3.1-3">These operations are executed over an application-provided transport layer,
-where the transport layer enforces access control by blocking queries which are
+<p id="section-3.1-3">These operations are executed over an application-provided transport layer.
+The transport layer enforces access control by blocking queries which are
 not allowed:<a href="#section-3.1-3" class="pilcrow">¶</a></p>
 <span id="name-example-request-and-respons"></span><div id="request-response">
 <figure id="figure-1">
@@ -1575,11 +1575,11 @@ transparency log, or <strong>peer-to-peer communication</strong>.<a href="#secti
 described in <a href="#third-party-auditing" class="auto internal xref">Section 4.2</a> and <a href="#third-party-management" class="auto internal xref">Section 4.3</a>, an outside
 organization monitors the operation of the transparency log. This third party
 verifies, among other things, that the transparency log is growing in an
-append-only manner and produces a signature on the most recent tree head if this
-verification is successful. The transparency log provides this signature to
-users with their query responses as proof that they have not been shown a fork.
-This approach relies on an assumption that the third party is trusted not to
-collude with the transparency log to sign a fork.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
+append-only manner. If verification is successful, the third party and produces
+a signature on the most recent tree head. The transparency log provides this
+signature to users in-line with their query responses as proof that they are not
+being shown a fork. This approach relies on an assumption that the third party
+is trusted not to collude with the transparency log to sign a fork.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
 <p id="section-3.3-5">With anonymous communication, a single user accesses the transparency log over
 an anonymous channel and checks that the transparency log is presenting the same
 tree head over the anonymous channel as it does over an authenticated channel.
@@ -1714,8 +1714,8 @@ between both the owner of a label and those that look up the label. Stated as
 simply as possible, the monitoring obligations of each party are:<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-4.1-2">
 <li id="section-4.1-2.1">
-            <p id="section-4.1-2.1.1">On a regular basis, the label owner searches for the most recent version of
-their label and verifies that it has not changed unexpectedly.<a href="#section-4.1-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-4.1-2.1.1">On a regular basis, the label owner verifies that the most recent version of
+their label has not changed unexpectedly.<a href="#section-4.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-4.1-2.2">
             <p id="section-4.1-2.2.1">When a user that looked up a label sees that it was inserted very recently,
@@ -1811,7 +1811,7 @@ being rejected by users is set in the transparency log's configuration.<a href="
                 <path d="M 176,96 L 320,96" fill="none" stroke="black"></path>
                 <path d="M 24,110 L 64,110" fill="none" stroke="black"></path>
                 <path d="M 24,114 L 64,114" fill="none" stroke="black"></path>
-                <path d="M 448,160 L 560,160" fill="none" stroke="black"></path>
+                <path d="M 480,160 L 560,160" fill="none" stroke="black"></path>
                 <path d="M 352,176 L 432,176" fill="none" stroke="black"></path>
                 <polygon class="arrowhead" points="568,160 556,154.4 556,165.6" fill="black" transform="rotate(0,560,160)"></polygon>
                 <polygon class="arrowhead" points="360,176 348,170.4 348,181.6" fill="black" transform="rotate(180,352,176)"></polygon>
@@ -1834,9 +1834,8 @@ being rejected by users is set in the transparency log's configuration.<a href="
                   <text x="156" y="116">Response{AuditorSig:</text>
                   <text x="264" y="116">66bf,</text>
                   <text x="308" y="116">...}</text>
-                  <text x="392" y="164">BatchUpdate</text>
-                  <text x="472" y="180">NewSig:</text>
-                  <text x="536" y="180">53c1035</text>
+                  <text x="408" y="164">[AuditorUpdate]</text>
+                  <text x="504" y="180">AuditorTreeHead</text>
                 </g>
               </svg><a href="#section-4.2-3.1.1" class="pilcrow">¶</a>
 </div>
@@ -1848,7 +1847,7 @@ being rejected by users is set in the transparency log's configuration.<a href="
 <p id="section-4.2-4">Given the long-lived nature of transparency logs and the potentially short-lived
 nature of third-party auditing arrangements, KT allows third-party auditors to
 start auditing a log at any arbitrary point. This allows a new third-party
-auditor to start up quickly, without ingesting the transparency log's entire
+auditor to start up without ingesting the transparency log's entire
 history. The point at which an auditor started auditing is provided to users in
 the transparency log's configuration. When verifying query responses, users
 verify that the auditor started auditing at or before the point necessary for
@@ -1864,8 +1863,8 @@ the query to be secure.<a href="#section-4.2-4" class="pilcrow">¶</a></p>
 for the majority of the work of storing and operating the log. The transparency
 log serves mainly to enforce access control and authenticate the addition of new
 entries to the log. All user queries are initially sent by users directly to the
-transparency log, and the log operator proxies them to the third-party manager
-if they pass access control.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
+transparency log, and the transparency log proxies them to the third-party
+manager if they pass access control.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
 <span id="name-third-party-management-vali"></span><div id="manager-fig">
 <figure id="figure-6">
           <div id="section-4.3-2.1">
@@ -1945,7 +1944,8 @@ transparency log instances, for example:<a href="#section-5-1" class="pilcrow">�
 <ul class="normal">
 <li class="normal" id="section-5-2.1">
           <p id="section-5-2.1.1">A service provider may wish to gradually migrate to a transparency log that
-uses a different deployment mode.<a href="#section-5-2.1.1" class="pilcrow">¶</a></p>
+uses different cryptographic keys, a different cipher suite, or different
+deployment mode.<a href="#section-5-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-5-2.2">
           <p id="section-5-2.2.1">A service provider may operate multiple logs to improve their ability to scale
@@ -2027,14 +2027,14 @@ the policy may look like:<a href="#section-5.2-1" class="pilcrow">¶</a></p>
 users over a trustworthy channel. Label owners issue final Monitor queries to
 complete monitoring up to this point. Label owners initiate monitoring state
 for the new transparency log by processing an Update for the migrated
-versions of their labels and verifying that the migration was done properly.
+versions of their labels and verifying that the migration was done correctly.
 From then on, users will monitor only the new transparency log.<a href="#section-5.2-2.3.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <p id="section-5.2-3">The final tree size and root hash of the prior transparency log need to be
 distributed to users in a way that guarantees all users have a globally
 consistent view. This can be done either by storing them in a well-known label
-of the new transparency log, or with the application's code distribution
+of the new transparency log or with the application's code distribution
 mechanism.<a href="#section-5.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
