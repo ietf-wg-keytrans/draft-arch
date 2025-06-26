@@ -663,10 +663,10 @@ either:
 2. The user will permanently enter an invalid state.
 
 Depending on the exact reason that the user enters an invalid state, it will
-either be detected by background monitoring or the next time that out-of-band
-communication is available. Importantly, this means that users must stay
-online for some bounded amount of time after entering an invalid state for it to
-be successfully detected.
+either be detected by background monitoring or by the mechanisms described in
+{{detecting-forks}}. Importantly, this means that users must stay online for
+some bounded amount of time after entering an invalid state for it to be
+successfully detected.
 
 Alternatively, instead of executing a lookup incorrectly, the transparency log
 can attempt to prevent a user from learning about more recent states of the log.
@@ -675,11 +675,11 @@ outdated versions of data. To prevent this, applications configure an upper
 bound on how stale a query response can be without being rejected.
 
 The exact caveats of the above guarantees depend naturally on the security of
-underlying cryptographic primitives, and also the deployment mode that the
+underlying cryptographic primitives and also the deployment mode that the
 transparency log relies on:
 
 - Third-Party Management and Third-Party Auditing require an assumption that the
-  transparency log and the third-party manager/auditor do not collude
+  transparency log and the third-party manager or auditor do not collude
   to trick users into accepting malicious results.
 - Contact Monitoring requires an assumption that the user that owns a label and
   all users that look up the label do the necessary monitoring afterwards.
@@ -691,31 +691,33 @@ transparency log is always detected within a bounded amount of time. The
 parameters that determine the maximum amount of time before malicious behavior
 is detected are as follows:
 
-- How stale an application allows query responses to be (ie, how long an
-  application is willing to go without seeing updates to the tree).
-- How frequently users execute background monitoring.
-- How frequently users exercise out-of-band communication.
-- For third-party auditing: the maximum amount of lag that an auditor is allowed
-  to have relative to the most recent tree head.
+- The configured maximum amount of time by which a query response can be stale.
+- The configured Reasonable Monitoring Window (described in
+  {{Section 7.1 of PROTO}}), weighed against how frequently users execute
+  background monitoring in practice.
+- For logs that use the Contact Monitoring deployment mode: how frequently users
+  engage in anonymous communication with the transparency log, or peer-to-peer
+  communication with other users.
+- For logs that use the Third-Party Auditing deployment mode: the configured
+  maximum acceptable lag for an auditor.
 
 ## Privacy Guarantees
 
 For applications deploying KT, service operators expect to be able to control
-when sensitive information is revealed. In particular, an operator can often
-only reveal that a user is a member of their service, and information about that
-user's account, to that user's friends or contacts.
+when sensitive information is revealed. In particular, a service operator can
+often only reveal that a user is a member of their service, and information
+about that user's account, to that user's friends or contacts.
 
 KT only allows users to learn whether or not a label exists in the
 transparency log if the user obtains a valid search proof for that label.
-Similarly, KT only allows users to learn about the contents of a log entry if
-the user obtains a valid search proof for the exact label and version stored at
-that log entry.
+Similarly, KT only allows users to learn about the value of a label if
+the user obtains a valid search proof for the exact label and version.
 
 When a user was previously allowed to lookup or change a label's value but no
 longer is, KT prevents the user from learning whether or not the label's value
-has changed since the user's access was revoked. Note however that in Contact
-Monitoring mode, users SHOULD be permitted to perform monitoring to
-guarantee honest operation of the transparency log.
+has changed since the user's access was revoked. This is true even in Contact
+Monitoring mode, where users are still permitted to perform monitoring after
+their access to perform other queries has been revoked.
 
 Applications determine the privacy of data in KT by
 relying on these properties when they enforce access control policies on the
@@ -731,10 +733,12 @@ metrics about their users. These metrics include the size of their user base, th
 frequency with which new users join, and the frequency with which existing users
 update their labels.
 
-KT allows a service operator to obscure the size of its user base by padding the
-tree with fake entries. Similarly, it also allows a service operator to obscure
-the rate at which changes are made by padding real changes with fake ones,
-causing outsiders to observe a baseline constant rate of changes.
+KT allows a service operator to obscure the size of its user base by batch
+inserting a large number of fake label-version pairs when a transparency log is
+first initialized. Similarly, KT also allows a service operator to obscure the
+rate at which "real" changes are made to the transparency log by padding "real"
+changes with the insertion of other fake label-version pairs such that it
+creates the outside appearance of a constant baseline rate of insertions.
 
 ### Leakage to Third-Party
 
@@ -832,47 +836,49 @@ Fundamentally, KT can be thought of as guaranteeing that all the users of a
 service agree on the contents of a key-value database (noting that this document
 refers to these keys as "labels"). It takes special care to turn the guarantee
 that all users agree on a set of labels and values into a guarantee that the
-mapping between end-users and their public keys is authentic.
-Critically, to authenticate an end-user
-identity, it must be both *unique* and *user-visible*. However, what exactly
-constitutes a unique and user-visible identifier varies greatly from application
-to application.
+mapping between end-users and their public keys is authentic. Critically, to
+authenticate an end-user identity, it must be both *unique* and *user-visible*.
+However, what exactly constitutes a unique and user-visible identifier varies
+greatly from application to application.
 
 Consider, for example, a communication service where users are uniquely
-identified by a fixed username, but KT has been deployed using an internal UUID
-as the label. While the UUID might be unique, it is not user-visible. When a
-user attempts to lookup a contact by username, the service operator must
-translate the username into its UUID. Since this mapping (from username to UUID)
-is unauthenticated, the service operator can manipulate it to eavesdrop on
-conversations by returning the UUID for an account that it controls. From a
-security perspective, this is equivalent to not using KT at all. An example of
-this type of application, where the unique and user-visible identifier is a
-fixed string, would be email.
+identified by a fixed username, but KT has been deployed using each user's
+internal UUID as their label. While the UUID might be unique, it is not
+necessarily user-visible. When a user attempts to lookup a contact by username,
+the service operator translates the username into a user UUID under the hood. If
+this mapping (from username to UUID) is unauthenticated, the service operator
+could manipulate it to eavesdrop on conversations by returning the UUID for an
+account that it controls. From a security perspective, this would be equivalent
+to not using KT at all.
 
-However in other applications, the use of internal UUIDs in KT may be
-appropriate. For example, many applications don't have this type of fixed
-username and instead rely on their UI (underpinned internally by a UUID) to indicate
-to users whether a conversation is with a new person or someone they've
-previously contacted. The fact that the UI behaves in this way makes the UUID a
-user-visible identifier, even if a user may not be able to actually see it
-written out. An example of this kind of application would be Slack.
+However, that's not to say that the use of internal UUIDs in KT is never
+appropriate. Many applications don't have a concept of a fixed explicit
+identifier, like a username, and instead rely on their UI (underpinned
+internally by a user's ID) to indicate to users whether a conversation is with a
+new person or someone they've previously contacted. The fact that the UI behaves
+this way makes the user's ID a user-visible identifier even if a user may not be
+able to actually see it written out. An example of this kind of application
+would be Slack.
 
 A **primary end-user identity** is one that is unique, user-visible, and unable
 to change. (Or equivalently, if it changes, it appears in the application UI as
 a new conversation with a new user.) A primary end-user identity should always
-be a label in KT, with the end-user's public keys as the associated value.
+be a label in KT, with the end-user's public keys and other account information
+as the associated value.
 
 A **secondary end-user identity** is one that is unique, user-visible, and able
 to change without being interpreted as a different account due to its
-association with a primary identity. Examples of this type of identity include
-phone numbers, or most usernames. These identities are used solely for initial
-user discovery, in which they're converted to a primary identity that's used by
-the application from then on. A secondary end-user identity should be a label
-in KT, for the purpose of authenticating user discovery, with the primary
-end-user identity as the associated value.
+association with a primary end-user identity. These identities are used solely
+for initial user discovery, during which they're converted into a primary
+end-user identity (like a UUID) that's used by the application to identify the
+end-user from then on. An example of this type of identity would be a phone
+number, since users can often change the phone number they use with a service
+without disrupting existing communications. A secondary end-user identity should
+be a label in KT with the primary end-user identity as the associated value,
+such that it can be used to authenticate the user discovery process.
 
 While likely helpful to most common applications, the distinction between
-handling primary and secondary identities is not a hard-and-fast rule.
+handling primary and secondary end-user identities is not a guaranteed rule.
 Applications must be careful to ensure they fully capture the semantics of
 identity in their application with the label-value pairs they store in KT.
 
