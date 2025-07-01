@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-03-30T01:43:32.572177+00:00",
+  "timestamp": "2025-07-01T02:24:16.673944+00:00",
   "repo": "ietf-wg-keytrans/draft-arch",
   "labels": [
     {
@@ -224,15 +224,15 @@
       "id": "I_kwDOKhdr7c56DQU5",
       "title": "Security Guarantees",
       "url": "https://github.com/ietf-wg-keytrans/draft-arch/issues/5",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "eshaghoshms",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "Some additional parameters that would be nice to add in Section 6 (The parameters that determine the maximum amount of time before malicious behavior is detected are as follows:)\r\n\r\n1. What state is needed to be maintained by the client devices to detect malicious behavior\r\n2. What state the client devices need to maintain about the user's contacts to help detect malicious behavior\r\n3. Who detects the malicious behavior: the owner of the key, or its recipient\r\n\r\n\r\n\r\n",
       "createdAt": "2023-12-18T23:57:28Z",
-      "updatedAt": "2023-12-19T01:04:05Z",
-      "closedAt": null,
+      "updatedAt": "2025-06-30T00:55:55Z",
+      "closedAt": "2025-06-30T00:55:55Z",
       "comments": []
     },
     {
@@ -240,15 +240,15 @@
       "id": "I_kwDOKhdr7c56DSqg",
       "title": "Leakage to Third-Party",
       "url": "https://github.com/ietf-wg-keytrans/draft-arch/issues/6",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "eshaghoshms",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "I suggest editing the following text in Section 6.1.1\r\n\r\n_In the event that a third-party auditor or manager is used, there\u2019s additional information leaked to the third-party that\u2019s not visible to outsiders.\r\nIn the case of a third-party auditor, the auditor is able to learn the total number of distinct keys in the log. It is also able to distinguish between real and fake modifications to the tree, and keep track of when individual keys are modified. However, auditors are not able to learn the plaintext values of any keys or values. This is because keys are masked with a VRF, and values are only provided to auditors as commitments._\r\n\r\nto\r\n\r\n_In the event that a third-party auditor or manager is used, there might be additional information leaked to the third-party that\u2019s not visible to outsiders. However, in the case of a third-party auditor, auditors are not able to learn the plaintext values of any keys or values. This is because keys are masked with a VRF, and values are only provided to auditors as commitments._\r\n \r\nThis is because many of the KT systems so not suffer from the extra leakage mentioned in the text leakage: SEEMless, VeRSA, Verdict, Parakeet, ELEKTRA. ",
       "createdAt": "2023-12-19T00:04:00Z",
-      "updatedAt": "2024-01-26T23:51:20Z",
-      "closedAt": null,
+      "updatedAt": "2025-06-30T00:53:53Z",
+      "closedAt": "2025-06-30T00:53:53Z",
       "comments": [
         {
           "author": "Bren2010",
