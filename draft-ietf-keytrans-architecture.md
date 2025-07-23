@@ -190,14 +190,14 @@ Alice                                   Transparency Log
   |                                            |
   |        (Valid / Accepted Requests)         |
   |                                            |
-  | Search(Alice) ---------------------------> |
-  | <--------------------- SearchResponse(...) |
+  | Search(Alice) ---------------------------->|
+  |<---------------------- SearchResponse(...) |
   |                                            |
-  | Search(Bob) -----------------------------> |
-  | <--------------------- SearchResponse(...) |
+  | Search(Bob) ------------------------------>|
+  |<---------------------- SearchResponse(...) |
   |                                            |
-  | Update(Alice, ...) ----------------------> |
-  | <--------------------- UpdateResponse(...) |
+  | Update(Alice, ...) ----------------------->|
+  |<---------------------- UpdateResponse(...) |
   |                                            |
   |                                            |
   |       (Rejected / Blocked Requests)        |
@@ -245,15 +245,15 @@ perform the monitoring themself over an anonymous channel.
 ~~~aasvg
 Transparency Log               Alice           Anonymous Group
 |                                |                           |
-| <--------------- Search(Alice) |                           |
-| SearchResponse(...) ---------> | Encrypt(Anon Group,       |
+|<---------------- Search(Alice) |                           |
+| SearchResponse(...) ---------->| Encrypt(Anon Group,       |
 |                                |     SearchResponse ||     |
 |                                |     Message   ||          |
-|                                |     Signature) ---------> |
+|                                |     Signature) ---------->|
 |                                |                           |
-| <-------------- Monitor(Alice) |                           |
-| MonitorResponse(...) --------> | Encrypt(Anon Group,       |
-|                                |     MonitorResponse) ---> |
+|<--------------- Monitor(Alice) |                           |
+| MonitorResponse(...) --------->| Encrypt(Anon Group,       |
+|                                |     MonitorResponse) ---->|
 |                                |                           |
 ~~~
 {: #anonymous title="Example message flow in an anonymous deployment. Users
@@ -318,16 +318,16 @@ Alice                      Bob                          Transparency Log
 |                           |                                          |
 |                           | (Normal reqs over authenticated channel) |
 |                           |                                          |
-|                           | Search(Bob) ---------------------------> |
-|                           | <---------- Response{Head: 6c063bb, ...} |
+|                           | Search(Bob) ---------------------------->|
+|                           |<----------- Response{Head: 6c063bb, ...} |
 |                           |                                          |
 |                           |                                          |
 |                           |                                          |
 |                           |                                          |
 |   (OOB check with peer)   |    (OOB check over anonymous channel)    |
 |                           |                                          |
-| <------ DistinguishedHead | DistinguishedHead ~~~~~~~~~~~~~~~~~~~~~> |
-| 6c063bb ----------------> | <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 6c063bb |
+|<------- DistinguishedHead | DistinguishedHead ~~~~~~~~~~~~~~~~~~~~~> |
+| 6c063bb ----------------->| <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 6c063bb |
 |                           |                                          |
 |                           | Search(Bob) ~~~~~~~~~~~~~~~~~~~> X       |
 |                           |                                          |
@@ -405,18 +405,18 @@ detect its removal.
 ~~~aasvg
 Alice                        Transparency Log                        Bob
 |                                   |                                  |
-| Search(Bob) --------------------> |                                  |
-| <------------ SearchResponse(...) |                                  |
+| Search(Bob) --------------------->|                                  |
+|<------------- SearchResponse(...) |                                  |
 |                                   |                                  |
 |           (1 day later)           |                                  |
 |                                   |                                  |
-| Monitor(Bob) -------------------> |                                  |
-| <----------- MonitorResponse(...) |                                  |
+| Monitor(Bob) -------------------->|                                  |
+|<------------ MonitorResponse(...) |                                  |
 |                                   |                                  |
 |           (1 day later)           |                                  |
 |                                   |                                  |
-|                                   | <------------------ Monitor(Bob) |
-|                                   | MonitorResponse(...) ----------> |
+|                                   |<------------------- Monitor(Bob) |
+|                                   | MonitorResponse(...) ----------->|
 |                                   |                                  |
 ~~~
 {: #contact-monitoring-fig title="Contact Monitoring. Alice searches for Bob's
@@ -452,14 +452,14 @@ being rejected by users is set in the transparency log's configuration.
 ~~~aasvg
 Many Users                        Transparency Log               Auditor
 |                                        |                             |
-| Update(Alice, ...) ------------------> |                             |
-| Update(Bob, ...) --------------------> |                             |
-| Update(Carol, ...) ------------------> |                             |
+| Update(Alice, ...) ------------------->|                             |
+| Update(Bob, ...) --------------------->|                             |
+| Update(Carol, ...) ------------------->|                             |
 | <===== Response{AuditorSig: 66bf, ...} |                             |
 |                                        |                             |
 |                                        |                             |
-|                                        | [AuditorUpdate] ----------> |
-|                                        | <---------- AuditorTreeHead |
+|                                        | [AuditorUpdate] ----------->|
+|                                        |<----------- AuditorTreeHead |
 |                                        |                             |
 ~~~
 {: #auditing-fig title="Third-Party Auditing. A recent signature from the
@@ -487,11 +487,11 @@ manager if they pass access control.
 ~~~aasvg
 Alice                  Transparency Log                  Manager
 |                             |                                |
-| Search(Alice) ------------> | -----------------------------> |
-| <-------------------------- | <--------- SearchResponse(...) |
+| Search(Alice) ------------->| ------------------------------>|
+|<--------------------------- |<---------- SearchResponse(...) |
 |                             |                                |
-| Update(Alice, ...) -------> | -----------------------------> |
-| <-------------------------- | <--------- UpdateResponse(...) |
+| Update(Alice, ...) -------->| ------------------------------>|
+|<--------------------------- |<---------- UpdateResponse(...) |
 |                             |                                |
 | Search(Fred) ----------> X  |                                |
 | Update(Bob, ...) ------> X  |                                |
