@@ -3,9 +3,9 @@
 
 
 Key Transparency                                            B. McMillion
-Internet-Draft                                              26 June 2025
+Internet-Draft                                              24 July 2025
 Intended status: Informational                                          
-Expires: 28 December 2025
+Expires: 25 January 2026
 
 
                      Key Transparency Architecture
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 28 December 2025.
+   This Internet-Draft will expire on 25 January 2026.
 
 Copyright Notice
 
@@ -258,14 +258,14 @@ Table of Contents
      |                                            |
      |        (Valid / Accepted Requests)         |
      |                                            |
-     | Search(Alice) ---------------------------> |
-     | <--------------------- SearchResponse(...) |
+     | Search(Alice) ---------------------------->|
+     |<---------------------- SearchResponse(...) |
      |                                            |
-     | Search(Bob) -----------------------------> |
-     | <--------------------- SearchResponse(...) |
+     | Search(Bob) ------------------------------>|
+     |<---------------------- SearchResponse(...) |
      |                                            |
-     | Update(Alice, ...) ----------------------> |
-     | <--------------------- UpdateResponse(...) |
+     | Update(Alice, ...) ----------------------->|
+     |<---------------------- UpdateResponse(...) |
      |                                            |
      |                                            |
      |       (Rejected / Blocked Requests)        |
@@ -318,15 +318,15 @@ Table of Contents
 
    Transparency Log               Alice           Anonymous Group
    |                                |                           |
-   | <--------------- Search(Alice) |                           |
-   | SearchResponse(...) ---------> | Encrypt(Anon Group,       |
+   |<---------------- Search(Alice) |                           |
+   | SearchResponse(...) ---------->| Encrypt(Anon Group,       |
    |                                |     SearchResponse ||     |
    |                                |     Message   ||          |
-   |                                |     Signature) ---------> |
+   |                                |     Signature) ---------->|
    |                                |                           |
-   | <-------------- Monitor(Alice) |                           |
-   | MonitorResponse(...) --------> | Encrypt(Anon Group,       |
-   |                                |     MonitorResponse) ---> |
+   |<--------------- Monitor(Alice) |                           |
+   | MonitorResponse(...) --------->| Encrypt(Anon Group,       |
+   |                                |     MonitorResponse) ---->|
    |                                |                           |
 
      Figure 2: Example message flow in an anonymous deployment.  Users
@@ -397,16 +397,16 @@ Alice                      Bob                          Transparency Log
 |                           |                                          |
 |                           | (Normal reqs over authenticated channel) |
 |                           |                                          |
-|                           | Search(Bob) ---------------------------> |
-|                           | <---------- Response{Head: 6c063bb, ...} |
+|                           | Search(Bob) ---------------------------->|
+|                           |<----------- Response{Head: 6c063bb, ...} |
 |                           |                                          |
 |                           |                                          |
 |                           |                                          |
 |                           |                                          |
 |   (OOB check with peer)   |    (OOB check over anonymous channel)    |
 |                           |                                          |
-| <------ DistinguishedHead | DistinguishedHead ~~~~~~~~~~~~~~~~~~~~~> |
-| 6c063bb ----------------> | <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 6c063bb |
+|<------- DistinguishedHead | DistinguishedHead ~~~~~~~~~~~~~~~~~~~~~> |
+| 6c063bb ----------------->| <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 6c063bb |
 |                           |                                          |
 |                           | Search(Bob) ~~~~~~~~~~~~~~~~~~~> X       |
 |                           |                                          |
@@ -491,18 +491,18 @@ Alice                      Bob                          Transparency Log
 
 Alice                        Transparency Log                        Bob
 |                                   |                                  |
-| Search(Bob) --------------------> |                                  |
-| <------------ SearchResponse(...) |                                  |
+| Search(Bob) --------------------->|                                  |
+|<------------- SearchResponse(...) |                                  |
 |                                   |                                  |
 |           (1 day later)           |                                  |
 |                                   |                                  |
-| Monitor(Bob) -------------------> |                                  |
-| <----------- MonitorResponse(...) |                                  |
+| Monitor(Bob) -------------------->|                                  |
+|<------------ MonitorResponse(...) |                                  |
 |                                   |                                  |
 |           (1 day later)           |                                  |
 |                                   |                                  |
-|                                   | <------------------ Monitor(Bob) |
-|                                   | MonitorResponse(...) ----------> |
+|                                   |<------------------- Monitor(Bob) |
+|                                   | MonitorResponse(...) ----------->|
 |                                   |                                  |
 
     Figure 4: Contact Monitoring.  Alice searches for Bob's label.
@@ -539,14 +539,14 @@ Alice                        Transparency Log                        Bob
 
 Many Users                        Transparency Log               Auditor
 |                                        |                             |
-| Update(Alice, ...) ------------------> |                             |
-| Update(Bob, ...) --------------------> |                             |
-| Update(Carol, ...) ------------------> |                             |
+| Update(Alice, ...) ------------------->|                             |
+| Update(Bob, ...) --------------------->|                             |
+| Update(Carol, ...) ------------------->|                             |
 | <===== Response{AuditorSig: 66bf, ...} |                             |
 |                                        |                             |
 |                                        |                             |
-|                                        | [AuditorUpdate] ----------> |
-|                                        | <---------- AuditorTreeHead |
+|                                        | [AuditorUpdate] ----------->|
+|                                        |<----------- AuditorTreeHead |
 |                                        |                             |
 
      Figure 5: Third-Party Auditing.  A recent signature from the
@@ -575,11 +575,11 @@ Many Users                        Transparency Log               Auditor
 
    Alice                  Transparency Log                  Manager
    |                             |                                |
-   | Search(Alice) ------------> | -----------------------------> |
-   | <-------------------------- | <--------- SearchResponse(...) |
+   | Search(Alice) ------------->| ------------------------------>|
+   |<--------------------------- |<---------- SearchResponse(...) |
    |                             |                                |
-   | Update(Alice, ...) -------> | -----------------------------> |
-   | <-------------------------- | <--------- UpdateResponse(...) |
+   | Update(Alice, ...) -------->| ------------------------------>|
+   |<--------------------------- |<---------- UpdateResponse(...) |
    |                             |                                |
    | Search(Fred) ----------> X  |                                |
    | Update(Bob, ...) ------> X  |                                |
@@ -1027,9 +1027,9 @@ Many Users                        Transparency Log               Auditor
 
    [PROTO]    McMillion, B. and F. Linker, "Key Transparency Protocol",
               Work in Progress, Internet-Draft, draft-ietf-keytrans-
-              protocol-01, 4 June 2025,
+              protocol-02, 6 July 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-
-              keytrans-protocol-01>.
+              keytrans-protocol-02>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
