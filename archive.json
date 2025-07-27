@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-24T02:19:57.080580+00:00",
+  "timestamp": "2025-07-27T02:30:04.316193+00:00",
   "repo": "ietf-wg-keytrans/draft-arch",
   "labels": [
     {
@@ -1044,26 +1044,42 @@
       "id": "PR_kwDOKhdr7c6gQ2nt",
       "title": "make ascii art diagrams connect arrows as recommended for aasvg",
       "url": "https://github.com/ietf-wg-keytrans/draft-arch/pull/17",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "rohanmahy",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "The ladder diagrams look weird. Fixed.\r\n\r\nbefore\r\n<img width=\"467\" height=\"329\" alt=\"image\" src=\"https://github.com/user-attachments/assets/4681ab3f-e414-4f96-9591-3f7ef1240b18\" />\r\n\r\nafter\r\n<img width=\"467\" height=\"329\" alt=\"image\" src=\"https://github.com/user-attachments/assets/cf813701-85c9-4852-8481-cd3c300c4857\" />\r\n",
       "createdAt": "2025-07-23T12:52:21Z",
-      "updatedAt": "2025-07-23T12:52:21Z",
+      "updatedAt": "2025-07-24T19:35:02Z",
       "baseRepository": "ietf-wg-keytrans/draft-arch",
       "baseRefName": "main",
       "baseRefOid": "b1c03fc2ff68a9fe6d866c377e3c3c152709be68",
       "headRepository": "rohanmahy/keytrans-arch",
       "headRefName": "fix-aasvg",
       "headRefOid": "a39ab8dc5f0f2597837dc525699ef812fd2562fd",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-07-24T19:35:02Z",
+      "mergedAt": "2025-07-24T19:35:02Z",
+      "mergedBy": "Bren2010",
+      "mergeCommit": {
+        "oid": "d6402967b15420edcdbc6fa1036ef945f9b42e3f"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOKhdr7c61-XrE",
+          "commit": {
+            "abbreviatedOid": "a39ab8d"
+          },
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Thank you!",
+          "createdAt": "2025-07-24T19:34:56Z",
+          "updatedAt": "2025-07-24T19:34:56Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
