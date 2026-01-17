@@ -238,7 +238,7 @@ recipient would do to authenticate the relationship between the presented
 end-user identity and their public keys. Recipients can verify the
 request-response pairs themselves without contacting the transparency log.
 
-Any future monitoring that may be required should be provided to recipients
+Any future monitoring that may be required SHOULD be provided to recipients
 proactively by the sender. However, if this fails, the recipient will need to
 perform the monitoring themself over an anonymous channel.
 
@@ -286,9 +286,9 @@ With a trusted third party, such as a Third-Party Auditor or Manager as
 described in {{third-party-auditing}} and {{third-party-management}}, an outside
 organization monitors the operation of the transparency log. This third party
 verifies, among other things, that the transparency log is growing in an
-append-only manner. If verification is successful, the third party and produces
+append-only manner. If verification is successful, the third party produces
 a signature on the most recent tree head. The transparency log provides this
-signature to users in-line with their query responses as proof that they are not
+signature to users inline with their query responses as proof that they are not
 being shown a fork. This approach relies on an assumption that the third party
 is trusted not to collude with the transparency log to sign a fork.
 
@@ -382,7 +382,7 @@ mode, which affects only the individual client's behavior, would cause the
 client to behave as if its transparency log was deployed in Contact Monitoring
 mode. As such, it would start retaining state about previously looked-up labels
 and regularly engaging in out-of-band communication. Enabling this
-higher-security mode allows users to double-check that the third party is not
+higher security mode allows users to double check that the third party is not
 colluding with the transparency log.
 
 ## Contact Monitoring
@@ -428,10 +428,10 @@ request before making hers." }
 Importantly, Contact Monitoring impacts how the server is able to enforce access
 control on Monitor queries. While Search and Update queries can enforce access
 control on a "point in time" basis, where a user is allowed to execute the query
-at one point in time but maybe not the next, Monitor queries must have
-"accretive" access control. This is because, if a user is allowed to execute a
+at one point in time but maybe not the next, Monitor queries MUST have
+*accretive* access control. This is because, if a user is allowed to execute a
 Search or Update query for a label, the user may then need to issue at least one
-Monitor query for the label some time in the future. These Monitor queries must
+Monitor query for the label some time in the future. These Monitor queries MUST
 be permitted, regardless of whether or not the user is still permitted to
 execute such Search or Update queries.
 
@@ -529,7 +529,7 @@ transparency log instances, for example:
 - A federated system may allow each participant in the federation to operate
   their own transparency log for their own users.
 
-Client implementations should generally be prepared to interact with multiple
+Client implementations SHOULD generally be prepared to interact with multiple
 independent transparency logs. When multiple transparency logs are used as part
 of one application, all users MUST have a consistent policy for executing
 Search, Update, and Monitor queries against the logs in a way that maintains the
@@ -550,9 +550,9 @@ this policy may look like:
    then against the new transparency log only if the most recent version of a
    label in the old transparency log is a special application-defined
    'tombstone' entry.
-2. Update queries should only be executed against the new transparency log,
-   adding a tombstone entry to the old transparency log if one hasn't been
-   created already.
+2. Update queries should only be executed against the new transparency log, with
+   the exception of adding a tombstone entry for the label to the old
+   transparency log if one hasn't been added already.
 3. Both transparency logs should be monitored as they would be if they were run
    individually. Once the migration has completed and the old transparency log
    has stopped accepting modifications, the old transparency log MUST stay
@@ -575,7 +575,7 @@ the policy may look like:
 1. Search queries must be executed against the new transparency log.
 2. Update queries must be executed against the new transparency log.
 3. The final tree size and root hash of the old transparency log is provided to
-   users over a trustworthy channel. Label owners issue final Monitor queries to
+   users over a trustworthy channel. Users issue their final Monitor queries to
    complete monitoring up to this point. Label owners initiate monitoring state
    for the new transparency log by processing an Update for the migrated
    versions of their labels and verifying that the migration was done correctly.
@@ -583,9 +583,11 @@ the policy may look like:
 
 The final tree size and root hash of the prior transparency log need to be
 distributed to users in a way that guarantees all users have a globally
-consistent view. This can be done either by storing them in a well-known label
-of the new transparency log or with the application's code distribution
-mechanism.
+consistent view. This can be done by storing them in a well-known label of the
+new transparency log. Users MUST process this well-known label as if they own
+it, so that they continue to monitor it for unexpected changes for the duration
+of the migration period. Alternatively, the final tree size and root hash may be
+distributed with the application's code distribution mechanism.
 
 ## Federation
 
@@ -593,7 +595,7 @@ In a federated application, many servers that are owned and operated by
 different entities will cooperate to provide a single end-to-end encrypted
 communication service. Each entity in a federated system provides its own
 infrastructure (in particular, a transparency log) to serve the users that rely
-on it. Given this, there must be a consistent policy for directing KT requests
+on it. Given this, there MUST be a consistent policy for directing KT requests
 to the correct transparency log. Typically in such a system, the end-user
 identity directly specifies which entity requests should be directed to. For
 example, with an email end-user identity like `alice@example.com`, the
@@ -610,12 +612,12 @@ logs with its own.
 As part of the core infrastructure of an end-to-end encrypted communication
 service, transparency logs are required to operate seamlessly for several years.
 This presents a problem for general append-only logs, as even moderate usage can
-cause the log to grow to an unmanageable size. This issue is further compounded
-by the fact that a substantial portion of the entries added to a log may be
-fake, having been added solely for the purpose of obscuring short-term update
-rates (as discussed in {{privacy-guarantees}}). Given this, transparency logs
-need to be able manage their footprint by pruning data which is no longer
-required by the communication service.
+cause the log to grow to an unmanageable size in that time frame. This issue is
+further compounded by the fact that a substantial portion of the entries added
+to a log may be fake, having been added solely for the purpose of obscuring
+short-term update rates (discussed in {{privacy-guarantees}}). Given this,
+transparency logs need to be able manage their footprint by pruning data which
+is no longer required by the communication service.
 
 Broadly speaking, a transparency log's database will contain two types of data:
 
@@ -624,40 +626,47 @@ Broadly speaking, a transparency log's database will contain two types of data:
    openings.
 
 The first type, serialized user data, can be pruned by removing any entries that
-the service operator's access control policy would never permit access to. For
-example, a service operator may only permit clients to search for the most
-recent version (or `n` versions) of a label. Any entries that don't meet this
-criteria can be deleted without consideration to the rest of the protocol.
+have either expired, or to which the service operator's access control policy
+would never permit access. A version of a label expires when a greater version
+has been created and the log entry that the version was inserted in has passed
+its **maximum lifetime** (defined in {{PROTO}}). The protocol will never allow a
+search for an expired version of a label to succeed, so the corresponding value
+may be deleted.
 
-The second type, cryptographic data, can also be pruned, but only after
+Note that the greatest version of a label never expires through the maximum
+lifetime mechanism. However, service operators may define arbitrary access
+control policies that permanently block access to the greatest (or any other
+versions) of a label. The values corresponding to these label-version pairs may
+also be deleted without consideration to the rest of the protocol.
+
+The second type of data, cryptographic data, can also be pruned, but only after
 considering which parts are no longer required by the protocol for producing
-proofs. For example, even though the label-value pair inserted at a particular
-entry in the append-only log may have been deleted, parts of the log entry may
-still be needed to produce proofs for Search / Update / Monitor queries on other
-labels. The exact mechanism for determining which data is safe to delete will
-depend on the protocol and implementation.
+proofs. For example, even though a particular version of a label may have been
+deleted, the corresponding VRF output and commitment may still need to exist in
+the latest version of the transparency log's prefix tree to produce valid search
+proofs for undeleted versions of the label. The exact mechanism for determining
+which data is safe to delete will depend on the protocol and implementation.
 
 The distinction between user data and cryptographic data provides a valuable
-separation of concerns, given that the protocol document does not provide a
-mechanism for a service operator to convey its access control policy to a
-transparency log. That is: pruning user data can be done entirely by
-application-defined code, while pruning cryptographic data can be done entirely
-by KT-specific code as a subsequent operation.
+separation of concerns since {{PROTO}} does not provide a way for a service
+operator to convey its access control policy to a transparency log. That is, it
+allows the pruning of user data to be done entirely by application-defined code,
+while the pruning of cryptographic data can be done entirely by KT-specific code
+as a subsequent operation.
 
 
 # Security Guarantees
 
-A user that correctly verifies a proof from the transparency log (and does any
-required monitoring afterwards) receives a guarantee that the transparency log
-operator executed the label-value lookup correctly, and in a way that's globally
+A user that correctly verifies a proof from the transparency log and does any
+required monitoring afterwards receives a guarantee that the transparency log
+operator executed the operation correctly, and in a way that's globally
 consistent with what it has shown all other users. That is, when a user searches
 for a label, they're guaranteed that the result they receive represents the same
-result that any other user searching for the same label would've seen. When a user
-modifies a label, they're guaranteed that other users will see the modification
-the next time they search for the label.
+result that any other user searching for the same label at roughly the same time
+would've seen. When a user modifies a label, they're guaranteed that other users
+will see the modification within a bounded amount of time.
 
-If the transparency log does not execute a label-value lookup correctly, then
-either:
+If the transparency log does not execute an operation correctly, then either:
 
 1. The user will detect the error immediately and reject the proof, or
 2. The user will permanently enter an invalid state.
@@ -665,17 +674,17 @@ either:
 Depending on the exact reason that the user enters an invalid state, it will
 either be detected by background monitoring or by the mechanisms described in
 {{detecting-forks}}. Importantly, this means that users must stay online for
-some bounded amount of time after entering an invalid state for it to be
+a bounded amount of time after entering an invalid state for it to be
 successfully detected.
 
 Alternatively, instead of executing a lookup incorrectly, the transparency log
 can attempt to prevent a user from learning about more recent states of the log.
 This would allow the log to continue executing queries correctly, but on
-outdated versions of data. To prevent this, applications configure an upper
+stale versions of data. To prevent this, applications configure an upper
 bound on how stale a query response can be without being rejected.
 
 The exact caveats of the above guarantees depend naturally on the security of
-underlying cryptographic primitives and also the deployment mode that the
+the underlying cryptographic primitives and also the deployment mode that the
 transparency log relies on:
 
 - Third-Party Management and Third-Party Auditing require an assumption that the
@@ -700,6 +709,42 @@ is detected are as follows:
   communication with other users.
 - For logs that use the Third-Party Auditing deployment mode: the configured
   maximum acceptable lag for an auditor.
+- For logs that use the Third-Party Management deployment mode: the amount of
+  lag, or potential inefficacy, of the service operator's approach to detecting
+  forks.
+
+## State Loss
+
+The security of KT often depends on the ability of users to maintain robust
+local state. Users that lose their state in a Contact Monitoring or Third-Party
+Auditing deployment will have a correspondingly reduced ability to detect if
+they were shown a fork, or if the transparency log later obscured data that they
+consumed.
+
+In a Contact Monitoring deployment mode, this can happen when a user loses their
+state after consuming a version of a label that was created either within the
+Reasonable Monitoring Window, or within a portion of the log that was
+insufficiently gossipped. In a Third-Party Auditing deployment mode, this can
+happen when a user loses their state after consuming a version of a label that
+was created within the auditor's maximum acceptable lag.
+
+Applications should consider the nature of possible state loss in their clients
+when configuring a transparency log and MUST ensure that the relevant protocol
+parameters are set in a way that appropriately mitigates this risk.
+For example, in a Contact Monitoring deployment, the Reasonable Monitoring
+Window and the duration between out-of-band communication attempts SHOULD be
+much less than the typical time between state loss events. Similarly, in a
+Third-Party Auditing deployment, the maximum acceptable lag for an auditor
+SHOULD be much less than the typical time between state loss events.
+
+In applications where client state is typically ephemeral (like a web page), or
+where state loss could possibly be triggered adversarially, a Third-Party
+Management deployment mode is RECOMMENDED. Alternatively, applications could
+also consider implementing a policy of not consuming label-version pairs that
+were inserted too recently. Once a label-version pair is outside of the
+Reasonable Monitoring Window in a Contact Monitoring deployment, or beyond the
+maximum acceptable auditor lag in a Third-Party Auditing deployment, the risks
+associated with state loss are often already sufficiently mitigated.
 
 ## Privacy Guarantees
 
@@ -711,7 +756,7 @@ about that user's account, to that user's friends or contacts.
 KT only allows users to learn whether or not a label exists in the
 transparency log if the user obtains a valid search proof for that label.
 Similarly, KT only allows users to learn about the value of a label if
-the user obtains a valid search proof for the exact label and version.
+the user obtains a valid search proof for that exact version of the label.
 
 When a user was previously allowed to lookup or change a label's value but no
 longer is, KT prevents the user from learning whether or not the label's value
@@ -737,7 +782,7 @@ KT allows a service operator to obscure the size of its user base by batch
 inserting a large number of fake label-version pairs when a transparency log is
 first initialized. Similarly, KT also allows a service operator to obscure the
 rate at which "real" changes are made to the transparency log by padding "real"
-changes with the insertion of other fake label-version pairs such that it
+changes with the insertion of other fake label-version pairs, such that it
 creates the outside appearance of a constant baseline rate of insertions.
 
 ### Leakage to Third-Party
@@ -762,55 +807,36 @@ patterns, such as how often a specific label is looked up.
 
 # Privacy Law Considerations
 
-Consumer privacy laws often provide a 'right to erasure'. This means that when a
+Consumer privacy laws often provide a *right to erasure*. This means that when a
 consumer requests that a service provider delete their personal information, the
 service provider is legally obligated to do so. This may seem to be incompatible
-with the description of KT in {{introduction}} as an 'append-only log'. Once an
+with the description of KT in {{introduction}} as an "append-only log". Once an
 entry is added to a transparency log, it indeed can not be removed.
 
 The important caveat here is that user data is not directly stored in the
-append-only log. Instead, the log consists of privacy-preserving cryptographic
-commitments. By logging commitments instead of plaintext user data, users
-interacting with the log are unable to infer anything about an entry's contents
-until the service provider explicitly provides the commitment's opening. A
-service provider responding to an erasure request can delete the commitment
-opening and the associated data, effectively anonymizing the entry.
+append-only log. Instead, the primary contents of a transparency log consists of
+privacy-preserving VRF outputs and cryptographic commitments. The use of
+cryptographic commitments ensures that users interacting with the transparency
+log are unable to learn anything about a label's value until the transparency
+log explicitly provides the commitment's opening. A transparency log responding
+to an erasure request can delete the commitment opening and the associated data,
+effectively anonymizing the entry.
 
-Other than the log, the second place where user information is stored is in the
-*prefix tree*. This is a cryptographic index provided to users to enable them to
-efficiently query the log, which contains information about which labels
-exist and where. These labels are usually serialized end-user identifiers,
-although it varies by application. To minimize leakage, all labels are
-processed through a Verifiable Random Function, or VRF {{?RFC9381}}.
-
-A VRF deterministically maps each label to the fixed-length pseudorandom
-value. Only the service operator, who holds a private key, can execute the VRF.
-Critically though, VRFs can provide proof that an input-output pair is
-valid, which users verify with a public key. When a user tries to search for or
-update a label, the service operator first executes its VRF on the input label
-to obtain the index that will actually be looked up or stored in the
-prefix tree. The service operator then provides the VRF output, along with a
-proof that the output is correct, in its response to the user.
-
-The pseudorandom property of VRFs means that even if a user indirectly observes
-that a specific VRF output exists in the prefix tree, they can't learn which
-user it identifies. The inability of users to execute the VRF
-themselves also prevents offline "password cracking" approaches, where an
-attacker tries all possibilities in a low entropy space (like the set of phone
-numbers) to find the input that produces a given output.
-
-A service provider responding to an erasure request can 'trim' the prefix tree,
-by no longer storing the full VRF output for any labels corresponding to an
-end-user's identifiers. With only a small amount of the VRF output left in
-storage, even if the transparency log is later compromised, it would be unable
-to recover deleted identifiers. If the same labels were reinserted into the
-log at a later time, it would appear as if they were being inserted for the
-first time.
+In KT, labels are usually serialized end-user identifiers, although it varies by
+application. To minimize leakage, all labels are processed through a Verifiable
+Random Function, or VRF {{?RFC9381}}. A VRF deterministically maps each label to
+the fixed-length pseudorandom value. A transparency log responding to an erasure
+request can 'trim' the prefix tree, by no longer storing the full VRF output for
+any labels corresponding to an end-user's identifiers. With only a small amount
+of the VRF output left in storage, even if the transparency log is later
+compromised, it would be impossible to affirmatively recover deleted end-user
+identifiers. If the same labels were reinserted into the transparency log at a
+later time, it would appear as if they were being inserted for the first time.
 
 As an example, consider the information stored in a transparency log after
-inserting a label `L` with value `V`. The index inserted into the prefix tree would
-roughly correspond to `VRF(label L) = pseudorandom bytes`, and the value stored in
-the append-only log would roughly correspond to:
+inserting a label `L` with value `V`. The stored VRF output would roughly
+correspond to `VRF(label L) = pseudorandom bytes`, and the commitment to the
+label's new value would roughly correspond to:
 
 ~~~
 Commit(nonce: random bytes, body: version N of label L is V)
@@ -821,7 +847,7 @@ and random commitment nonce. It also trims the VRF output to the minimum size
 necessary. The commitment scheme guarantees that, without the high-entropy
 random nonce, the remaining commitment reveals nothing about the label or value.
 
-Assuming that the prefix tree is well-balanced (which is extremely likely due to
+Assuming that the prefix tree is well-balanced (which is likely, due to
 VRFs being pseudorandom), the number of VRF output bits retained is
 approximately equal to the logarithm of the total number of labels stored. This
 means that while the VRF's full output may be 256 bits, in a log with one
@@ -829,6 +855,7 @@ million labels, only 20 output bits would need to be retained. This would be
 insufficient for recovering even a very low-entropy identifier like a phone
 number.
 
+TODO: Discuss max lifetime here as well
 
 # Implementation Guidance
 
@@ -862,35 +889,28 @@ would be Slack.
 
 A **primary end-user identity** is one that is unique, user-visible, and unable
 to change. (Or equivalently, if it changes, it appears in the application UI as
-a new conversation with a new user.) A primary end-user identity should always
-be a label in KT, with the end-user's public keys and other account information
-as the associated value.
+a new conversation with a new user.) An example of this type of identifier would
+be an email address on an email service. A primary end-user identity SHOULD
+always be a label in KT, with the end-user's public keys and other account
+information as the associated value.
 
 A **secondary end-user identity** is one that is unique, user-visible, and able
 to change without being interpreted as a different account due to its
 association with a primary end-user identity. These identities are used solely
 for initial user discovery, during which they're converted into a primary
 end-user identity (like a UUID) that's used by the application to identify the
-end-user from then on. An example of this type of identity would be a phone
-number, since users can often change the phone number they use with a service
-without disrupting existing communications. A secondary end-user identity should
-be a label in KT with the primary end-user identity as the associated value,
-such that it can be used to authenticate the user discovery process.
+end-user from then on. An example of this type of identity would be a username,
+since users can often change their username without disrupting existing
+communications. A secondary end-user identity SHOULD be a label in KT with the
+primary end-user identity as the associated value, such that it can be used to
+authenticate the user discovery process.
 
 While likely helpful to most common applications, the distinction between
 handling primary and secondary end-user identities is not a guaranteed rule.
 Applications must be careful to ensure they fully capture the semantics of
-identity in their application with the label-value pairs they store in KT.
+identity in their application with the labels and values they store in KT.
 
 
 # IANA Considerations
 
 This document has no IANA actions.
-
-
---- back
-
-# Acknowledgments
-{:numbered="false"}
-
-TODO acknowledge.
