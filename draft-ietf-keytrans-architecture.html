@@ -13,23 +13,22 @@ infrastructure, and specifies the security properties that the protocol
 provides. It also gives more general, non-prescriptive guidance on how to
 securely apply Key Transparency to a number of common applications. 
     " name="description">
-<meta content="xml2rfc 3.30.0" name="generator">
+<meta content="xml2rfc 3.31.0" name="generator">
 <meta content="key transparency" name="keyword">
 <meta content="draft-ietf-keytrans-architecture-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.30.0
-    Python 3.12.11
+  xml2rfc 3.31.0
+    Python 3.12.12
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
-    intervaltree 3.1.0
+    intervaltree 3.2.1
     Jinja2 3.1.6
-    lxml 5.3.1
-    platformdirs 4.3.8
+    lxml 6.0.2
+    platformdirs 4.5.1
     pycountry 24.6.1
-    PyYAML 6.0.2
-    requests 2.32.4
-    setuptools 80.9.0
-    wcwidth 0.2.13
+    PyYAML 6.0.3
+    requests 2.32.5
+    wcwidth 0.2.14
 -->
 <link href="draft-ietf-keytrans-architecture.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1048,11 +1047,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Key Transparency Architecture</td>
-<td class="right">July 2025</td>
+<td class="right">January 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">McMillion</td>
-<td class="center">Expires 25 January 2026</td>
+<td class="center">Expires 21 July 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1065,12 +1064,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-keytrans-architecture-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-07-24" class="published">24 July 2025</time>
+<time datetime="2026-01-17" class="published">17 January 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-01-25">25 January 2026</time></dd>
+<dd class="expires"><time datetime="2026-07-21">21 July 2026</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1123,7 +1122,7 @@ securely apply Key Transparency to a number of common applications.<a href="#sec
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 25 January 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 21 July 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1132,7 +1131,7 @@ securely apply Key Transparency to a number of common applications.<a href="#sec
 <a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
         </h2>
 <p id="section-boilerplate.2-1">
-            Copyright (c) 2025 IETF Trust and the persons identified as the
+            Copyright (c) 2026 IETF Trust and the persons identified as the
             document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.2-2">
             This document is subject to BCP 78 and the IETF Trust's Legal
@@ -1207,10 +1206,13 @@ securely apply Key Transparency to a number of common applications.<a href="#sec
             <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-security-guarantees" class="internal xref">Security Guarantees</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
-                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-privacy-guarantees" class="internal xref">Privacy Guarantees</a></p>
+                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-state-loss" class="internal xref">State Loss</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-privacy-guarantees" class="internal xref">Privacy Guarantees</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1.2.1">
-                    <p id="section-toc.1-1.7.2.1.2.1.1"><a href="#section-7.1.1" class="auto internal xref">7.1.1</a>.  <a href="#name-leakage-to-third-party" class="internal xref">Leakage to Third-Party</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2.2.1">
+                    <p id="section-toc.1-1.7.2.2.2.1.1"><a href="#section-7.2.1" class="auto internal xref">7.2.1</a>.  <a href="#name-leakage-to-third-party" class="internal xref">Leakage to Third-Party</a></p>
 </li>
                 </ul>
 </li>
@@ -1237,10 +1239,7 @@ securely apply Key Transparency to a number of common applications.<a href="#sec
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
-            <p id="section-toc.1-1.13.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
+            <p id="section-toc.1-1.12.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
 </li>
         </ul>
 </nav>
@@ -1497,7 +1496,7 @@ request-response pairs. These Search operations correspond to the lookups the
 recipient would do to authenticate the relationship between the presented
 end-user identity and their public keys. Recipients can verify the
 request-response pairs themselves without contacting the transparency log.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
-<p id="section-3.2-5">Any future monitoring that may be required should be provided to recipients
+<p id="section-3.2-5">Any future monitoring that may be required <span class="bcp14">SHOULD</span> be provided to recipients
 proactively by the sender. However, if this fails, the recipient will need to
 perform the monitoring themself over an anonymous channel.<a href="#section-3.2-5" class="pilcrow">¶</a></p>
 <span id="name-example-message-flow-in-an-"></span><div id="anonymous">
@@ -1575,9 +1574,9 @@ transparency log, or <strong>peer-to-peer communication</strong>.<a href="#secti
 described in <a href="#third-party-auditing" class="auto internal xref">Section 4.2</a> and <a href="#third-party-management" class="auto internal xref">Section 4.3</a>, an outside
 organization monitors the operation of the transparency log. This third party
 verifies, among other things, that the transparency log is growing in an
-append-only manner. If verification is successful, the third party and produces
+append-only manner. If verification is successful, the third party produces
 a signature on the most recent tree head. The transparency log provides this
-signature to users in-line with their query responses as proof that they are not
+signature to users inline with their query responses as proof that they are not
 being shown a fork. This approach relies on an assumption that the third party
 is trusted not to collude with the transparency log to sign a fork.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
 <p id="section-3.3-5">With anonymous communication, a single user accesses the transparency log over
@@ -1702,7 +1701,7 @@ mode, which affects only the individual client's behavior, would cause the
 client to behave as if its transparency log was deployed in Contact Monitoring
 mode. As such, it would start retaining state about previously looked-up labels
 and regularly engaging in out-of-band communication. Enabling this
-higher-security mode allows users to double-check that the third party is not
+higher security mode allows users to double check that the third party is not
 colluding with the transparency log.<a href="#section-4-7" class="pilcrow">¶</a></p>
 <div id="contact-monitoring">
 <section id="section-4.1">
@@ -1775,10 +1774,10 @@ detect its removal.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
 <p id="section-4.1-5">Importantly, Contact Monitoring impacts how the server is able to enforce access
 control on Monitor queries. While Search and Update queries can enforce access
 control on a "point in time" basis, where a user is allowed to execute the query
-at one point in time but maybe not the next, Monitor queries must have
-"accretive" access control. This is because, if a user is allowed to execute a
+at one point in time but maybe not the next, Monitor queries <span class="bcp14">MUST</span> have
+<em>accretive</em> access control. This is because, if a user is allowed to execute a
 Search or Update query for a label, the user may then need to issue at least one
-Monitor query for the label some time in the future. These Monitor queries must
+Monitor query for the label some time in the future. These Monitor queries <span class="bcp14">MUST</span>
 be permitted, regardless of whether or not the user is still permitted to
 execute such Search or Update queries.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
 </section>
@@ -1956,7 +1955,7 @@ or provide higher availability.<a href="#section-5-2.2.1" class="pilcrow">¶</a>
 their own transparency log for their own users.<a href="#section-5-2.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-5-3">Client implementations should generally be prepared to interact with multiple
+<p id="section-5-3">Client implementations <span class="bcp14">SHOULD</span> generally be prepared to interact with multiple
 independent transparency logs. When multiple transparency logs are used as part
 of one application, all users <span class="bcp14">MUST</span> have a consistent policy for executing
 Search, Update, and Monitor queries against the logs in a way that maintains the
@@ -1987,9 +1986,9 @@ label in the old transparency log is a special application-defined
 'tombstone' entry.<a href="#section-5.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.1-2.2">
-            <p id="section-5.1-2.2.1">Update queries should only be executed against the new transparency log,
-adding a tombstone entry to the old transparency log if one hasn't been
-created already.<a href="#section-5.1-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-2.2.1">Update queries should only be executed against the new transparency log, with
+the exception of adding a tombstone entry for the label to the old
+transparency log if one hasn't been added already.<a href="#section-5.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.1-2.3">
             <p id="section-5.1-2.3.1">Both transparency logs should be monitored as they would be if they were run
@@ -2024,7 +2023,7 @@ the policy may look like:<a href="#section-5.2-1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.2-2.3">
             <p id="section-5.2-2.3.1">The final tree size and root hash of the old transparency log is provided to
-users over a trustworthy channel. Label owners issue final Monitor queries to
+users over a trustworthy channel. Users issue their final Monitor queries to
 complete monitoring up to this point. Label owners initiate monitoring state
 for the new transparency log by processing an Update for the migrated
 versions of their labels and verifying that the migration was done correctly.
@@ -2033,9 +2032,11 @@ From then on, users will monitor only the new transparency log.<a href="#section
         </ol>
 <p id="section-5.2-3">The final tree size and root hash of the prior transparency log need to be
 distributed to users in a way that guarantees all users have a globally
-consistent view. This can be done either by storing them in a well-known label
-of the new transparency log or with the application's code distribution
-mechanism.<a href="#section-5.2-3" class="pilcrow">¶</a></p>
+consistent view. This can be done by storing them in a well-known label of the
+new transparency log. Users <span class="bcp14">MUST</span> process this well-known label as if they own
+it, so that they continue to monitor it for unexpected changes for the duration
+of the migration period. Alternatively, the final tree size and root hash may be
+distributed with the application's code distribution mechanism.<a href="#section-5.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="federation">
@@ -2047,7 +2048,7 @@ mechanism.<a href="#section-5.2-3" class="pilcrow">¶</a></p>
 different entities will cooperate to provide a single end-to-end encrypted
 communication service. Each entity in a federated system provides its own
 infrastructure (in particular, a transparency log) to serve the users that rely
-on it. Given this, there must be a consistent policy for directing KT requests
+on it. Given this, there <span class="bcp14">MUST</span> be a consistent policy for directing KT requests
 to the correct transparency log. Typically in such a system, the end-user
 identity directly specifies which entity requests should be directed to. For
 example, with an email end-user identity like <code>alice@example.com</code>, the
@@ -2068,12 +2069,12 @@ logs with its own.<a href="#section-5.3-2" class="pilcrow">¶</a></p>
 <p id="section-6-1">As part of the core infrastructure of an end-to-end encrypted communication
 service, transparency logs are required to operate seamlessly for several years.
 This presents a problem for general append-only logs, as even moderate usage can
-cause the log to grow to an unmanageable size. This issue is further compounded
-by the fact that a substantial portion of the entries added to a log may be
-fake, having been added solely for the purpose of obscuring short-term update
-rates (as discussed in <a href="#privacy-guarantees" class="auto internal xref">Section 7.1</a>). Given this, transparency logs
-need to be able manage their footprint by pruning data which is no longer
-required by the communication service.<a href="#section-6-1" class="pilcrow">¶</a></p>
+cause the log to grow to an unmanageable size in that time frame. This issue is
+further compounded by the fact that a substantial portion of the entries added
+to a log may be fake, having been added solely for the purpose of obscuring
+short-term update rates (discussed in <a href="#privacy-guarantees" class="auto internal xref">Section 7.2</a>). Given this,
+transparency logs need to be able manage their footprint by pruning data which
+is no longer required by the communication service.<a href="#section-6-1" class="pilcrow">¶</a></p>
 <p id="section-6-2">Broadly speaking, a transparency log's database will contain two types of data:<a href="#section-6-2" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-6-3">
 <li id="section-6-3.1">
@@ -2085,23 +2086,30 @@ openings.<a href="#section-6-3.2.1" class="pilcrow">¶</a></p>
 </li>
       </ol>
 <p id="section-6-4">The first type, serialized user data, can be pruned by removing any entries that
-the service operator's access control policy would never permit access to. For
-example, a service operator may only permit clients to search for the most
-recent version (or <code>n</code> versions) of a label. Any entries that don't meet this
-criteria can be deleted without consideration to the rest of the protocol.<a href="#section-6-4" class="pilcrow">¶</a></p>
-<p id="section-6-5">The second type, cryptographic data, can also be pruned, but only after
+have either expired, or to which the service operator's access control policy
+would never permit access. A version of a label expires when a greater version
+has been created and the log entry that the version was inserted in has passed
+its <strong>maximum lifetime</strong> (defined in <span>[<a href="#PROTO" class="cite xref">PROTO</a>]</span>). The protocol will never allow a
+search for an expired version of a label to succeed, so the corresponding value
+may be deleted.<a href="#section-6-4" class="pilcrow">¶</a></p>
+<p id="section-6-5">Note that the greatest version of a label never expires through the maximum
+lifetime mechanism. However, service operators may define arbitrary access
+control policies that permanently block access to the greatest (or any other
+versions) of a label. The values corresponding to these label-version pairs may
+also be deleted without consideration to the rest of the protocol.<a href="#section-6-5" class="pilcrow">¶</a></p>
+<p id="section-6-6">The second type of data, cryptographic data, can also be pruned, but only after
 considering which parts are no longer required by the protocol for producing
-proofs. For example, even though the label-value pair inserted at a particular
-entry in the append-only log may have been deleted, parts of the log entry may
-still be needed to produce proofs for Search / Update / Monitor queries on other
-labels. The exact mechanism for determining which data is safe to delete will
-depend on the protocol and implementation.<a href="#section-6-5" class="pilcrow">¶</a></p>
-<p id="section-6-6">The distinction between user data and cryptographic data provides a valuable
-separation of concerns, given that the protocol document does not provide a
-mechanism for a service operator to convey its access control policy to a
-transparency log. That is: pruning user data can be done entirely by
-application-defined code, while pruning cryptographic data can be done entirely
-by KT-specific code as a subsequent operation.<a href="#section-6-6" class="pilcrow">¶</a></p>
+proofs. For example, even though a particular version of a label may have been
+deleted, the corresponding VRF output and commitment may still need to exist in
+the latest version of the transparency log's prefix tree to produce valid search
+proofs for undeleted versions of the label. The exact mechanism for determining
+which data is safe to delete will depend on the protocol and implementation.<a href="#section-6-6" class="pilcrow">¶</a></p>
+<p id="section-6-7">The distinction between user data and cryptographic data provides a valuable
+separation of concerns since <span>[<a href="#PROTO" class="cite xref">PROTO</a>]</span> does not provide a way for a service
+operator to convey its access control policy to a transparency log. That is, it
+allows the pruning of user data to be done entirely by application-defined code,
+while the pruning of cryptographic data can be done entirely by KT-specific code
+as a subsequent operation.<a href="#section-6-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="security-guarantees">
@@ -2109,16 +2117,15 @@ by KT-specific code as a subsequent operation.<a href="#section-6-6" class="pilc
       <h2 id="name-security-guarantees">
 <a href="#section-7" class="section-number selfRef">7. </a><a href="#name-security-guarantees" class="section-name selfRef">Security Guarantees</a>
       </h2>
-<p id="section-7-1">A user that correctly verifies a proof from the transparency log (and does any
-required monitoring afterwards) receives a guarantee that the transparency log
-operator executed the label-value lookup correctly, and in a way that's globally
+<p id="section-7-1">A user that correctly verifies a proof from the transparency log and does any
+required monitoring afterwards receives a guarantee that the transparency log
+operator executed the operation correctly, and in a way that's globally
 consistent with what it has shown all other users. That is, when a user searches
 for a label, they're guaranteed that the result they receive represents the same
-result that any other user searching for the same label would've seen. When a user
-modifies a label, they're guaranteed that other users will see the modification
-the next time they search for the label.<a href="#section-7-1" class="pilcrow">¶</a></p>
-<p id="section-7-2">If the transparency log does not execute a label-value lookup correctly, then
-either:<a href="#section-7-2" class="pilcrow">¶</a></p>
+result that any other user searching for the same label at roughly the same time
+would've seen. When a user modifies a label, they're guaranteed that other users
+will see the modification within a bounded amount of time.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-2">If the transparency log does not execute an operation correctly, then either:<a href="#section-7-2" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-7-3">
 <li id="section-7-3.1">
           <p id="section-7-3.1.1">The user will detect the error immediately and reject the proof, or<a href="#section-7-3.1.1" class="pilcrow">¶</a></p>
@@ -2130,15 +2137,15 @@ either:<a href="#section-7-2" class="pilcrow">¶</a></p>
 <p id="section-7-4">Depending on the exact reason that the user enters an invalid state, it will
 either be detected by background monitoring or by the mechanisms described in
 <a href="#detecting-forks" class="auto internal xref">Section 3.3</a>. Importantly, this means that users must stay online for
-some bounded amount of time after entering an invalid state for it to be
+a bounded amount of time after entering an invalid state for it to be
 successfully detected.<a href="#section-7-4" class="pilcrow">¶</a></p>
 <p id="section-7-5">Alternatively, instead of executing a lookup incorrectly, the transparency log
 can attempt to prevent a user from learning about more recent states of the log.
 This would allow the log to continue executing queries correctly, but on
-outdated versions of data. To prevent this, applications configure an upper
+stale versions of data. To prevent this, applications configure an upper
 bound on how stale a query response can be without being rejected.<a href="#section-7-5" class="pilcrow">¶</a></p>
 <p id="section-7-6">The exact caveats of the above guarantees depend naturally on the security of
-underlying cryptographic primitives and also the deployment mode that the
+the underlying cryptographic primitives and also the deployment mode that the
 transparency log relies on:<a href="#section-7-6" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-7-7.1">
@@ -2163,7 +2170,7 @@ is detected are as follows:<a href="#section-7-8" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-7-9.2">
           <p id="section-7-9.2.1">The configured Reasonable Monitoring Window (described in
-<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-keytrans-protocol-02#section-7.1" class="relref">Section 7.1</a> of [<a href="#PROTO" class="cite xref">PROTO</a>]</span>), weighed against how frequently users execute
+<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-keytrans-protocol-03#section-7.1" class="relref">Section 7.1</a> of [<a href="#PROTO" class="cite xref">PROTO</a>]</span>), weighed against how frequently users execute
 background monitoring in practice.<a href="#section-7-9.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-7-9.3">
@@ -2175,62 +2182,101 @@ communication with other users.<a href="#section-7-9.3.1" class="pilcrow">¶</a>
           <p id="section-7-9.4.1">For logs that use the Third-Party Auditing deployment mode: the configured
 maximum acceptable lag for an auditor.<a href="#section-7-9.4.1" class="pilcrow">¶</a></p>
 </li>
+        <li class="normal" id="section-7-9.5">
+          <p id="section-7-9.5.1">For logs that use the Third-Party Management deployment mode: the amount of
+lag, or potential inefficacy, of the service operator's approach to detecting
+forks.<a href="#section-7-9.5.1" class="pilcrow">¶</a></p>
+</li>
       </ul>
-<div id="privacy-guarantees">
+<div id="state-loss">
 <section id="section-7.1">
-        <h3 id="name-privacy-guarantees">
-<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-privacy-guarantees" class="section-name selfRef">Privacy Guarantees</a>
+        <h3 id="name-state-loss">
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-state-loss" class="section-name selfRef">State Loss</a>
         </h3>
-<p id="section-7.1-1">For applications deploying KT, service operators expect to be able to control
+<p id="section-7.1-1">The security of KT often depends on the ability of users to maintain robust
+local state. Users that lose their state in a Contact Monitoring or Third-Party
+Auditing deployment will have a correspondingly reduced ability to detect if
+they were shown a fork, or if the transparency log later obscured data that they
+consumed.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+<p id="section-7.1-2">In a Contact Monitoring deployment mode, this can happen when a user loses their
+state after consuming a version of a label that was created either within the
+Reasonable Monitoring Window, or within a portion of the log that was
+insufficiently gossipped. In a Third-Party Auditing deployment mode, this can
+happen when a user loses their state after consuming a version of a label that
+was created within the auditor's maximum acceptable lag.<a href="#section-7.1-2" class="pilcrow">¶</a></p>
+<p id="section-7.1-3">Applications should consider the nature of possible state loss in their clients
+when configuring a transparency log and <span class="bcp14">MUST</span> ensure that the relevant protocol
+parameters are set in a way that appropriately mitigates this risk.
+For example, in a Contact Monitoring deployment, the Reasonable Monitoring
+Window and the duration between out-of-band communication attempts <span class="bcp14">SHOULD</span> be
+much less than the typical time between state loss events. Similarly, in a
+Third-Party Auditing deployment, the maximum acceptable lag for an auditor
+<span class="bcp14">SHOULD</span> be much less than the typical time between state loss events.<a href="#section-7.1-3" class="pilcrow">¶</a></p>
+<p id="section-7.1-4">In applications where client state is typically ephemeral (like a web page), or
+where state loss could possibly be triggered adversarially, a Third-Party
+Management deployment mode is <span class="bcp14">RECOMMENDED</span>. Alternatively, applications could
+also consider implementing a policy of not consuming label-version pairs that
+were inserted too recently. Once a label-version pair is outside of the
+Reasonable Monitoring Window in a Contact Monitoring deployment, or beyond the
+maximum acceptable auditor lag in a Third-Party Auditing deployment, the risks
+associated with state loss are often already sufficiently mitigated.<a href="#section-7.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="privacy-guarantees">
+<section id="section-7.2">
+        <h3 id="name-privacy-guarantees">
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-privacy-guarantees" class="section-name selfRef">Privacy Guarantees</a>
+        </h3>
+<p id="section-7.2-1">For applications deploying KT, service operators expect to be able to control
 when sensitive information is revealed. In particular, a service operator can
 often only reveal that a user is a member of their service, and information
-about that user's account, to that user's friends or contacts.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
-<p id="section-7.1-2">KT only allows users to learn whether or not a label exists in the
+about that user's account, to that user's friends or contacts.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+<p id="section-7.2-2">KT only allows users to learn whether or not a label exists in the
 transparency log if the user obtains a valid search proof for that label.
 Similarly, KT only allows users to learn about the value of a label if
-the user obtains a valid search proof for the exact label and version.<a href="#section-7.1-2" class="pilcrow">¶</a></p>
-<p id="section-7.1-3">When a user was previously allowed to lookup or change a label's value but no
+the user obtains a valid search proof for that exact version of the label.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
+<p id="section-7.2-3">When a user was previously allowed to lookup or change a label's value but no
 longer is, KT prevents the user from learning whether or not the label's value
 has changed since the user's access was revoked. This is true even in Contact
 Monitoring mode, where users are still permitted to perform monitoring after
-their access to perform other queries has been revoked.<a href="#section-7.1-3" class="pilcrow">¶</a></p>
-<p id="section-7.1-4">Applications determine the privacy of data in KT by
+their access to perform other queries has been revoked.<a href="#section-7.2-3" class="pilcrow">¶</a></p>
+<p id="section-7.2-4">Applications determine the privacy of data in KT by
 relying on these properties when they enforce access control policies on the
 queries issued by users, as discussed in <a href="#protocol-overview" class="auto internal xref">Section 3</a>. For example if
 two users aren't friends, an application can block these users from searching
 for each other's labels. This prevents both users from learning about
 each other's existence. If the users were previously friends but no longer are,
 the application can prevent the users from searching for each other's labels and
-learning the contents of any subsequent account updates.<a href="#section-7.1-4" class="pilcrow">¶</a></p>
-<p id="section-7.1-5">Service operators also expect to be able to control sensitive population-level
+learning the contents of any subsequent account updates.<a href="#section-7.2-4" class="pilcrow">¶</a></p>
+<p id="section-7.2-5">Service operators also expect to be able to control sensitive population-level
 metrics about their users. These metrics include the size of their user base, the
 frequency with which new users join, and the frequency with which existing users
-update their labels.<a href="#section-7.1-5" class="pilcrow">¶</a></p>
-<p id="section-7.1-6">KT allows a service operator to obscure the size of its user base by batch
+update their labels.<a href="#section-7.2-5" class="pilcrow">¶</a></p>
+<p id="section-7.2-6">KT allows a service operator to obscure the size of its user base by batch
 inserting a large number of fake label-version pairs when a transparency log is
 first initialized. Similarly, KT also allows a service operator to obscure the
 rate at which "real" changes are made to the transparency log by padding "real"
-changes with the insertion of other fake label-version pairs such that it
-creates the outside appearance of a constant baseline rate of insertions.<a href="#section-7.1-6" class="pilcrow">¶</a></p>
+changes with the insertion of other fake label-version pairs, such that it
+creates the outside appearance of a constant baseline rate of insertions.<a href="#section-7.2-6" class="pilcrow">¶</a></p>
 <div id="leakage-to-third-party">
-<section id="section-7.1.1">
+<section id="section-7.2.1">
           <h4 id="name-leakage-to-third-party">
-<a href="#section-7.1.1" class="section-number selfRef">7.1.1. </a><a href="#name-leakage-to-third-party" class="section-name selfRef">Leakage to Third-Party</a>
+<a href="#section-7.2.1" class="section-number selfRef">7.2.1. </a><a href="#name-leakage-to-third-party" class="section-name selfRef">Leakage to Third-Party</a>
           </h4>
-<p id="section-7.1.1-1">In the event that a third-party auditor or manager is used, there's additional
-information leaked to the third-party that's not visible to outsiders.<a href="#section-7.1.1-1" class="pilcrow">¶</a></p>
-<p id="section-7.1.1-2">In the case of a third-party auditor, the auditor is able to learn the total
+<p id="section-7.2.1-1">In the event that a third-party auditor or manager is used, there's additional
+information leaked to the third-party that's not visible to outsiders.<a href="#section-7.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-7.2.1-2">In the case of a third-party auditor, the auditor is able to learn the total
 number of distinct changes to the log. It is also able to learn the order and
 approximate timing with which each change was made. However, auditors are not
 able to learn the plaintext of any labels or values. This is because labels
 are masked with a VRF, and values are only provided to auditors as commitments.
 They are also not able to distinguish between whether a change represents a label
 being created for the first time or being updated, or whether a change
-represents a "real" change from an end-user or a "fake" padding change.<a href="#section-7.1.1-2" class="pilcrow">¶</a></p>
-<p id="section-7.1.1-3">In the case of a third-party manager, the manager generally learns everything
+represents a "real" change from an end-user or a "fake" padding change.<a href="#section-7.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-7.2.1-3">In the case of a third-party manager, the manager generally learns everything
 that the service operator would know. This includes the total set of plaintext
 labels and values and their modification history. It also includes traffic
-patterns, such as how often a specific label is looked up.<a href="#section-7.1.1-3" class="pilcrow">¶</a></p>
+patterns, such as how often a specific label is looked up.<a href="#section-7.2.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2242,65 +2288,50 @@ patterns, such as how often a specific label is looked up.<a href="#section-7.1.
       <h2 id="name-privacy-law-considerations">
 <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-privacy-law-considerations" class="section-name selfRef">Privacy Law Considerations</a>
       </h2>
-<p id="section-8-1">Consumer privacy laws often provide a 'right to erasure'. This means that when a
+<p id="section-8-1">Consumer privacy laws often provide a <em>right to erasure</em>. This means that when a
 consumer requests that a service provider delete their personal information, the
 service provider is legally obligated to do so. This may seem to be incompatible
-with the description of KT in <a href="#introduction" class="auto internal xref">Section 1</a> as an 'append-only log'. Once an
+with the description of KT in <a href="#introduction" class="auto internal xref">Section 1</a> as an "append-only log". Once an
 entry is added to a transparency log, it indeed can not be removed.<a href="#section-8-1" class="pilcrow">¶</a></p>
 <p id="section-8-2">The important caveat here is that user data is not directly stored in the
-append-only log. Instead, the log consists of privacy-preserving cryptographic
-commitments. By logging commitments instead of plaintext user data, users
-interacting with the log are unable to infer anything about an entry's contents
-until the service provider explicitly provides the commitment's opening. A
-service provider responding to an erasure request can delete the commitment
-opening and the associated data, effectively anonymizing the entry.<a href="#section-8-2" class="pilcrow">¶</a></p>
-<p id="section-8-3">Other than the log, the second place where user information is stored is in the
-<em>prefix tree</em>. This is a cryptographic index provided to users to enable them to
-efficiently query the log, which contains information about which labels
-exist and where. These labels are usually serialized end-user identifiers,
-although it varies by application. To minimize leakage, all labels are
-processed through a Verifiable Random Function, or VRF <span>[<a href="#RFC9381" class="cite xref">RFC9381</a>]</span>.<a href="#section-8-3" class="pilcrow">¶</a></p>
-<p id="section-8-4">A VRF deterministically maps each label to the fixed-length pseudorandom
-value. Only the service operator, who holds a private key, can execute the VRF.
-Critically though, VRFs can provide proof that an input-output pair is
-valid, which users verify with a public key. When a user tries to search for or
-update a label, the service operator first executes its VRF on the input label
-to obtain the index that will actually be looked up or stored in the
-prefix tree. The service operator then provides the VRF output, along with a
-proof that the output is correct, in its response to the user.<a href="#section-8-4" class="pilcrow">¶</a></p>
-<p id="section-8-5">The pseudorandom property of VRFs means that even if a user indirectly observes
-that a specific VRF output exists in the prefix tree, they can't learn which
-user it identifies. The inability of users to execute the VRF
-themselves also prevents offline "password cracking" approaches, where an
-attacker tries all possibilities in a low entropy space (like the set of phone
-numbers) to find the input that produces a given output.<a href="#section-8-5" class="pilcrow">¶</a></p>
-<p id="section-8-6">A service provider responding to an erasure request can 'trim' the prefix tree,
-by no longer storing the full VRF output for any labels corresponding to an
-end-user's identifiers. With only a small amount of the VRF output left in
-storage, even if the transparency log is later compromised, it would be unable
-to recover deleted identifiers. If the same labels were reinserted into the
-log at a later time, it would appear as if they were being inserted for the
-first time.<a href="#section-8-6" class="pilcrow">¶</a></p>
-<p id="section-8-7">As an example, consider the information stored in a transparency log after
-inserting a label <code>L</code> with value <code>V</code>. The index inserted into the prefix tree would
-roughly correspond to <code>VRF(label L) = pseudorandom bytes</code>, and the value stored in
-the append-only log would roughly correspond to:<a href="#section-8-7" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-8-8">
+append-only log. Instead, the primary contents of a transparency log consists of
+privacy-preserving VRF outputs and cryptographic commitments. The use of
+cryptographic commitments ensures that users interacting with the transparency
+log are unable to learn anything about a label's value until the transparency
+log explicitly provides the commitment's opening. A transparency log responding
+to an erasure request can delete the commitment opening and the associated data,
+effectively anonymizing the entry.<a href="#section-8-2" class="pilcrow">¶</a></p>
+<p id="section-8-3">In KT, labels are usually serialized end-user identifiers, although it varies by
+application. To minimize leakage, all labels are processed through a Verifiable
+Random Function, or VRF <span>[<a href="#RFC9381" class="cite xref">RFC9381</a>]</span>. A VRF deterministically maps each label to
+the fixed-length pseudorandom value. A transparency log responding to an erasure
+request can 'trim' the prefix tree, by no longer storing the full VRF output for
+any labels corresponding to an end-user's identifiers. With only a small amount
+of the VRF output left in storage, even if the transparency log is later
+compromised, it would be impossible to affirmatively recover deleted end-user
+identifiers. If the same labels were reinserted into the transparency log at a
+later time, it would appear as if they were being inserted for the first time.<a href="#section-8-3" class="pilcrow">¶</a></p>
+<p id="section-8-4">As an example, consider the information stored in a transparency log after
+inserting a label <code>L</code> with value <code>V</code>. The stored VRF output would roughly
+correspond to <code>VRF(label L) = pseudorandom bytes</code>, and the commitment to the
+label's new value would roughly correspond to:<a href="#section-8-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-8-5">
 <pre>
 Commit(nonce: random bytes, body: version N of label L is V)
-</pre><a href="#section-8-8" class="pilcrow">¶</a>
+</pre><a href="#section-8-5" class="pilcrow">¶</a>
 </div>
-<p id="section-8-9">After receiving an erasure request, the transparency log deletes the label, value,
+<p id="section-8-6">After receiving an erasure request, the transparency log deletes the label, value,
 and random commitment nonce. It also trims the VRF output to the minimum size
 necessary. The commitment scheme guarantees that, without the high-entropy
-random nonce, the remaining commitment reveals nothing about the label or value.<a href="#section-8-9" class="pilcrow">¶</a></p>
-<p id="section-8-10">Assuming that the prefix tree is well-balanced (which is extremely likely due to
+random nonce, the remaining commitment reveals nothing about the label or value.<a href="#section-8-6" class="pilcrow">¶</a></p>
+<p id="section-8-7">Assuming that the prefix tree is well-balanced (which is likely, due to
 VRFs being pseudorandom), the number of VRF output bits retained is
 approximately equal to the logarithm of the total number of labels stored. This
 means that while the VRF's full output may be 256 bits, in a log with one
 million labels, only 20 output bits would need to be retained. This would be
 insufficient for recovering even a very low-entropy identifier like a phone
-number.<a href="#section-8-10" class="pilcrow">¶</a></p>
+number.<a href="#section-8-7" class="pilcrow">¶</a></p>
+<p id="section-8-8">TODO: Discuss max lifetime here as well<a href="#section-8-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="implementation-guidance">
@@ -2335,23 +2366,24 @@ able to actually see it written out. An example of this kind of application
 would be Slack.<a href="#section-9-3" class="pilcrow">¶</a></p>
 <p id="section-9-4">A <strong>primary end-user identity</strong> is one that is unique, user-visible, and unable
 to change. (Or equivalently, if it changes, it appears in the application UI as
-a new conversation with a new user.) A primary end-user identity should always
-be a label in KT, with the end-user's public keys and other account information
-as the associated value.<a href="#section-9-4" class="pilcrow">¶</a></p>
+a new conversation with a new user.) An example of this type of identifier would
+be an email address on an email service. A primary end-user identity <span class="bcp14">SHOULD</span>
+always be a label in KT, with the end-user's public keys and other account
+information as the associated value.<a href="#section-9-4" class="pilcrow">¶</a></p>
 <p id="section-9-5">A <strong>secondary end-user identity</strong> is one that is unique, user-visible, and able
 to change without being interpreted as a different account due to its
 association with a primary end-user identity. These identities are used solely
 for initial user discovery, during which they're converted into a primary
 end-user identity (like a UUID) that's used by the application to identify the
-end-user from then on. An example of this type of identity would be a phone
-number, since users can often change the phone number they use with a service
-without disrupting existing communications. A secondary end-user identity should
-be a label in KT with the primary end-user identity as the associated value,
-such that it can be used to authenticate the user discovery process.<a href="#section-9-5" class="pilcrow">¶</a></p>
+end-user from then on. An example of this type of identity would be a username,
+since users can often change their username without disrupting existing
+communications. A secondary end-user identity <span class="bcp14">SHOULD</span> be a label in KT with the
+primary end-user identity as the associated value, such that it can be used to
+authenticate the user discovery process.<a href="#section-9-5" class="pilcrow">¶</a></p>
 <p id="section-9-6">While likely helpful to most common applications, the distinction between
 handling primary and secondary end-user identities is not a guaranteed rule.
 Applications must be careful to ensure they fully capture the semantics of
-identity in their application with the label-value pairs they store in KT.<a href="#section-9-6" class="pilcrow">¶</a></p>
+identity in their application with the labels and values they store in KT.<a href="#section-9-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">
@@ -2375,7 +2407,7 @@ identity in their application with the label-value pairs they store in KT.<a hre
 <dl class="references">
 <dt id="PROTO">[PROTO]</dt>
         <dd>
-<span class="refAuthor">McMillion, B.</span> and <span class="refAuthor">F. Linker</span>, <span class="refTitle">"Key Transparency Protocol"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-keytrans-protocol-02</span>, <time datetime="2025-07-06" class="refDate">6 July 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-keytrans-protocol-02">https://datatracker.ietf.org/doc/html/draft-ietf-keytrans-protocol-02</a>&gt;</span>. </dd>
+<span class="refAuthor">McMillion, B.</span> and <span class="refAuthor">F. Linker</span>, <span class="refTitle">"Key Transparency Protocol"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-keytrans-protocol-03</span>, <time datetime="2025-10-19" class="refDate">19 October 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-keytrans-protocol-03">https://datatracker.ietf.org/doc/html/draft-ietf-keytrans-protocol-03</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
         <dd>
@@ -2419,16 +2451,8 @@ identity in their application with the label-value pairs they store in KT.<a hre
 </div>
 </section>
 </div>
-<div id="acknowledgments">
-<section id="appendix-A">
-      <h2 id="name-acknowledgments">
-<a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
-      </h2>
-<p id="appendix-A-1">TODO acknowledge.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
-</section>
-</div>
 <div id="authors-addresses">
-<section id="appendix-B">
+<section id="appendix-A">
       <h2 id="name-authors-address">
 <a href="#name-authors-address" class="section-name selfRef">Author's Address</a>
       </h2>
