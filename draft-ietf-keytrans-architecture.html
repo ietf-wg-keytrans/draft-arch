@@ -1051,7 +1051,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">McMillion</td>
-<td class="center">Expires 21 July 2026</td>
+<td class="center">Expires 25 July 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1064,12 +1064,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-keytrans-architecture-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-01-17" class="published">17 January 2026</time>
+<time datetime="2026-01-21" class="published">21 January 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-07-21">21 July 2026</time></dd>
+<dd class="expires"><time datetime="2026-07-25">25 July 2026</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1122,7 +1122,7 @@ securely apply Key Transparency to a number of common applications.<a href="#sec
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 21 July 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 25 July 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -2087,22 +2087,22 @@ openings.<a href="#section-6-3.2.1" class="pilcrow">¶</a></p>
       </ol>
 <p id="section-6-4">The first type, serialized user data, can be pruned by removing any entries that
 have either expired, or to which the service operator's access control policy
-would never permit access. A version of a label expires when a greater version
-has been created and the log entry that the version was inserted in has passed
-its <strong>maximum lifetime</strong> (defined in <span>[<a href="#PROTO" class="cite xref">PROTO</a>]</span>). The protocol will never allow a
-search for an expired version of a label to succeed, so the corresponding value
-may be deleted.<a href="#section-6-4" class="pilcrow">¶</a></p>
-<p id="section-6-5">Note that the greatest version of a label never expires through the maximum
-lifetime mechanism. However, service operators may define arbitrary access
-control policies that permanently block access to the greatest (or any other
-versions) of a label. The values corresponding to these label-version pairs may
-also be deleted without consideration to the rest of the protocol.<a href="#section-6-5" class="pilcrow">¶</a></p>
+would never permit access. A version of a label expires when it is no longer
+possible to produce a valid search proof for the label-version pair, which
+happens when all of the necessary log entries have passed their <strong>maximum
+lifetime</strong> (as defined in <span>[<a href="#PROTO" class="cite xref">PROTO</a>]</span>).<a href="#section-6-4" class="pilcrow">¶</a></p>
+<p id="section-6-5">Notably, the greatest version of a label is the only version that never expires
+through the maximum lifetime mechanism. However, service operators may define
+arbitrary access control policies that permanently block access to the greatest
+(or any other versions) of a label. The values corresponding to these
+label-version pairs may also be deleted without consideration to the rest of the
+protocol.<a href="#section-6-5" class="pilcrow">¶</a></p>
 <p id="section-6-6">The second type of data, cryptographic data, can also be pruned, but only after
 considering which parts are no longer required by the protocol for producing
 proofs. For example, even though a particular version of a label may have been
 deleted, the corresponding VRF output and commitment may still need to exist in
 the latest version of the transparency log's prefix tree to produce valid search
-proofs for undeleted versions of the label. The exact mechanism for determining
+proofs for other versions of the label. The exact mechanism for determining
 which data is safe to delete will depend on the protocol and implementation.<a href="#section-6-6" class="pilcrow">¶</a></p>
 <p id="section-6-7">The distinction between user data and cryptographic data provides a valuable
 separation of concerns since <span>[<a href="#PROTO" class="cite xref">PROTO</a>]</span> does not provide a way for a service
@@ -2292,46 +2292,31 @@ patterns, such as how often a specific label is looked up.<a href="#section-7.2.
 consumer requests that a service provider delete their personal information, the
 service provider is legally obligated to do so. This may seem to be incompatible
 with the description of KT in <a href="#introduction" class="auto internal xref">Section 1</a> as an "append-only log". Once an
-entry is added to a transparency log, it indeed can not be removed.<a href="#section-8-1" class="pilcrow">¶</a></p>
-<p id="section-8-2">The important caveat here is that user data is not directly stored in the
-append-only log. Instead, the primary contents of a transparency log consists of
-privacy-preserving VRF outputs and cryptographic commitments. The use of
-cryptographic commitments ensures that users interacting with the transparency
-log are unable to learn anything about a label's value until the transparency
-log explicitly provides the commitment's opening. A transparency log responding
-to an erasure request can delete the commitment opening and the associated data,
-effectively anonymizing the entry.<a href="#section-8-2" class="pilcrow">¶</a></p>
-<p id="section-8-3">In KT, labels are usually serialized end-user identifiers, although it varies by
-application. To minimize leakage, all labels are processed through a Verifiable
-Random Function, or VRF <span>[<a href="#RFC9381" class="cite xref">RFC9381</a>]</span>. A VRF deterministically maps each label to
-the fixed-length pseudorandom value. A transparency log responding to an erasure
-request can 'trim' the prefix tree, by no longer storing the full VRF output for
-any labels corresponding to an end-user's identifiers. With only a small amount
-of the VRF output left in storage, even if the transparency log is later
-compromised, it would be impossible to affirmatively recover deleted end-user
-identifiers. If the same labels were reinserted into the transparency log at a
-later time, it would appear as if they were being inserted for the first time.<a href="#section-8-3" class="pilcrow">¶</a></p>
-<p id="section-8-4">As an example, consider the information stored in a transparency log after
-inserting a label <code>L</code> with value <code>V</code>. The stored VRF output would roughly
-correspond to <code>VRF(label L) = pseudorandom bytes</code>, and the commitment to the
-label's new value would roughly correspond to:<a href="#section-8-4" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-8-5">
-<pre>
-Commit(nonce: random bytes, body: version N of label L is V)
-</pre><a href="#section-8-5" class="pilcrow">¶</a>
-</div>
-<p id="section-8-6">After receiving an erasure request, the transparency log deletes the label, value,
-and random commitment nonce. It also trims the VRF output to the minimum size
-necessary. The commitment scheme guarantees that, without the high-entropy
-random nonce, the remaining commitment reveals nothing about the label or value.<a href="#section-8-6" class="pilcrow">¶</a></p>
-<p id="section-8-7">Assuming that the prefix tree is well-balanced (which is likely, due to
-VRFs being pseudorandom), the number of VRF output bits retained is
-approximately equal to the logarithm of the total number of labels stored. This
-means that while the VRF's full output may be 256 bits, in a log with one
-million labels, only 20 output bits would need to be retained. This would be
-insufficient for recovering even a very low-entropy identifier like a phone
-number.<a href="#section-8-7" class="pilcrow">¶</a></p>
-<p id="section-8-8">TODO: Discuss max lifetime here as well<a href="#section-8-8" class="pilcrow">¶</a></p>
+entry is added to a transparency log, it indeed can not be removed. The
+important caveat here is that user data is not directly stored in the
+append-only log. Instead, it primarily contains privacy-preserving VRF outputs
+and cryptographic commitments.<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-2">The value corresponding to a label is typically some serialized user account
+data, like a public key or internal identifier. KT uses cryptographic
+commitments to ensure that users interacting with a transparency log are unable
+to learn anything about a label's value until the transparency log explicitly
+provides the commitment's opening. A transparency log responding to an erasure
+request can delete the commitment opening and the associated data. This can be
+done immediately and permanently prevents recovery of the associated value.<a href="#section-8-2" class="pilcrow">¶</a></p>
+<p id="section-8-3">Labels themselves are typically serialized end-user identifiers, like a username
+or email address. All labels are processed through a Verifiable Random Function,
+or VRF <span>[<a href="#RFC9381" class="cite xref">RFC9381</a>]</span>, which deterministically maps each label to a fixed-length
+pseudorandom value. The set of all labels stored in a transparency log is
+committed to by a prefix tree, and each version of the prefix tree is committed
+to by a log tree.<a href="#section-8-3" class="pilcrow">¶</a></p>
+<p id="section-8-4">While all the VRF outputs corresponding to labels affected by an erasure request
+can be deleted from the most recent version of the prefix tree immediately,
+previous versions of the prefix tree will still contain the VRF outputs and will
+still be needed by the protocol for a bounded amount of time. This bound is
+defined by the log entry maximum lifetime discussed in <span>[<a href="#PROTO" class="cite xref">PROTO</a>]</span>. As such, the
+VRF outputs can only be fully purged from the transparency log once all log
+entries that contain them have passed their maximum lifetime. After this point,
+they are no longer necessary for the protocol to operate.<a href="#section-8-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="implementation-guidance">

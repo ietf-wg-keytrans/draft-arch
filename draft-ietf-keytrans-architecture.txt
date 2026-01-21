@@ -3,9 +3,9 @@
 
 
 Key Transparency                                            B. McMillion
-Internet-Draft                                           17 January 2026
+Internet-Draft                                           21 January 2026
 Intended status: Informational                                          
-Expires: 21 July 2026
+Expires: 25 July 2026
 
 
                      Key Transparency Architecture
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 July 2026.
+   This Internet-Draft will expire on 25 July 2026.
 
 Copyright Notice
 
@@ -734,18 +734,17 @@ Many Users                        Transparency Log               Auditor
    The first type, serialized user data, can be pruned by removing any
    entries that have either expired, or to which the service operator's
    access control policy would never permit access.  A version of a
-   label expires when a greater version has been created and the log
-   entry that the version was inserted in has passed its *maximum
-   lifetime* (defined in [PROTO]).  The protocol will never allow a
-   search for an expired version of a label to succeed, so the
-   corresponding value may be deleted.
+   label expires when it is no longer possible to produce a valid search
+   proof for the label-version pair, which happens when all of the
+   necessary log entries have passed their *maximum lifetime* (as
+   defined in [PROTO]).
 
-   Note that the greatest version of a label never expires through the
-   maximum lifetime mechanism.  However, service operators may define
-   arbitrary access control policies that permanently block access to
-   the greatest (or any other versions) of a label.  The values
-   corresponding to these label-version pairs may also be deleted
-   without consideration to the rest of the protocol.
+   Notably, the greatest version of a label is the only version that
+   never expires through the maximum lifetime mechanism.  However,
+   service operators may define arbitrary access control policies that
+   permanently block access to the greatest (or any other versions) of a
+   label.  The values corresponding to these label-version pairs may
+   also be deleted without consideration to the rest of the protocol.
 
    The second type of data, cryptographic data, can also be pruned, but
    only after considering which parts are no longer required by the
@@ -753,9 +752,9 @@ Many Users                        Transparency Log               Auditor
    version of a label may have been deleted, the corresponding VRF
    output and commitment may still need to exist in the latest version
    of the transparency log's prefix tree to produce valid search proofs
-   for undeleted versions of the label.  The exact mechanism for
-   determining which data is safe to delete will depend on the protocol
-   and implementation.
+   for other versions of the label.  The exact mechanism for determining
+   which data is safe to delete will depend on the protocol and
+   implementation.
 
    The distinction between user data and cryptographic data provides a
    valuable separation of concerns since [PROTO] does not provide a way
@@ -949,53 +948,38 @@ Many Users                        Transparency Log               Auditor
    personal information, the service provider is legally obligated to do
    so.  This may seem to be incompatible with the description of KT in
    Section 1 as an "append-only log".  Once an entry is added to a
-   transparency log, it indeed can not be removed.
+   transparency log, it indeed can not be removed.  The important caveat
+   here is that user data is not directly stored in the append-only log.
+   Instead, it primarily contains privacy-preserving VRF outputs and
+   cryptographic commitments.
 
-   The important caveat here is that user data is not directly stored in
-   the append-only log.  Instead, the primary contents of a transparency
-   log consists of privacy-preserving VRF outputs and cryptographic
-   commitments.  The use of cryptographic commitments ensures that users
-   interacting with the transparency log are unable to learn anything
-   about a label's value until the transparency log explicitly provides
-   the commitment's opening.  A transparency log responding to an
-   erasure request can delete the commitment opening and the associated
-   data, effectively anonymizing the entry.
+   The value corresponding to a label is typically some serialized user
+   account data, like a public key or internal identifier.  KT uses
+   cryptographic commitments to ensure that users interacting with a
+   transparency log are unable to learn anything about a label's value
+   until the transparency log explicitly provides the commitment's
+   opening.  A transparency log responding to an erasure request can
+   delete the commitment opening and the associated data.  This can be
+   done immediately and permanently prevents recovery of the associated
+   value.
 
-   In KT, labels are usually serialized end-user identifiers, although
-   it varies by application.  To minimize leakage, all labels are
-   processed through a Verifiable Random Function, or VRF [RFC9381].  A
-   VRF deterministically maps each label to the fixed-length
-   pseudorandom value.  A transparency log responding to an erasure
-   request can 'trim' the prefix tree, by no longer storing the full VRF
-   output for any labels corresponding to an end-user's identifiers.
-   With only a small amount of the VRF output left in storage, even if
-   the transparency log is later compromised, it would be impossible to
-   affirmatively recover deleted end-user identifiers.  If the same
-   labels were reinserted into the transparency log at a later time, it
-   would appear as if they were being inserted for the first time.
+   Labels themselves are typically serialized end-user identifiers, like
+   a username or email address.  All labels are processed through a
+   Verifiable Random Function, or VRF [RFC9381], which deterministically
+   maps each label to a fixed-length pseudorandom value.  The set of all
+   labels stored in a transparency log is committed to by a prefix tree,
+   and each version of the prefix tree is committed to by a log tree.
 
-   As an example, consider the information stored in a transparency log
-   after inserting a label L with value V.  The stored VRF output would
-   roughly correspond to VRF(label L) = pseudorandom bytes, and the
-   commitment to the label's new value would roughly correspond to:
-
-   Commit(nonce: random bytes, body: version N of label L is V)
-
-   After receiving an erasure request, the transparency log deletes the
-   label, value, and random commitment nonce.  It also trims the VRF
-   output to the minimum size necessary.  The commitment scheme
-   guarantees that, without the high-entropy random nonce, the remaining
-   commitment reveals nothing about the label or value.
-
-   Assuming that the prefix tree is well-balanced (which is likely, due
-   to VRFs being pseudorandom), the number of VRF output bits retained
-   is approximately equal to the logarithm of the total number of labels
-   stored.  This means that while the VRF's full output may be 256 bits,
-   in a log with one million labels, only 20 output bits would need to
-   be retained.  This would be insufficient for recovering even a very
-   low-entropy identifier like a phone number.
-
-   TODO: Discuss max lifetime here as well
+   While all the VRF outputs corresponding to labels affected by an
+   erasure request can be deleted from the most recent version of the
+   prefix tree immediately, previous versions of the prefix tree will
+   still contain the VRF outputs and will still be needed by the
+   protocol for a bounded amount of time.  This bound is defined by the
+   log entry maximum lifetime discussed in [PROTO].  As such, the VRF
+   outputs can only be fully purged from the transparency log once all
+   log entries that contain them have passed their maximum lifetime.
+   After this point, they are no longer necessary for the protocol to
+   operate.
 
 9.  Implementation Guidance
 
