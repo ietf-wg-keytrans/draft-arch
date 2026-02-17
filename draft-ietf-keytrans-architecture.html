@@ -28,7 +28,7 @@ securely apply Key Transparency to a number of common applications.
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.32.5
-    wcwidth 0.2.14
+    wcwidth 0.3.0
 -->
 <link href="draft-ietf-keytrans-architecture.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -169,7 +169,7 @@ securely apply Key Transparency to a number of common applications.
   font-weight: 400;
   font-display: swap;
   src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 @font-face {
   font-family: 'Oxygen Mono';
@@ -177,7 +177,8 @@ securely apply Key Transparency to a number of common applications.
   font-weight: 400;
   font-display: swap;
   src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
 }
 
 @font-face {
@@ -569,6 +570,7 @@ aside, blockquote {
 }
 blockquote {
   margin: 1em 0;
+  border-left: 2px var(--pilcrow-strong) solid;
 }
 cite {
   display: block;
@@ -639,7 +641,7 @@ a.pilcrow {
   }
 }
 @media not print {
-  :hover > a.pilcrow {
+  :hover > a.pilcrow, a.pilcrow:focus {
     opacity: 1;
   }
   a.pilcrow[href]:hover {
@@ -1047,11 +1049,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Key Transparency Architecture</td>
-<td class="right">January 2026</td>
+<td class="right">February 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">McMillion</td>
-<td class="center">Expires 25 July 2026</td>
+<td class="center">Expires 21 August 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1064,12 +1066,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-keytrans-architecture-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-01-21" class="published">21 January 2026</time>
+<time datetime="2026-02-17" class="published">17 February 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-07-25">25 July 2026</time></dd>
+<dd class="expires"><time datetime="2026-08-21">21 August 2026</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1122,7 +1124,7 @@ securely apply Key Transparency to a number of common applications.<a href="#sec
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 25 July 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 21 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1688,7 +1690,7 @@ asserting that the tree has been constructed correctly.<a href="#section-4-4" cl
 with no third party. The cost of this is that, when a user looks up a version of
 a label that was inserted very recently, the user may need to retain some
 additional state and monitor the label until it is included in a <em>distinguished
-log entry</em> (as defined in <span>[<a href="#PROTO" class="cite xref">PROTO</a>]</span>). If a user
+log entry</em> (defined in <span>[<a href="#PROTO" class="cite xref">PROTO</a>]</span>). If a user
 looks up many label-version pairs that were inserted very recently, monitoring
 may become relatively expensive.<a href="#section-4-5" class="pilcrow">¶</a></p>
 <p id="section-4-6">Additionally, applications that rely on a transparency log deployed in Contact
@@ -1788,15 +1790,16 @@ execute such Search or Update queries.<a href="#section-4.1-5" class="pilcrow">�
 <a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-third-party-auditing" class="section-name selfRef">Third-Party Auditing</a>
         </h3>
 <p id="section-4.2-1">With the Third-Party Auditing deployment mode, the transparency log obtains
-signatures from a third-party auditor attesting to the fact that the tree has
-been constructed correctly. These signatures are provided to users as part of
-the responses for their queries.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
-<p id="section-4.2-2">The third-party auditor is expected to run asynchronously, downloading and
-authenticating a log's contents in the background, so as not to become a
-bottleneck for the transparency log. As a result, signatures from the auditor
-may lag behind the view presented by the transparency log. The maximum amount of
-time that the auditor may lag behind the transparency log without its signature
-being rejected by users is set in the transparency log's configuration.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
+signatures from a third-party auditor attesting (at minimum) to the fact that
+the tree has been constructed correctly. These signatures are provided to users
+as part of the responses for their queries.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2-2">When running synchronously, the auditor can easily become a bottleneck for the
+transparency log. It's generally expected that third-party auditors run
+asynchronously, downloading and authenticating a log's contents in the
+background. As a result, signatures from the auditor may lag behind the view
+presented by the transparency log. The maximum amount of time that the auditor
+may lag behind the transparency log without its signature being rejected by
+users is set in the transparency log's configuration.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
 <span id="name-third-party-auditing-a-rece"></span><div id="auditing-fig">
 <figure id="figure-5">
           <div id="section-4.2-3.1">
