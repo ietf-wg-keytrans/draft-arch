@@ -363,10 +363,11 @@ log performs the majority of the work of storing and operating the service, only
 obtaining signatures from a third-party auditor at regular intervals
 asserting that the tree has been constructed correctly.
 
-To reduce the probability of collusion between the transparency log and third-party
-auditor, an application may require two or more independent third parties. 
-If more than one third-party auditor is supported, MUST require signatures
-from at least a strict majority of auditors in order to detect forked views among the set of auditors. 
+To reduce the probability of collusion between the transparency log and the
+third party, a transparency log can have two or more independent third parties
+coordinate as one and produce threshold signatures. In this scenario, the
+threshold for a valid signature MUST be at least a majority of the third
+parties, to prevent different subsets from authenticating forked views.
 
 **Contact Monitoring**, on the other hand, supports a single-party deployment
 with no third party. The cost of this is that, when a user looks up a version of
@@ -669,7 +670,8 @@ consistent with what it has shown all other users. That is, when a user searches
 for a label, they're guaranteed that the result they receive represents the same
 result that any other user searching for the same label at roughly the same time
 would've seen. When a user modifies a label, they're guaranteed that other users
-will either see the modification within a bounded amount of time or permanently enter an invalid state.
+will see the modification within a bounded amount of time, or will
+themselves permanently enter an invalid state as discussed below.
 
 If the transparency log does not execute an operation correctly, then either:
 
