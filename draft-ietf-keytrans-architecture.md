@@ -367,7 +367,7 @@ asserting that the tree has been constructed correctly.
 with no third party. The cost of this is that, when a user looks up a version of
 a label that was inserted very recently, the user may need to retain some
 additional state and monitor the label until it is included in a *distinguished
-log entry* (as defined in {{!PROTO=I-D.ietf-keytrans-protocol}}). If a user
+log entry* (defined in {{!PROTO=I-D.ietf-keytrans-protocol}}). If a user
 looks up many label-version pairs that were inserted very recently, monitoring
 may become relatively expensive.
 
@@ -438,16 +438,17 @@ execute such Search or Update queries.
 ## Third-Party Auditing
 
 With the Third-Party Auditing deployment mode, the transparency log obtains
-signatures from a third-party auditor attesting to the fact that the tree has
-been constructed correctly. These signatures are provided to users as part of
-the responses for their queries.
+signatures from a third-party auditor attesting (at minimum) to the fact that
+the tree has been constructed correctly. These signatures are provided to users
+as part of the responses for their queries.
 
-The third-party auditor is expected to run asynchronously, downloading and
-authenticating a log's contents in the background, so as not to become a
-bottleneck for the transparency log. As a result, signatures from the auditor
-may lag behind the view presented by the transparency log. The maximum amount of
-time that the auditor may lag behind the transparency log without its signature
-being rejected by users is set in the transparency log's configuration.
+When running synchronously, the auditor can easily become a bottleneck for the
+transparency log. It's generally expected that third-party auditors run
+asynchronously, downloading and authenticating a log's contents in the
+background. As a result, signatures from the auditor may lag behind the view
+presented by the transparency log. The maximum amount of time that the auditor
+may lag behind the transparency log without its signature being rejected by
+users is set in the transparency log's configuration.
 
 ~~~aasvg
 Many Users                        Transparency Log               Auditor
