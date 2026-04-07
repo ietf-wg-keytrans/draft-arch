@@ -159,7 +159,8 @@ relying on their existing access control system.
 With some small exceptions, applications may enforce arbitrary access control
 rules on top of KT. This may include requiring a user to be logged in to make KT
 requests, only allowing a user to lookup the labels of another user if they're
-"friends", or applying a rate limit. Applications SHOULD prevent users from
+"friends", or applying a rate limit. Most applications will likely want to, at
+minimum, prevent users from
 modifying labels they do not own. The exact mechanism for rejecting requests,
 and possibly explaining the reason for rejection, is left to the application.
 
@@ -239,8 +240,11 @@ end-user identity and their public keys. Recipients can verify the
 request-response pairs themselves without contacting the transparency log.
 
 Any future monitoring that may be required SHOULD be provided to recipients
-proactively by the sender. However, if this fails, the recipient will need to
-perform the monitoring themself over an anonymous channel.
+proactively by the sender, as this is the most robust way to preserve the
+sender's anonymity. If required future monitoring isn't provided, either
+accidentally or because the system was intentionally designed that way, the
+recipient will need to perform the monitoring themself over an anonymous
+channel.
 
 ~~~aasvg
 Transparency Log               Alice           Anonymous Group
@@ -383,7 +387,7 @@ communication with the transparency log or peer-to-peer communication, as
 described in {{detecting-forks}}.
 
 Applications that rely on a transparency log deployed in either of the
-third-party modes SHOULD allow users to enable a "Contact Monitoring Mode". This
+third-party modes MAY allow users to enable a "Contact Monitoring Mode". This
 mode, which affects only the individual client's behavior, would cause the
 client to behave as if its transparency log was deployed in Contact Monitoring
 mode. As such, it would start retaining state about previously looked-up labels
@@ -537,7 +541,9 @@ transparency log instances, for example:
   their own transparency log for their own users.
 
 Client implementations SHOULD generally be prepared to interact with multiple
-independent transparency logs. When multiple transparency logs are used as part
+independent transparency logs, as quickly migrating to a new transparency log is
+the  generally recommended way to recover from log failure. When multiple
+transparency logs are used as part
 of one application, all users MUST have a consistent policy for executing
 Search, Update, and Monitor queries against the logs in a way that maintains the
 high-level security guarantees of KT:
@@ -553,14 +559,14 @@ high-level security guarantees of KT:
 In the case of gradually migrating from an old transparency log to a new one,
 this policy may look like:
 
-1. Search queries should be executed against the old transparency log first, and
+1. Search queries are executed against the old transparency log first, and
    then against the new transparency log only if the most recent version of a
    label in the old transparency log is a special application-defined
    'tombstone' entry.
-2. Update queries should only be executed against the new transparency log, with
+2. Update queries are only executed against the new transparency log, with
    the exception of adding a tombstone entry for the label to the old
    transparency log if one hasn't been added already.
-3. Both transparency logs should be monitored as they would be if they were run
+3. Both transparency logs are monitored as they would be if they were run
    individually. Once the migration has completed and the old transparency log
    has stopped accepting modifications, the old transparency log MUST stay
    operational long enough for all users to complete their monitoring of it
@@ -611,7 +617,10 @@ controlling entity is `example.com`.
 A controlling entity like `example.com` MAY act as an anonymizing proxy for its
 users when they query transparency logs run by other entities (in the manner of
 {{?RFC9458}}), but SHOULD NOT attempt to 'mirror' or combine other transparency
-logs with its own.
+logs with its own. This ensures that all transparency logs can consistently
+enforce their access control policies as intended, manage compliance with
+privacy laws, and modify label values quickly and without interference from
+third-party caches.
 
 
 # Pruning
@@ -743,7 +752,9 @@ For example, in a Contact Monitoring deployment, the Reasonable Monitoring
 Window and the duration between out-of-band communication attempts SHOULD be
 much less than the typical time between state loss events. Similarly, in a
 Third-Party Auditing deployment, the maximum acceptable lag for an auditor
-SHOULD be much less than the typical time between state loss events.
+SHOULD be much less than the typical time between state loss events. This
+minimizes the likelihood that a state loss event could be useful to a
+misbehaving transparency log.
 
 In applications where client state is typically ephemeral (like a web page), or
 where state loss could possibly be triggered adversarially, a Third-Party
