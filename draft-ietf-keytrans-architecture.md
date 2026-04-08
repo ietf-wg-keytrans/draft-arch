@@ -554,9 +554,8 @@ high-level security guarantees of KT:
 
 - If all transparency logs behave honestly, then users observe a globally
   consistent view of the data associated with each label.
-- If any transparency log behaves dishonestly such that the prior guarantee is
-  not met, this will be detected in a timely manner by background monitoring or
-  out-of-band communication.
+- If any transparency log behaves dishonestly, this will be detected in a timely
+  manner by background monitoring or out-of-band communication.
 
 ## Gradual Migration
 
