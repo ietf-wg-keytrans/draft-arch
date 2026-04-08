@@ -123,6 +123,11 @@ genuinely need to see them.
   log is usually run either entirely or partially by the service operator, but
   could also be operated externally.
 
+**Transparency Log Configuration:**
+: The fixed, public parameters of a Transparency Log such as the log's cipher
+  suite and public key. Configuration is pre-distributed to users through a
+  trustworthy channel and used for proof verification.
+
 
 # Protocol Overview
 
@@ -171,11 +176,13 @@ The operations that can be executed by a user are as follows:
 1. **Search:** Looks up the value of a specific label in the most recent version
    of the log. Users may request either a specific version of the label or the
    most recent version available. If the label-version pair exists, the server
-   returns the corresponding value and an inclusion proof.
-2. **Update:** Adds a new label-value pair to the log, for which the server
-   returns an inclusion proof. Note that this means that new values are added to
-   the log immediately and no provisional inclusion proof, such as an SCT as
-   defined in {{Section 3 of ?RFC6962}}, is provided.
+   returns the corresponding value and a proof that the search operation was
+   executed correctly.
+2. **Update:** Adds a new label-value pair to the log. The server returns a
+   proof that the label-value pair was added correctly. Note that this means
+   that new values are added to the log immediately and no provisional proof,
+   such as an Signed Certificate Timestamp (SCT) as defined in {{Section 3 of
+   ?RFC6962}}, is provided.
 3. **Monitor:** While Search and Update are run by the user as necessary,
    monitoring is done in the background on a recurring basis. It can both check
    that the log is continuing to behave honestly (all previously returned labels
@@ -251,9 +258,7 @@ Transparency Log               Alice           Anonymous Group
 |                                |                           |
 |<---------------- Search(Alice) |                           |
 | SearchResponse(...) ---------->| Encrypt(Anon Group,       |
-|                                |     SearchResponse ||     |
-|                                |     Message   ||          |
-|                                |     Signature) ---------->|
+|                                |     SearchResponse) ----->|
 |                                |                           |
 |<--------------- Monitor(Alice) |                           |
 | MonitorResponse(...) --------->| Encrypt(Anon Group,       |
@@ -437,13 +442,12 @@ request before making hers." }
 
 Importantly, Contact Monitoring impacts how the server is able to enforce access
 control on Monitor queries. While Search and Update queries can enforce access
-control on a "point in time" basis, where a user is allowed to execute the query
-at one point in time but maybe not the next, Monitor queries MUST have
-*accretive* access control. This is because, if a user is allowed to execute a
-Search or Update query for a label, the user may then need to issue at least one
-Monitor query for the label some time in the future. These Monitor queries MUST
-be permitted, regardless of whether or not the user is still permitted to
-execute such Search or Update queries.
+control on an arbitrary "point in time" basis, where a user is allowed to
+execute the query at one point in time but maybe not the next, users are
+sometimes required by the protocol to make Monitor queries based on the Search
+and Update queries they made in the past. These Monitor queries MUST be
+permitted, regardless of whether or not the user is still permitted to execute
+such Search or Update queries.
 
 ## Third-Party Auditing
 
