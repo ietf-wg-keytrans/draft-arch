@@ -848,7 +848,7 @@ done immediately and permanently prevents recovery of the associated value.
 
 Labels themselves are typically serialized end-user identifiers, like a username
 or email address. All labels are processed through a Verifiable Random Function,
-or VRF {{?RFC9381}}, which deterministically maps each label to a fixed-length
+or VRF {{?RFC9381}}, which uses a private key to deterministically map each label to a fixed-length
 pseudorandom value. The set of all labels stored in a transparency log is
 committed to by a prefix tree, and each version of the prefix tree is committed
 to by a log tree.
