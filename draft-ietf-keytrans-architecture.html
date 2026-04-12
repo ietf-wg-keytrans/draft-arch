@@ -13,22 +13,22 @@ infrastructure, and specifies the security properties that the protocol
 provides. It also gives more general, non-prescriptive guidance on how to
 securely apply Key Transparency to a number of common applications. 
     " name="description">
-<meta content="xml2rfc 3.31.0" name="generator">
+<meta content="xml2rfc 3.32.0" name="generator">
 <meta content="key transparency" name="keyword">
 <meta content="draft-ietf-keytrans-architecture-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.31.0
+  xml2rfc 3.32.0
     Python 3.12.12
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
     lxml 6.0.2
-    platformdirs 4.5.1
+    platformdirs 4.9.4
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.32.5
-    wcwidth 0.3.0
+    wcwidth 0.6.0
 -->
 <link href="draft-ietf-keytrans-architecture.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1049,11 +1049,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Key Transparency Architecture</td>
-<td class="right">February 2026</td>
+<td class="right">April 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">McMillion</td>
-<td class="center">Expires 21 August 2026</td>
+<td class="center">Expires 14 October 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1066,12 +1066,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-keytrans-architecture-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-02-17" class="published">17 February 2026</time>
+<time datetime="2026-04-12" class="published">12 April 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-08-21">21 August 2026</time></dd>
+<dd class="expires"><time datetime="2026-10-14">14 October 2026</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1124,7 +1124,7 @@ securely apply Key Transparency to a number of common applications.<a href="#sec
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 21 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 14 October 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1342,6 +1342,13 @@ as public keys) associated with a given end-user identity. A transparency
 log is usually run either entirely or partially by the service operator, but
 could also be operated externally.<a href="#section-2-2.12.1" class="pilcrow">¶</a></p>
 </dd>
+        <dd class="break"></dd>
+<dt id="section-2-2.13"><strong>Transparency Log Configuration:</strong></dt>
+        <dd style="margin-left: 1.5em" id="section-2-2.14">
+          <p id="section-2-2.14.1">The fixed, public parameters of a Transparency Log such as the log's cipher
+suite and public key. Configuration is pre-distributed to users through a
+trustworthy channel and used for proof verification.<a href="#section-2-2.14.1" class="pilcrow">¶</a></p>
+</dd>
       <dd class="break"></dd>
 </dl>
 </section>
@@ -1380,7 +1387,8 @@ relying on their existing access control system.<a href="#section-3-4" class="pi
 <p id="section-3-5">With some small exceptions, applications may enforce arbitrary access control
 rules on top of KT. This may include requiring a user to be logged in to make KT
 requests, only allowing a user to lookup the labels of another user if they're
-"friends", or applying a rate limit. Applications <span class="bcp14">SHOULD</span> prevent users from
+"friends", or applying a rate limit. Most applications will likely want to, at
+minimum, prevent users from
 modifying labels they do not own. The exact mechanism for rejecting requests,
 and possibly explaining the reason for rejection, is left to the application.<a href="#section-3-5" class="pilcrow">¶</a></p>
 <div id="user-operations">
@@ -1394,13 +1402,14 @@ and possibly explaining the reason for rejection, is left to the application.<a 
             <p id="section-3.1-2.1.1"><strong>Search:</strong> Looks up the value of a specific label in the most recent version
 of the log. Users may request either a specific version of the label or the
 most recent version available. If the label-version pair exists, the server
-returns the corresponding value and an inclusion proof.<a href="#section-3.1-2.1.1" class="pilcrow">¶</a></p>
+returns the corresponding value and a proof that the search operation was
+executed correctly.<a href="#section-3.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-3.1-2.2">
-            <p id="section-3.1-2.2.1"><strong>Update:</strong> Adds a new label-value pair to the log, for which the server
-returns an inclusion proof. Note that this means that new values are added to
-the log immediately and no provisional inclusion proof, such as an SCT as
-defined in <span><a href="https://rfc-editor.org/rfc/rfc6962#section-3" class="relref">Section 3</a> of [<a href="#RFC6962" class="cite xref">RFC6962</a>]</span>, is provided.<a href="#section-3.1-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-3.1-2.2.1"><strong>Update:</strong> Adds a new label-value pair to the log. The server returns a
+proof that the label-value pair was added correctly. Note that this means
+that new values are added to the log immediately and no provisional proof,
+such as an Signed Certificate Timestamp (SCT) as defined in <span><a href="https://rfc-editor.org/rfc/rfc6962#section-3" class="relref">Section 3</a> of [<a href="#RFC6962" class="cite xref">RFC6962</a>]</span>, is provided.<a href="#section-3.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-3.1-2.3">
             <p id="section-3.1-2.3.1"><strong>Monitor:</strong> While Search and Update are run by the user as necessary,
@@ -1499,27 +1508,31 @@ recipient would do to authenticate the relationship between the presented
 end-user identity and their public keys. Recipients can verify the
 request-response pairs themselves without contacting the transparency log.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
 <p id="section-3.2-5">Any future monitoring that may be required <span class="bcp14">SHOULD</span> be provided to recipients
-proactively by the sender. However, if this fails, the recipient will need to
-perform the monitoring themself over an anonymous channel.<a href="#section-3.2-5" class="pilcrow">¶</a></p>
+proactively by the sender, as this is the most robust way to preserve the
+sender's anonymity. If required future monitoring isn't provided, either
+accidentally or because the system was intentionally designed that way, the
+recipient will need to perform the monitoring themself over an anonymous
+channel.<a href="#section-3.2-5" class="pilcrow">¶</a></p>
 <span id="name-example-message-flow-in-an-"></span><div id="anonymous">
 <figure id="figure-2">
           <div id="section-3.2-6.1">
             <div class="alignLeft art-svg artwork" id="section-3.2-6.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="224" width="504" viewBox="0 0 504 224" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 8,48 L 8,208" fill="none" stroke="black"></path>
-                <path d="M 272,48 L 272,208" fill="none" stroke="black"></path>
-                <path d="M 496,48 L 496,208" fill="none" stroke="black"></path>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="192" width="504" viewBox="0 0 504 192" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,48 L 8,176" fill="none" stroke="black"></path>
+                <path d="M 272,48 L 272,176" fill="none" stroke="black"></path>
+                <path d="M 432,80 L 432,88" fill="none" stroke="black"></path>
+                <path d="M 496,48 L 496,176" fill="none" stroke="black"></path>
                 <path d="M 16,64 L 144,64" fill="none" stroke="black"></path>
                 <path d="M 184,80 L 264,80" fill="none" stroke="black"></path>
-                <path d="M 408,128 L 488,128" fill="none" stroke="black"></path>
-                <path d="M 16,160 L 136,160" fill="none" stroke="black"></path>
-                <path d="M 192,176 L 264,176" fill="none" stroke="black"></path>
-                <path d="M 456,192 L 488,192" fill="none" stroke="black"></path>
-                <polygon class="arrowhead" points="496,192 484,186.4 484,197.6" fill="black" transform="rotate(0,488,192)"></polygon>
-                <polygon class="arrowhead" points="496,128 484,122.4 484,133.6" fill="black" transform="rotate(0,488,128)"></polygon>
-                <polygon class="arrowhead" points="272,176 260,170.4 260,181.6" fill="black" transform="rotate(0,264,176)"></polygon>
+                <path d="M 448,96 L 488,96" fill="none" stroke="black"></path>
+                <path d="M 16,128 L 136,128" fill="none" stroke="black"></path>
+                <path d="M 192,144 L 264,144" fill="none" stroke="black"></path>
+                <path d="M 456,160 L 488,160" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="496,160 484,154.4 484,165.6" fill="black" transform="rotate(0,488,160)"></polygon>
+                <polygon class="arrowhead" points="496,96 484,90.4 484,101.6" fill="black" transform="rotate(0,488,96)"></polygon>
+                <polygon class="arrowhead" points="272,144 260,138.4 260,149.6" fill="black" transform="rotate(0,264,144)"></polygon>
                 <polygon class="arrowhead" points="272,80 260,74.4 260,85.6" fill="black" transform="rotate(0,264,80)"></polygon>
-                <polygon class="arrowhead" points="24,160 12,154.4 12,165.6" fill="black" transform="rotate(180,16,160)"></polygon>
+                <polygon class="arrowhead" points="24,128 12,122.4 12,133.6" fill="black" transform="rotate(180,16,128)"></polygon>
                 <polygon class="arrowhead" points="24,64 12,58.4 12,69.6" fill="black" transform="rotate(180,16,64)"></polygon>
                 <g class="text">
                   <text x="52" y="36">Transparency</text>
@@ -1530,17 +1543,13 @@ perform the monitoring themself over an anonymous channel.<a href="#section-3.2-
                   <text x="208" y="68">Search(Alice)</text>
                   <text x="96" y="84">SearchResponse(...)</text>
                   <text x="332" y="84">Encrypt(Anon</text>
-                  <text x="412" y="84">Group,</text>
-                  <text x="372" y="100">SearchResponse</text>
-                  <text x="444" y="100">||</text>
-                  <text x="344" y="116">Message</text>
-                  <text x="404" y="116">||</text>
-                  <text x="356" y="132">Signature)</text>
-                  <text x="204" y="164">Monitor(Alice)</text>
-                  <text x="100" y="180">MonitorResponse(...)</text>
-                  <text x="332" y="180">Encrypt(Anon</text>
-                  <text x="412" y="180">Group,</text>
-                  <text x="380" y="196">MonitorResponse)</text>
+                  <text x="408" y="84">Group</text>
+                  <text x="376" y="100">SearchResponse)</text>
+                  <text x="204" y="132">Monitor(Alice)</text>
+                  <text x="100" y="148">MonitorResponse(...)</text>
+                  <text x="332" y="148">Encrypt(Anon</text>
+                  <text x="412" y="148">Group,</text>
+                  <text x="380" y="164">MonitorResponse)</text>
                 </g>
               </svg><a href="#section-3.2-6.1.1" class="pilcrow">¶</a>
 </div>
@@ -1703,7 +1712,7 @@ Monitoring mode <span class="bcp14">MUST</span> regularly attempt to detect fork
 communication with the transparency log or peer-to-peer communication, as
 described in <a href="#detecting-forks" class="auto internal xref">Section 3.3</a>.<a href="#section-4-7" class="pilcrow">¶</a></p>
 <p id="section-4-8">Applications that rely on a transparency log deployed in either of the
-third-party modes <span class="bcp14">SHOULD</span> allow users to enable a "Contact Monitoring Mode". This
+third-party modes <span class="bcp14">MAY</span> allow users to enable a "Contact Monitoring Mode". This
 mode, which affects only the individual client's behavior, would cause the
 client to behave as if its transparency log was deployed in Contact Monitoring
 mode. As such, it would start retaining state about previously looked-up labels
@@ -1780,13 +1789,12 @@ detect its removal.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
 </div>
 <p id="section-4.1-5">Importantly, Contact Monitoring impacts how the server is able to enforce access
 control on Monitor queries. While Search and Update queries can enforce access
-control on a "point in time" basis, where a user is allowed to execute the query
-at one point in time but maybe not the next, Monitor queries <span class="bcp14">MUST</span> have
-<em>accretive</em> access control. This is because, if a user is allowed to execute a
-Search or Update query for a label, the user may then need to issue at least one
-Monitor query for the label some time in the future. These Monitor queries <span class="bcp14">MUST</span>
-be permitted, regardless of whether or not the user is still permitted to
-execute such Search or Update queries.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
+control on an arbitrary "point in time" basis, where a user is allowed to
+execute the query at one point in time but maybe not the next, users are
+sometimes required by the protocol to make Monitor queries based on the Search
+and Update queries they made in the past. These Monitor queries <span class="bcp14">MUST</span> be
+permitted, regardless of whether or not the user is still permitted to execute
+such Search or Update queries.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="third-party-auditing">
@@ -1964,7 +1972,9 @@ their own transparency log for their own users.<a href="#section-5-2.3.1" class=
 </li>
       </ul>
 <p id="section-5-3">Client implementations <span class="bcp14">SHOULD</span> generally be prepared to interact with multiple
-independent transparency logs. When multiple transparency logs are used as part
+independent transparency logs, as quickly migrating to a new transparency log is
+the  generally recommended way to recover from log failure. When multiple
+transparency logs are used as part
 of one application, all users <span class="bcp14">MUST</span> have a consistent policy for executing
 Search, Update, and Monitor queries against the logs in a way that maintains the
 high-level security guarantees of KT:<a href="#section-5-3" class="pilcrow">¶</a></p>
@@ -1974,9 +1984,8 @@ high-level security guarantees of KT:<a href="#section-5-3" class="pilcrow">¶</
 consistent view of the data associated with each label.<a href="#section-5-4.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-5-4.2">
-          <p id="section-5-4.2.1">If any transparency log behaves dishonestly such that the prior guarantee is
-not met, this will be detected in a timely manner by background monitoring or
-out-of-band communication.<a href="#section-5-4.2.1" class="pilcrow">¶</a></p>
+          <p id="section-5-4.2.1">If any transparency log behaves dishonestly, this will be detected in a timely
+manner by background monitoring or out-of-band communication.<a href="#section-5-4.2.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <div id="gradual-migration">
@@ -1988,18 +1997,18 @@ out-of-band communication.<a href="#section-5-4.2.1" class="pilcrow">¶</a></p>
 this policy may look like:<a href="#section-5.1-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-5.1-2">
 <li id="section-5.1-2.1">
-            <p id="section-5.1-2.1.1">Search queries should be executed against the old transparency log first, and
+            <p id="section-5.1-2.1.1">Search queries are executed against the old transparency log first, and
 then against the new transparency log only if the most recent version of a
 label in the old transparency log is a special application-defined
 'tombstone' entry.<a href="#section-5.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.1-2.2">
-            <p id="section-5.1-2.2.1">Update queries should only be executed against the new transparency log, with
+            <p id="section-5.1-2.2.1">Update queries are only executed against the new transparency log, with
 the exception of adding a tombstone entry for the label to the old
 transparency log if one hasn't been added already.<a href="#section-5.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.1-2.3">
-            <p id="section-5.1-2.3.1">Both transparency logs should be monitored as they would be if they were run
+            <p id="section-5.1-2.3.1">Both transparency logs are monitored as they would be if they were run
 individually. Once the migration has completed and the old transparency log
 has stopped accepting modifications, the old transparency log <span class="bcp14">MUST</span> stay
 operational long enough for all users to complete their monitoring of it
@@ -2064,7 +2073,10 @@ controlling entity is <code>example.com</code>.<a href="#section-5.3-1" class="p
 <p id="section-5.3-2">A controlling entity like <code>example.com</code> <span class="bcp14">MAY</span> act as an anonymizing proxy for its
 users when they query transparency logs run by other entities (in the manner of
 <span>[<a href="#RFC9458" class="cite xref">RFC9458</a>]</span>), but <span class="bcp14">SHOULD NOT</span> attempt to 'mirror' or combine other transparency
-logs with its own.<a href="#section-5.3-2" class="pilcrow">¶</a></p>
+logs with its own. This ensures that all transparency logs can consistently
+enforce their access control policies as intended, manage compliance with
+privacy laws, and modify label values quickly and without interference from
+third-party caches.<a href="#section-5.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2220,7 +2232,9 @@ For example, in a Contact Monitoring deployment, the Reasonable Monitoring
 Window and the duration between out-of-band communication attempts <span class="bcp14">SHOULD</span> be
 much less than the typical time between state loss events. Similarly, in a
 Third-Party Auditing deployment, the maximum acceptable lag for an auditor
-<span class="bcp14">SHOULD</span> be much less than the typical time between state loss events.<a href="#section-7.1-3" class="pilcrow">¶</a></p>
+<span class="bcp14">SHOULD</span> be much less than the typical time between state loss events. This
+minimizes the likelihood that a state loss event could be useful to a
+misbehaving transparency log.<a href="#section-7.1-3" class="pilcrow">¶</a></p>
 <p id="section-7.1-4">In applications where client state is typically ephemeral (like a web page), or
 where state loss could possibly be triggered adversarially, a Third-Party
 Management deployment mode is <span class="bcp14">RECOMMENDED</span>. Alternatively, applications could
@@ -2314,7 +2328,7 @@ request can delete the commitment opening and the associated data. This can be
 done immediately and permanently prevents recovery of the associated value.<a href="#section-8-2" class="pilcrow">¶</a></p>
 <p id="section-8-3">Labels themselves are typically serialized end-user identifiers, like a username
 or email address. All labels are processed through a Verifiable Random Function,
-or VRF <span>[<a href="#RFC9381" class="cite xref">RFC9381</a>]</span>, which deterministically maps each label to a fixed-length
+or VRF <span>[<a href="#RFC9381" class="cite xref">RFC9381</a>]</span>, which uses a private key to deterministically map each label to a fixed-length
 pseudorandom value. The set of all labels stored in a transparency log is
 committed to by a prefix tree, and each version of the prefix tree is committed
 to by a log tree.<a href="#section-8-3" class="pilcrow">¶</a></p>

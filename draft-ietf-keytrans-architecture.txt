@@ -3,9 +3,9 @@
 
 
 Key Transparency                                            B. McMillion
-Internet-Draft                                          17 February 2026
+Internet-Draft                                             12 April 2026
 Intended status: Informational                                          
-Expires: 21 August 2026
+Expires: 14 October 2026
 
 
                      Key Transparency Architecture
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 August 2026.
+   This Internet-Draft will expire on 14 October 2026.
 
 Copyright Notice
 
@@ -183,6 +183,11 @@ Table of Contents
       either entirely or partially by the service operator, but could
       also be operated externally.
 
+   *Transparency Log Configuration:*  The fixed, public parameters of a
+      Transparency Log such as the log's cipher suite and public key.
+      Configuration is pre-distributed to users through a trustworthy
+      channel and used for proof verification.
+
 3.  Protocol Overview
 
    From a networking perspective, KT follows a client-server
@@ -223,9 +228,10 @@ Table of Contents
    control rules on top of KT.  This may include requiring a user to be
    logged in to make KT requests, only allowing a user to lookup the
    labels of another user if they're "friends", or applying a rate
-   limit.  Applications SHOULD prevent users from modifying labels they
-   do not own.  The exact mechanism for rejecting requests, and possibly
-   explaining the reason for rejection, is left to the application.
+   limit.  Most applications will likely want to, at minimum, prevent
+   users from modifying labels they do not own.  The exact mechanism for
+   rejecting requests, and possibly explaining the reason for rejection,
+   is left to the application.
 
 3.1.  User Operations
 
@@ -235,13 +241,15 @@ Table of Contents
        recent version of the log.  Users may request either a specific
        version of the label or the most recent version available.  If
        the label-version pair exists, the server returns the
-       corresponding value and an inclusion proof.
+       corresponding value and a proof that the search operation was
+       executed correctly.
 
-   2.  *Update:* Adds a new label-value pair to the log, for which the
-       server returns an inclusion proof.  Note that this means that new
-       values are added to the log immediately and no provisional
-       inclusion proof, such as an SCT as defined in Section 3 of
-       [RFC6962], is provided.
+   2.  *Update:* Adds a new label-value pair to the log.  The server
+       returns a proof that the label-value pair was added correctly.
+       Note that this means that new values are added to the log
+       immediately and no provisional proof, such as an Signed
+       Certificate Timestamp (SCT) as defined in Section 3 of [RFC6962],
+       is provided.
 
    3.  *Monitor:* While Search and Update are run by the user as
        necessary, monitoring is done in the background on a recurring
@@ -312,17 +320,17 @@ Table of Contents
    without contacting the transparency log.
 
    Any future monitoring that may be required SHOULD be provided to
-   recipients proactively by the sender.  However, if this fails, the
-   recipient will need to perform the monitoring themself over an
-   anonymous channel.
+   recipients proactively by the sender, as this is the most robust way
+   to preserve the sender's anonymity.  If required future monitoring
+   isn't provided, either accidentally or because the system was
+   intentionally designed that way, the recipient will need to perform
+   the monitoring themself over an anonymous channel.
 
    Transparency Log               Alice           Anonymous Group
    |                                |                           |
    |<---------------- Search(Alice) |                           |
    | SearchResponse(...) ---------->| Encrypt(Anon Group,       |
-   |                                |     SearchResponse ||     |
-   |                                |     Message   ||          |
-   |                                |     Signature) ---------->|
+   |                                |     SearchResponse) ----->|
    |                                |                           |
    |<--------------- Monitor(Alice) |                           |
    | MonitorResponse(...) --------->| Encrypt(Anon Group,       |
@@ -467,14 +475,14 @@ Alice                      Bob                          Transparency Log
    peer communication, as described in Section 3.3.
 
    Applications that rely on a transparency log deployed in either of
-   the third-party modes SHOULD allow users to enable a "Contact
-   Monitoring Mode".  This mode, which affects only the individual
-   client's behavior, would cause the client to behave as if its
-   transparency log was deployed in Contact Monitoring mode.  As such,
-   it would start retaining state about previously looked-up labels and
-   regularly engaging in out-of-band communication.  Enabling this
-   higher security mode allows users to double check that the third
-   party is not colluding with the transparency log.
+   the third-party modes MAY allow users to enable a "Contact Monitoring
+   Mode".  This mode, which affects only the individual client's
+   behavior, would cause the client to behave as if its transparency log
+   was deployed in Contact Monitoring mode.  As such, it would start
+   retaining state about previously looked-up labels and regularly
+   engaging in out-of-band communication.  Enabling this higher security
+   mode allows users to double check that the third party is not
+   colluding with the transparency log.
 
 4.1.  Contact Monitoring
 
@@ -520,14 +528,13 @@ Alice                        Transparency Log                        Bob
 
    Importantly, Contact Monitoring impacts how the server is able to
    enforce access control on Monitor queries.  While Search and Update
-   queries can enforce access control on a "point in time" basis, where
-   a user is allowed to execute the query at one point in time but maybe
-   not the next, Monitor queries MUST have _accretive_ access control.
-   This is because, if a user is allowed to execute a Search or Update
-   query for a label, the user may then need to issue at least one
-   Monitor query for the label some time in the future.  These Monitor
-   queries MUST be permitted, regardless of whether or not the user is
-   still permitted to execute such Search or Update queries.
+   queries can enforce access control on an arbitrary "point in time"
+   basis, where a user is allowed to execute the query at one point in
+   time but maybe not the next, users are sometimes required by the
+   protocol to make Monitor queries based on the Search and Update
+   queries they made in the past.  These Monitor queries MUST be
+   permitted, regardless of whether or not the user is still permitted
+   to execute such Search or Update queries.
 
 4.2.  Third-Party Auditing
 
@@ -630,40 +637,40 @@ Many Users                        Transparency Log               Auditor
       operate their own transparency log for their own users.
 
    Client implementations SHOULD generally be prepared to interact with
-   multiple independent transparency logs.  When multiple transparency
-   logs are used as part of one application, all users MUST have a
-   consistent policy for executing Search, Update, and Monitor queries
-   against the logs in a way that maintains the high-level security
-   guarantees of KT:
+   multiple independent transparency logs, as quickly migrating to a new
+   transparency log is the generally recommended way to recover from log
+   failure.  When multiple transparency logs are used as part of one
+   application, all users MUST have a consistent policy for executing
+   Search, Update, and Monitor queries against the logs in a way that
+   maintains the high-level security guarantees of KT:
 
    *  If all transparency logs behave honestly, then users observe a
       globally consistent view of the data associated with each label.
 
-   *  If any transparency log behaves dishonestly such that the prior
-      guarantee is not met, this will be detected in a timely manner by
-      background monitoring or out-of-band communication.
+   *  If any transparency log behaves dishonestly, this will be detected
+      in a timely manner by background monitoring or out-of-band
+      communication.
 
 5.1.  Gradual Migration
 
    In the case of gradually migrating from an old transparency log to a
    new one, this policy may look like:
 
-   1.  Search queries should be executed against the old transparency
-       log first, and then against the new transparency log only if the
-       most recent version of a label in the old transparency log is a
+   1.  Search queries are executed against the old transparency log
+       first, and then against the new transparency log only if the most
+       recent version of a label in the old transparency log is a
        special application-defined 'tombstone' entry.
 
-   2.  Update queries should only be executed against the new
-       transparency log, with the exception of adding a tombstone entry
-       for the label to the old transparency log if one hasn't been
-       added already.
+   2.  Update queries are only executed against the new transparency
+       log, with the exception of adding a tombstone entry for the label
+       to the old transparency log if one hasn't been added already.
 
-   3.  Both transparency logs should be monitored as they would be if
-       they were run individually.  Once the migration has completed and
-       the old transparency log has stopped accepting modifications, the
-       old transparency log MUST stay operational long enough for all
-       users to complete their monitoring of it (keeping in mind that
-       some users may be offline for a significant amount of time).
+   3.  Both transparency logs are monitored as they would be if they
+       were run individually.  Once the migration has completed and the
+       old transparency log has stopped accepting modifications, the old
+       transparency log MUST stay operational long enough for all users
+       to complete their monitoring of it (keeping in mind that some
+       users may be offline for a significant amount of time).
 
    Placing a tombstone entry for each label in the old transparency log
    gives users a clear indication as to which transparency log contains
@@ -715,7 +722,11 @@ Many Users                        Transparency Log               Auditor
    A controlling entity like example.com MAY act as an anonymizing proxy
    for its users when they query transparency logs run by other entities
    (in the manner of [RFC9458]), but SHOULD NOT attempt to 'mirror' or
-   combine other transparency logs with its own.
+   combine other transparency logs with its own.  This ensures that all
+   transparency logs can consistently enforce their access control
+   policies as intended, manage compliance with privacy laws, and modify
+   label values quickly and without interference from third-party
+   caches.
 
 6.  Pruning
 
@@ -871,7 +882,8 @@ Many Users                        Transparency Log               Auditor
    less than the typical time between state loss events.  Similarly, in
    a Third-Party Auditing deployment, the maximum acceptable lag for an
    auditor SHOULD be much less than the typical time between state loss
-   events.
+   events.  This minimizes the likelihood that a state loss event could
+   be useful to a misbehaving transparency log.
 
    In applications where client state is typically ephemeral (like a web
    page), or where state loss could possibly be triggered adversarially,
@@ -975,10 +987,11 @@ Many Users                        Transparency Log               Auditor
 
    Labels themselves are typically serialized end-user identifiers, like
    a username or email address.  All labels are processed through a
-   Verifiable Random Function, or VRF [RFC9381], which deterministically
-   maps each label to a fixed-length pseudorandom value.  The set of all
-   labels stored in a transparency log is committed to by a prefix tree,
-   and each version of the prefix tree is committed to by a log tree.
+   Verifiable Random Function, or VRF [RFC9381], which uses a private
+   key to deterministically map each label to a fixed-length
+   pseudorandom value.  The set of all labels stored in a transparency
+   log is committed to by a prefix tree, and each version of the prefix
+   tree is committed to by a log tree.
 
    While all the VRF outputs corresponding to labels affected by an
    erasure request can be deleted from the most recent version of the
