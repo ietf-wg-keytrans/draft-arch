@@ -2011,9 +2011,11 @@ transparency log if one hasn't been added already.<a href="#section-5.1-2.2.1" c
             <p id="section-5.1-2.3.1">Both transparency logs are monitored as they would be if they were run
 individually. Once the migration has completed and the old transparency log
 has stopped accepting modifications, the old transparency log <span class="bcp14">MUST</span> stay
-operational long enough for all users to complete their monitoring of it
-(keeping in mind that some users may be offline for a significant amount of
-time).<a href="#section-5.1-2.3.1" class="pilcrow">¶</a></p>
+operational long enough for all users to complete their monitoring of it,
+keeping in mind that some users may be offline for a significant amount of
+time. If the old transparency log is shut down before a user is able to
+complete their monitoring of it, that user will be unable to detect some
+forms of misbehavior by the old transparency log.<a href="#section-5.1-2.3.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <p id="section-5.1-3">Placing a tombstone entry for each label in the old transparency log gives users
