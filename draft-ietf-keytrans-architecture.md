@@ -572,9 +572,11 @@ this policy may look like:
 3. Both transparency logs are monitored as they would be if they were run
    individually. Once the migration has completed and the old transparency log
    has stopped accepting modifications, the old transparency log MUST stay
-   operational long enough for all users to complete their monitoring of it
-   (keeping in mind that some users may be offline for a significant amount of
-   time).
+   operational long enough for all users to complete their monitoring of it,
+   keeping in mind that some users may be offline for a significant amount of
+   time. If the old transparency log is shut down before a user is able to
+   complete their monitoring of it, that user will be unable to detect some
+   forms of misbehavior by the old transparency log.
 
 Placing a tombstone entry for each label in the old transparency log gives users
 a clear indication as to which transparency log contains the most recent version
