@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-27T02:30:04.316193+00:00",
+  "timestamp": "2026-04-14T01:46:19.593760+00:00",
   "repo": "ietf-wg-keytrans/draft-arch",
   "labels": [
     {
@@ -288,6 +288,220 @@
       "updatedAt": "2024-03-04T20:00:21Z",
       "closedAt": "2024-03-04T20:00:21Z",
       "comments": []
+    },
+    {
+      "number": 19,
+      "id": "I_kwDOKhdr7c7z2U2t",
+      "title": "Lots of unmotivated SHOULDs",
+      "url": "https://github.com/ietf-wg-keytrans/draft-arch/issues/19",
+      "state": "CLOSED",
+      "author": "rohanmahy",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "There are ~10 normative SHOULDs in the document. None of them are clearly motivated. Why is a SHOULD used instead of a MUST or a MAY? Each one needs to say in what situations an implementation would have a good reason not to do what is suggested.\n\nI'm including a lowercase should in Section 3.2 para 5, which I think SHOULD be uppercase.\n\nIn Section 5.1, and the 1st para of Section 5.3 the lowercase `should`s would be better replaced with another word. For example s/should be/are/",
+      "createdAt": "2026-03-17T20:45:49Z",
+      "updatedAt": "2026-04-07T18:34:30Z",
+      "closedAt": "2026-04-07T18:34:30Z",
+      "comments": []
+    },
+    {
+      "number": 20,
+      "id": "I_kwDOKhdr7c7z2hZ9",
+      "title": "Unclear cardinality in Terminology and Overview",
+      "url": "https://github.com/ietf-wg-keytrans/draft-arch/issues/20",
+      "state": "CLOSED",
+      "author": "rohanmahy",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The definitions section distinguishes between devices, identities, and users, but then rarely references those terms.\n\nIn the entire Overview, it is never clear if public keys are always per-user, always per-device, or both. It is never explained if KT is queried for user identity associated with multiple devices if they get back multiple records in the KT. For example:\n\n>Users insert key-value pairs into the database where, for example, the key is their username and the value is their public key.\n\nDoes that mean that one user can insert multiple pairs, or that each user inserts one pair, resulting in several pairs among all the users?\n\nLikewise during the example queries, the only examples imply that there is always one record per query.",
+      "createdAt": "2026-03-17T20:56:29Z",
+      "updatedAt": "2026-04-07T18:42:06Z",
+      "closedAt": "2026-04-07T18:42:06Z",
+      "comments": [
+        {
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I think your questions are answered mostly in Section 9. There is only one value per version of a label, but that value can contain one per-user public key, or a list of per-device public keys, or anything else. KT doesn't force one vs the other.\n\nOne record per user is the simplest to talk about because you can picture a mapping \"Brendan -> brendan's public key\". More complicated concepts of user identity will require more mappings to authenticate",
+          "createdAt": "2026-04-07T18:42:06Z",
+          "updatedAt": "2026-04-07T18:42:06Z"
+        }
+      ]
+    },
+    {
+      "number": 21,
+      "id": "I_kwDOKhdr7c7z2lkt",
+      "title": "Terms not explained before they are used",
+      "url": "https://github.com/ietf-wg-keytrans/draft-arch/issues/21",
+      "state": "CLOSED",
+      "author": "rohanmahy",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "**Inclusion Proof**\nThe term inclusion proof is mentioned in the definition of Search in Section 3.1 with no explanation, definition, or reference. \n\nIt needs a one line explanation (possibly with a reference), but I would recommend explaining what an inclusion proof is in a full paragraph, between the 5th paragraph of Section 3 and the start of Section 3.1.\n\n**Anon Group**\nSection 3.2 has a mention of monitoring over an anonymous channel, but the reader is left to wonder how to accomplish this, and what properties the anonymous group requires, or even how many groups.\n\nThe diagram shows an undefined encryption operation including \"Anon group\". Is this encryption _to_ a group's key, or encryption _of_ the group's ID, or something else? The Search includes a Message (not explained) and a signature.\n\n**Transparency Log Configuration**\nSeveral places refer to \"configuration\" of the transparency log without explanation. When used at the end of Section 4.2, this seems like it is either more of an assertion in the log, or a Service Level Argreement (SLA). The difference matters though.\n\n**Other**\n\"commitment's opening\" isn't defined in section 8 para 2.\n\nI think you maybe mean \"irrevocable\" access control instead of \"acretive\" in section 4.1. If not please explain.\n\nPlease spell out the first use of SCT",
+      "createdAt": "2026-03-17T21:00:07Z",
+      "updatedAt": "2026-04-08T02:00:10Z",
+      "closedAt": "2026-04-08T02:00:10Z",
+      "comments": []
+    },
+    {
+      "number": 22,
+      "id": "I_kwDOKhdr7c7z3JQu",
+      "title": "Inappropriate use of \"guarantee\"",
+      "url": "https://github.com/ietf-wg-keytrans/draft-arch/issues/22",
+      "state": "OPEN",
+      "author": "rohanmahy",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The document uses guarantee in several places where it seems that no such assurance is possible. It seems instead to provide a \"high probability of detection\", or strong assurance of eventual detection, etc.  None of the uses in Section 7 or Section 9 are actual guarantees.\n\nThis use in Section 4.1 is particularly egregious:\n\"This guarantees that if a malicious value for a label is added to the log, then either it is detected by the label owner, or if it is removed/obscured from the log before the label owner can detect it, then any users that observed it will detect its removal.\"\nconsider:\n\"Adding a malicious value for a label temporarily will be detected if the label owner discovers it before it is removed, or if any other users observes the malicious value before and after it is removed and communicate the disparity.\"\n\nIn Section 5:\n\"If any transparency log behaves dishonestly such that the prior guarantee is not met\". Consider \"assertion\" or \"promise\".\n\n",
+      "createdAt": "2026-03-17T21:33:41Z",
+      "updatedAt": "2026-03-17T21:33:41Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 23,
+      "id": "I_kwDOKhdr7c7z3h-G",
+      "title": "Unclear language",
+      "url": "https://github.com/ietf-wg-keytrans/draft-arch/issues/23",
+      "state": "OPEN",
+      "author": "rohanmahy",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "\n**Section 3.3 paragraphs 2 and 3:**\n\n\"The protocol is designed such that users always require subsequent queries to prove consistency with previous queries. As such, users always stay on a linearizable view of the log. If a user is ever presented with a forked view, they hold on to this forked view forever and reject the output of any subsequent queries that are inconsistent with it.\n\nThis provides ample opportunity for users to detect when a fork has been presented but isn't in itself sufficient for detection. To detect forks, users require either a trusted third party, anonymous communication with the transparency log, or peer-to-peer communication.\"\n\nSetting aside that the architecture generally does not assume it knows how the protocol works yet, perhaps this would be better:\n\n\"The protocol is designed such that user's clients need to periodically query the log to show either consistency or detect a discrepancy with previous queries. Each client keeps an integrity-protected view of the log. If a client is ever presented with a malicious or \"forked\" view of the log, it will forever reject the output of any subsequent queries with a different history.\n\nTo detect forks, clients need to actively query and use one (or more?) of the three techniques...\" Maybe also tie this to Deployment modes with a forward reference? \n\n**Section 4 para 2**\n\n\"Users are able to run more efficiently as long as they can assume that the transparency log and the third party won't collude to trick them into accepting malicious results.\"\n\nmore efficiently than what?\nwhy could anyone assume the transparency log and third party won't collude?\nsuggest removing this sentence completely.\n\n**Section 5 last bullet**\n\"If any transparency log behaves dishonestly such that the **prior guarantee** is not met, **this** will be detected in a timely manner by background monitoring **or** out-of-band communication.\"\n\nWhat is the \"prior guarantee\"????\n\"a timely manner\" is not defined. Is this seconds, hours, or days?\nIn any case, I think this language is overselling the capability. \n\n**Section 6 para 3**\n\n\"The first type, serialized user data, can be pruned by removing any entries that have either expired, or to which the service operator's access control policy would never permit access. A version of a label expires when it is no longer possible to produce a valid search proof for the label-version pair, which happens when all of the necessary log entries have passed their maximum lifetime (as defined in [[PROTO](https://www.ietf.org/archive/id/draft-ietf-keytrans-architecture-07.html#PROTO)]).\"\n\nI think rewording the \"would never permit access\" part would be nice. \n\nAgain, it is weird for the architecture to know what the protocol has defined this intimately.\n\n**Section 7 para 2**\n\"If the transparency log does not execute an operation correctly\" - Does this mean that it returns unexpected data (temp service outage or bug), that it was compromised or malicious, or something else?\n\n",
+      "createdAt": "2026-03-17T22:00:01Z",
+      "updatedAt": "2026-03-17T22:37:09Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 24,
+      "id": "I_kwDOKhdr7c7z3y9_",
+      "title": "Unmentioned potential DoS attacks against the service?",
+      "url": "https://github.com/ietf-wg-keytrans/draft-arch/issues/24",
+      "state": "CLOSED",
+      "author": "rohanmahy",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "\nDoes the immediate migration scenario cause a thundering herd problem? Please describe briefly and explain any mitigation strategies if so.\n\n\"The user will permanently enter an invalid state\" - could this be turned into a DoS attack on the service in any of these circumstances?\n- an attacker compromises a single device of one user, to make KT never work for that user?\n- an attacker compromises a single device to make the KT log inconsistent for every user?\n- an attacker causes an out of order or temporary outage at the service (without compromise) that destroys the usefulness of the log\n\n(I'm fine if these are discussed in Protocol instead)",
+      "createdAt": "2026-03-17T22:19:06Z",
+      "updatedAt": "2026-04-08T01:21:12Z",
+      "closedAt": "2026-04-08T01:20:52Z",
+      "comments": [
+        {
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> Does the immediate migration scenario cause a thundering herd problem? Please describe briefly and explain any mitigation strategies if so.\n\nI don't see anything specific to this strategy that would make a thundering herd worse / more likely than it generally otherwise would be.\n\n> an attacker compromises a single device of one user, to make KT never work for that user?\n\nI suppose this could happen, but it would serve only to annoy that one user into resetting their state. I don't see a way to make anything more valuable of it\n\n> - an attacker compromises a single device to make the KT log inconsistent for every user?\n> - an attacker causes an out of order or temporary outage at the service (without compromise) that destroys the usefulness of the log\n\nThis isn't possible\n",
+          "createdAt": "2026-04-08T01:20:52Z",
+          "updatedAt": "2026-04-08T01:21:12Z"
+        }
+      ]
+    },
+    {
+      "number": 25,
+      "id": "I_kwDOKhdr7c7z349U",
+      "title": "Too opinionated about the format of the labels?",
+      "url": "https://github.com/ietf-wg-keytrans/draft-arch/issues/25",
+      "state": "CLOSED",
+      "author": "rohanmahy",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "In a few places, the document makes apparently very opinionated statements about the format of labels. This seems in conflict with Section 9:\n\n\u00abIn the case where an end-user explicitly requests to communicate with (or is informed they are communicating with) an end-user uniquely identified by the name \"Alice\", the end-user identity is the string \"Alice\".\u00bb\nCouldn't this be a URI or a email address trivially constructed from \"Alice\"?  How would the Slack-like UUID appear? \n\n\u00abFor example, with an email end-user identity like alice@example.com, the controlling entity is example.com.\u00bb\n... or a domain delegated by example.com ???\n",
+      "createdAt": "2026-03-17T22:25:51Z",
+      "updatedAt": "2026-04-08T01:59:30Z",
+      "closedAt": "2026-04-08T01:59:30Z",
+      "comments": [
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "NONE",
+          "body": "It would be great to give an example of a safe UUID label",
+          "createdAt": "2026-03-17T22:58:19Z",
+          "updatedAt": "2026-03-17T22:58:19Z"
+        },
+        {
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> Couldn't this be a URI or a email address trivially constructed from \"Alice\"? How would the Slack-like UUID appear?\n\nYou don't want to do any kind of processing on an end-user identifier that might cause what's authenticated to differ from the user's understanding of identity. Similar to how TLS certificates authenticate \"domain.com\" and not \"1.2.3.4\". The user typed in \"domain.com\" and that's who they want to talk to -- they don't care about what IP gets them there.\n\nThe safe UUID example we give is Slack because the window itself (underpinned by UUID) denotes who you're talking to. If your users have UUIDs but they're not visible (i.e., they don't control the UI), then UUIDs would not appear in KT.\n\nClosing for now but let me know if that doesn't make sense",
+          "createdAt": "2026-04-08T01:59:30Z",
+          "updatedAt": "2026-04-08T01:59:30Z"
+        }
+      ]
+    },
+    {
+      "number": 26,
+      "id": "I_kwDOKhdr7c7z38LW",
+      "title": "\"Transparency Log\" in Figure 6 is not a Log",
+      "url": "https://github.com/ietf-wg-keytrans/draft-arch/issues/26",
+      "state": "OPEN",
+      "author": "rohanmahy",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The \"Transparency Log\" in Figure 6 is a Proxy not a Log.",
+      "createdAt": "2026-03-17T22:29:16Z",
+      "updatedAt": "2026-03-17T22:29:16Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 27,
+      "id": "I_kwDOKhdr7c7z39pO",
+      "title": "Quesstions about Gradual migration",
+      "url": "https://github.com/ietf-wg-keytrans/draft-arch/issues/27",
+      "state": "CLOSED",
+      "author": "rohanmahy",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "What assurances are there on the old logs when a new transparency log with tombstones is created?\n\nWhat happens if the old log is shut down too quickly or some of the user's clients are offline too long? I think a sentence or paragraph about this would be useful.",
+      "createdAt": "2026-03-17T22:30:54Z",
+      "updatedAt": "2026-04-12T22:55:14Z",
+      "closedAt": "2026-04-12T22:55:14Z",
+      "comments": [
+        {
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> What assurances are there on the old logs when a new transparency log with tombstones is created?\n\nI'm not sure what you mean here?\n\n> What happens if the old log is shut down too quickly or some of the user's clients are offline too long? I think a sentence or paragraph about this would be useful.\n\nThis not happening is a \"MUST\" because it leaves users in a just-plain-broken state\n\n",
+          "createdAt": "2026-04-08T01:28:16Z",
+          "updatedAt": "2026-04-08T01:28:16Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "NONE",
+          "body": "The reason I think you need to say something about this explicitly is that\r\nyou are trying to write an operational MUST, not a software development\r\nMUST. Even if the software developer does everything perfectly, they can't\r\nprevent other humans (most of whom will never read this document) from\r\ndoing the wrong thing. However if you explain the consequences, the\r\nsoftware developers might be able to better warn the humans and explain\r\nwhy.\r\n\r\nOn Wed, 8 Apr 2026, 03:28 Brendan McMillion, ***@***.***>\r\nwrote:\r\n\r\n> *Bren2010* left a comment (ietf-wg-keytrans/draft-arch#27)\r\n> <https://github.com/ietf-wg-keytrans/draft-arch/issues/27#issuecomment-4203210235>\r\n>\r\n> What assurances are there on the old logs when a new transparency log with\r\n> tombstones is created?\r\n>\r\n> I'm not sure what you mean here?\r\n>\r\n> What happens if the old log is shut down too quickly or some of the user's\r\n> clients are offline too long? I think a sentence or paragraph about this\r\n> would be useful.\r\n>\r\n> This not happening is a \"MUST\" because it leaves users in a\r\n> just-plain-broken state\r\n>\r\n> \u2014\r\n> Reply to this email directly, view it on GitHub\r\n> <https://github.com/ietf-wg-keytrans/draft-arch/issues/27#issuecomment-4203210235>,\r\n> or unsubscribe\r\n> <https://github.com/notifications/unsubscribe-auth/AADSQPXH44WENZE5SQBKCPD4UWTMPAVCNFSM6AAAAACWVS2CMWVHI2DSMVQWIX3LMV43OSLTON2WKQ3PNVWWK3TUHM2DEMBTGIYTAMRTGU>\r\n> .\r\n> You are receiving this because you authored the thread.Message ID:\r\n> ***@***.***>\r\n>\r\n",
+          "createdAt": "2026-04-08T19:52:11Z",
+          "updatedAt": "2026-04-08T19:52:11Z"
+        }
+      ]
+    },
+    {
+      "number": 28,
+      "id": "I_kwDOKhdr7c7z3-2S",
+      "title": "Is the VRF algorithm a secret, or only its key?",
+      "url": "https://github.com/ietf-wg-keytrans/draft-arch/issues/28",
+      "state": "CLOSED",
+      "author": "rohanmahy",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "In Section 8 para 4, the wording makes it ambiguous if the VRF algorithm is a secret or not.",
+      "createdAt": "2026-03-17T22:32:15Z",
+      "updatedAt": "2026-04-08T01:33:57Z",
+      "closedAt": "2026-04-08T01:33:57Z",
+      "comments": [
+        {
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Clarified that VRFs have a private key",
+          "createdAt": "2026-04-08T01:33:57Z",
+          "updatedAt": "2026-04-08T01:33:57Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -1078,6 +1292,61 @@
           "createdAt": "2025-07-24T19:34:56Z",
           "updatedAt": "2025-07-24T19:34:56Z",
           "comments": []
+        }
+      ]
+    },
+    {
+      "number": 18,
+      "id": "PR_kwDOKhdr7c7DyZIF",
+      "title": "Include requirements for multi-auditor configurations",
+      "url": "https://github.com/ietf-wg-keytrans/draft-arch/pull/18",
+      "state": "MERGED",
+      "author": "tjade273",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "* Clarify requirements for multiple third-party auditors \r\n* Weaken guarantee on liveness for label modifications.",
+      "createdAt": "2026-02-14T15:12:06Z",
+      "updatedAt": "2026-02-17T17:12:30Z",
+      "baseRepository": "ietf-wg-keytrans/draft-arch",
+      "baseRefName": "main",
+      "baseRefOid": "1ef036c9bde2b8f789783cea187033c142f7bce2",
+      "headRepository": "tjade273/draft-arch",
+      "headRefName": "patch-1",
+      "headRefOid": "e3eca8aafb13f4c2e83da0b533b74cac87ecacc7",
+      "closedAt": "2026-02-17T17:12:30Z",
+      "mergedAt": "2026-02-17T17:12:30Z",
+      "mergedBy": "Bren2010",
+      "mergeCommit": {
+        "oid": "a64b73dbb85bc5cb4a3b306aee52936f76bf9e9d"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKhdr7c7jY0lC",
+          "commit": {
+            "abbreviatedOid": "c5a3eb2"
+          },
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Thank you!",
+          "createdAt": "2026-02-17T16:18:13Z",
+          "updatedAt": "2026-02-17T17:11:53Z",
+          "comments": [
+            {
+              "originalPosition": 17,
+              "body": "```suggestion\nwill see the modification within a bounded amount of time, or will\nthemselves permanently enter an invalid state as discussed below.\n```",
+              "createdAt": "2026-02-17T16:18:13Z",
+              "updatedAt": "2026-02-17T17:11:53Z"
+            },
+            {
+              "originalPosition": 7,
+              "body": "```suggestion\nTo reduce the probability of collusion between the transparency log and the\nthird party, a transparency log can have two or more independent third parties\ncoordinate as one and produce threshold signatures. In this scenario, the\nthreshold for a valid signature MUST be at least a majority of the third\nparties, to prevent different subsets from authenticating forked views.\n```",
+              "createdAt": "2026-02-17T16:30:35Z",
+              "updatedAt": "2026-02-17T17:11:53Z"
+            }
+          ]
         }
       ]
     }
