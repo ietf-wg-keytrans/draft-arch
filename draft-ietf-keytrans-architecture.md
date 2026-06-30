@@ -356,9 +356,7 @@ transparency log and the end-user.
 
 **Third-Party Management** and **Third-Party Auditing** are two deployment modes
 that require the transparency log to delegate part of its operation
-to a third party. Users are able to run more efficiently as
-long as they can assume that the transparency log and the third party won't
-collude to trick them into accepting malicious results.
+to a third party.
 
 With both third-party modes, all requests from end-users are initially routed to
 the transparency log and the log coordinates with the third party
@@ -412,7 +410,7 @@ simply as possible, the monitoring obligations of each party are:
    they check back later to see that the label-version pair they observed was
    not removed before it could be detected by the label owner.
 
-This guarantees that if a malicious value for a label is added to the log, then
+This ensures that if a malicious value for a label is added to the log, then
 either it is detected by the label owner, or if it is removed/obscured from the
 log before the label owner can detect it, then any users that observed it will
 detect its removal.
@@ -473,7 +471,7 @@ Many Users                        Transparency Log               Auditor
 | <===== Response{AuditorSig: 66bf, ...} |                             |
 |                                        |                             |
 |                                        |                             |
-|                                        | [AuditorUpdate] ----------->|
+|                                        | AuditorUpdate ------------->|
 |                                        |<----------- AuditorTreeHead |
 |                                        |                             |
 ~~~
@@ -493,14 +491,14 @@ the query to be secure.
 ## Third-Party Management
 
 With the Third-Party Management deployment mode, a third party is responsible
-for the majority of the work of storing and operating the log. The transparency
-log serves mainly to enforce access control and authenticate the addition of new
-entries to the log. All user queries are initially sent by users directly to the
-transparency log, and the transparency log proxies them to the third-party
+for the majority of the work of storing and operating the log. The service operator
+focuses mainly on enforcing access control and authenticating the creation of new
+versions of labels. All user queries are initially sent by users directly to the
+service operator, and the service operator proxies them to the third-party
 manager if they pass access control.
 
 ~~~aasvg
-Alice                  Transparency Log                  Manager
+Alice                  Service Operator                  Manager
 |                             |                                |
 | Search(Alice) ------------->| ------------------------------>|
 |<--------------------------- |<---------- SearchResponse(...) |
@@ -513,20 +511,20 @@ Alice                  Transparency Log                  Manager
 |                             |                                |
 ~~~
 {: #manager-fig title="Third-Party Management. Valid requests are proxied by the
-transparency log to the manager. Invalid requests are blocked." }
+service operator to the manager. Invalid requests are blocked." }
 
 The security of the Third-Party Management deployment mode comes from an
-assumption that the transparency log and the third-party manager do not collude
+assumption that the service operator and the third-party manager do not collude
 to behave maliciously. If the third-party manager behaves honestly, then any
 improper modifications to a label's value that were requested by the
-transparency log will be properly published such that the label owner will
-detect them when monitoring. If the transparency log behaves honestly, the
+service operator will be properly published such that the label owner will
+detect them when monitoring. If the service operator behaves honestly, the
 third-party manager will be unable to add any new unauthorized versions of a
 label such that a user will accept them, or remove any authorized version of a
 label without the label owner detecting it.
 
-The transparency log MUST implement some mechanism to detect when forks are
-presented by the third-party manager. Additionally, the transparency log MUST
+The service operator MUST implement some mechanism to detect when forks are
+presented by the third-party manager. Additionally, the service operator MUST
 implement some mechanism to prevent the same version of a label from being
 submitted to the third-party manager multiple times with different associated
 values.
@@ -536,10 +534,10 @@ values.
 There are many cases where it makes sense to operate multiple cooperating
 transparency log instances, for example:
 
-- A service provider may wish to gradually migrate to a transparency log that
+- A service operator may wish to gradually migrate to a transparency log that
   uses different cryptographic keys, a different cipher suite, or different
   deployment mode.
-- A service provider may operate multiple logs to improve their ability to scale
+- A service operator may operate multiple logs to improve their ability to scale
   or provide higher availability.
 - A federated system may allow each participant in the federation to operate
   their own transparency log for their own users.
@@ -550,7 +548,7 @@ the  generally recommended way to recover from log failure. When multiple
 transparency logs are used as part
 of one application, all users MUST have a consistent policy for executing
 Search, Update, and Monitor queries against the logs in a way that maintains the
-high-level security guarantees of KT:
+high-level security model of KT:
 
 - If all transparency logs behave honestly, then users observe a globally
   consistent view of the data associated with each label.
@@ -585,7 +583,7 @@ version of a label if the new transparency log is unreachable.
 
 ## Immediate Migration
 
-In some situations, the service provider may instead choose to stop adding new
+In some situations, the service operator may instead choose to stop adding new
 entries to a transparency log immediately and provide a new transparency log
 that is pre-populated with the most recent versions of all labels. In this case,
 the policy may look like:
@@ -600,7 +598,7 @@ the policy may look like:
    From then on, users will monitor only the new transparency log.
 
 The final tree size and root hash of the prior transparency log need to be
-distributed to users in a way that guarantees all users have a globally
+distributed to users in a way that ensures that all users have a globally
 consistent view. This can be done by storing them in a well-known label of the
 new transparency log. Users MUST process this well-known label as if they own
 it, so that they continue to monitor it for unexpected changes for the duration
@@ -636,7 +634,7 @@ This presents a problem for general append-only logs, as even moderate usage can
 cause the log to grow to an unmanageable size in that time frame. This issue is
 further compounded by the fact that a substantial portion of the entries added
 to a log may be fake, having been added solely for the purpose of obscuring
-short-term update rates (discussed in {{privacy-guarantees}}). Given this,
+short-term update rates (discussed in {{privacy-considerations}}). Given this,
 transparency logs need to be able manage their footprint by pruning data which
 is no longer required by the communication service.
 
@@ -646,9 +644,9 @@ Broadly speaking, a transparency log's database will contain two types of data:
 2. Cryptographic data, such as pre-computed portions of hash trees or commitment
    openings.
 
-The first type, serialized user data, can be pruned by removing any entries that
-have either expired, or to which the service operator's access control policy
-would never permit access. A version of a label expires when it is no longer
+The first type, serialized user data, can be pruned by removing entries that
+have either expired or have become permanently inaccessible due to the service operator's
+access control policy. A version of a label expires when it is no longer
 possible to produce a valid search proof for the label-version pair, which
 happens when all of the necessary log entries have passed their **maximum
 lifetime** (as defined in {{PROTO}}).
@@ -676,7 +674,7 @@ while the pruning of cryptographic data can be done entirely by KT-specific code
 as a subsequent operation.
 
 
-# Security Guarantees
+# Security Considerations
 
 A user that correctly verifies a proof from the transparency log and does any
 required monitoring afterwards receives a guarantee that the transparency log
@@ -705,9 +703,9 @@ This would allow the log to continue executing queries correctly, but on
 stale versions of data. To prevent this, applications configure an upper
 bound on how stale a query response can be without being rejected.
 
-The exact caveats of the above guarantees depend naturally on the security of
-the underlying cryptographic primitives and also the deployment mode that the
-transparency log relies on:
+The security of a transparency log depends naturally on the security of the
+cryptographic primitives that it's configured to use, as well as the deployment
+mode that the transparency log relies on:
 
 - Third-Party Management and Third-Party Auditing require an assumption that the
   transparency log and the third-party manager or auditor do not collude
@@ -770,7 +768,7 @@ Reasonable Monitoring Window in a Contact Monitoring deployment, or beyond the
 maximum acceptable auditor lag in a Third-Party Auditing deployment, the risks
 associated with state loss are often already sufficiently mitigated.
 
-## Privacy Guarantees
+## Privacy Considerations
 
 For applications deploying KT, service operators expect to be able to control
 when sensitive information is revealed. In particular, a service operator can
@@ -832,8 +830,8 @@ patterns, such as how often a specific label is looked up.
 # Privacy Law Considerations
 
 Consumer privacy laws often provide a *right to erasure*. This means that when a
-consumer requests that a service provider delete their personal information, the
-service provider is legally obligated to do so. This may seem to be incompatible
+consumer requests that a service operator delete their personal information, the
+service operator is legally obligated to do so. This may seem to be incompatible
 with the description of KT in {{introduction}} as an "append-only log". Once an
 entry is added to a transparency log, it indeed can not be removed. The
 important caveat here is that user data is not directly stored in the
