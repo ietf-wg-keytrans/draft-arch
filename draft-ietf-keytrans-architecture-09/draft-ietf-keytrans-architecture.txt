@@ -1072,12 +1072,6 @@ Many Users                        Transparency Log               Auditor
 
 11.1.  Normative References
 
-   [PROTO]    McMillion, B. and F. Linker, "Key Transparency Protocol",
-              Work in Progress, Internet-Draft, draft-ietf-keytrans-
-              protocol-04, 16 April 2026,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-
-              keytrans-protocol-04>.
-
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
@@ -1088,6 +1082,12 @@ Many Users                        Transparency Log               Auditor
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
 11.2.  Informative References
+
+   [PROTO]    McMillion, B. and F. Linker, "Key Transparency Protocol",
+              Work in Progress, Internet-Draft, draft-ietf-keytrans-
+              protocol-04, 16 April 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-
+              keytrans-protocol-04>.
 
    [RFC6962]  Laurie, B., Langley, A., and E. Kasper, "Certificate
               Transparency", RFC 6962, DOI 10.17487/RFC6962, June 2013,
