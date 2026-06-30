@@ -13,22 +13,23 @@ infrastructure, and specifies the security properties that the protocol
 provides. It also gives more general, non-prescriptive guidance on how to
 securely apply Key Transparency to a number of common applications. 
     " name="description">
-<meta content="xml2rfc 3.32.0" name="generator">
+<meta content="xml2rfc 3.34.0" name="generator">
 <meta content="key transparency" name="keyword">
 <meta content="draft-ietf-keytrans-architecture-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.32.0
-    Python 3.12.12
-    ConfigArgParse 1.7
+  xml2rfc 3.34.0
+    Python 3.14.5
+    ConfigArgParse 1.7.5
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
-    lxml 6.0.2
-    platformdirs 4.9.4
+    lxml 6.1.1
+    natsort 8.4.0
+    platformdirs 4.10.0
     pycountry 24.6.1
     PyYAML 6.0.3
-    requests 2.32.5
-    wcwidth 0.6.0
+    requests 2.33.1
+    wcwidth 0.8.1
 -->
 <link href="draft-ietf-keytrans-architecture.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -295,16 +296,19 @@ h1, h2, h3, h4, h5, h6 {
   font-size-adjust: 0.5;
   color: var(--title-color);
 }
-h1#title {
-  font-size: 32px;
-  line-height: 40px;
-  clear: both;
-}
-h1#title, h1#rfcnum {
-  margin: 1.5em 0 0.2em;
-}
-h1#rfcnum + h1#title {
-  margin: 0.2em 0;
+h1 {
+  &#title {
+    font-size: 32px;
+    line-height: 40px;
+    clear: both;
+    margin: 1.5em 0 0.2em;
+  }
+  &#rfcnum {
+    margin: 1.5em 0 0.2em;
+    & + h1#title {
+      margin: 0.2em 0;
+    }
+  }
 }
 
 h1, h2, h3 {
@@ -324,10 +328,10 @@ h4, h5, h6 {
 #abstract+p {
   font-size: 18px;
   line-height: 24px;
-}
-#abstract+p code, #abstract+p samp, #abstract+p tt {
-  font-size: 16px;
-  line-height: 0;
+  & code, & samp, & tt {
+    font-size: 16px;
+    line-height: 0;
+  }
 }
 
 p {
@@ -338,59 +342,59 @@ p {
 div {
   margin: 0;
 }
-.alignRight.art-text {
-  background-color: var(--highlight-color);
-  border: 1px solid var(--line-color);
-  border-radius: 3px;
-  padding: 0.5em 1em 0;
-  margin-bottom: 0.5em;
-}
-.alignRight.art-text pre {
-  padding: 0;
-  width: auto;
-}
 .alignRight {
   margin: 1em 0;
-}
-.alignRight > *:first-child {
-  border: none;
-  margin: 0;
-  float: right;
-  clear: both;
-}
-.alignRight > *:nth-child(2) {
-  clear: both;
-  display: block;
-  border: none;
+  &.art-text {
+    background-color: var(--highlight-color);
+    border: 1px solid var(--line-color);
+    border-radius: 3px;
+    padding: 0.5em 1em 0;
+    margin-bottom: 0.5em;
+    & pre {
+      padding: 0;
+      width: auto;
+    }
+  }
+  & > *:first-child {
+    border: none;
+    margin: 0;
+    float: right;
+    clear: both;
+  }
+  & > *:nth-child(2) {
+    clear: both;
+    display: block;
+    border: none;
+  }
 }
 svg {
   display: block;
-}
-/* font-family isn't space-separated, but =~ will have to do */
-svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
-  font-family: var(--font-mono);
-}
-.alignCenter.art-text {
-  background-color: var(--highlight-color);
-  border: 1px solid var(--line-color);
-  border-radius: 3px;
-  padding: 0.5em 1em 0;
-  margin-bottom: 0.5em;
-}
-.alignCenter.art-text pre {
-  padding: 0;
-  width: auto;
+  /* font-family isn't space-separated, but =~ will have to do */
+  &[font-family~="monospace" i], & [font-family~="monospace" i] {
+    font-family: var(--font-mono);
+  }
 }
 .alignCenter {
   margin: 1em 0;
-}
-.alignCenter > *:first-child {
-  border: none;
-  /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
-     support flexbox yet.
-  */
-  display: table;
-  margin: 0 auto;
+  &.art-text {
+    background-color: var(--highlight-color);
+    border: 1px solid var(--line-color);
+    border-radius: 3px;
+    padding: 0.5em 1em 0;
+    margin-bottom: 0.5em;
+    & pre {
+      padding: 0;
+      width: auto;
+    }
+  }
+  & > *:first-child {
+    border: none;
+    /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+       support flexbox yet.
+    */
+    display: table;
+    margin: 0 auto;
+  }
 }
 
 /* lists */
@@ -428,26 +432,25 @@ dl {
     --indent: 5ch;
     & > dt {
       min-width: calc(var(--indent) - 2ch);
+      float: none;
     }
-  }
-  &.olPercent > dt {
-    float: none;
   }
 
   dl > dd > & {
     margin-top: 0.5em;
     margin-bottom: 0;
   }
-}
-dl:not(.dlNewline) > dt {
-  float: left;
-  margin-right: 2ch;
-  min-width: 8ch;
-}
-dl > dd {
-  margin-bottom: .8em;
-  margin-left: var(--indent) !important; /* stupid element overrides */
-  min-height: 2ex;
+
+  &:not(.dlNewline) > dt {
+    float: left;
+    margin-right: 2ch;
+    min-width: 8ch;
+  }
+  & > dd {
+    margin-bottom: .8em;
+    margin-left: var(--indent) !important; /* stupid element overrides */
+    min-height: 2ex;
+  }
 }
 :is(dl.compact, .dlCompact) > dd {
   margin-bottom: 0;
@@ -463,20 +466,22 @@ dl > dd {
 }
 
 /* links */
-a, a[href].selfRef:hover {
+a {
   text-decoration: none;
+  &[href] {
+    color: var(--link-color);
+    &:hover { text-decoration: underline; }
+    &.selfRef {
+      color: var(--text-color);
+      &:hover {
+        text-decoration: none;
+        background-color: var(--highlight-color);
+      }
+    }
+  }
 }
-a[href] {
-  color: var(--link-color);
-}
-a[href].selfRef, .iref + a[href].internal {
+.iref + a[href].internal {
   color: var(--text-color);
-}
-a[href]:hover {
-  text-decoration: underline;
-}
-a[href].selfRef:hover {
-  background-color: var(--highlight-color);
 }
 a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
   white-space: nowrap;
@@ -512,9 +517,9 @@ img {
 figure {
   margin: 0.5em 0;
   padding: 0;
-}
-figure blockquote {
-  margin: 0.8em 0.4em 0.4em;
+  & blockquote {
+    margin: 0.8em 0.4em 0.4em;
+  }
 }
 figcaption, caption {
   font-style: italic;
@@ -524,17 +529,19 @@ figcaption, caption {
 }
 @media screen {
   /* Auto-collapse boilerplate. */
-  :is(#status-of-memo, #copyright) p {
-    margin: -2px 0;
-    max-height: 0;
-    transition: max-height 2s ease, margin 0.5s ease 0.5s;
-    overflow: hidden;
-  }
-  :is(#status-of-memo, #copyright):hover p,
-  :is(#status-of-memo, #copyright) h2:target ~ p {
-    margin: 0.5em 0;
-    max-height: 500px;
-    overflow: auto;
+  :is(#status-of-memo, #copyright) {
+    & p {
+      margin: -2px 0;
+      max-height: 0;
+      transition: max-height 2s ease, margin 0.5s ease 0.5s;
+      overflow: hidden;
+    }
+    &:hover p,
+    & h2:target ~ p {
+      margin: 0.5em 0;
+      max-height: 500px;
+      overflow: auto;
+    }
   }
   pre, svg {
     display: inline-block;
@@ -584,25 +591,17 @@ table {
   max-width: 100%;
   margin: 0 0 1em;
   border-collapse: collapse;
-}
-table.right {
-  margin-left: auto;
-}
-table.center {
-  margin-left: auto;
-  margin-right: auto;
-}
-table.left {
-  margin-right: auto;
-}
-table .text-left {
-  text-align: left;
-}
-table .text-center {
-  text-align: center;
-}
-table .text-right {
-  text-align: right;
+  &.right { margin-left: auto; }
+  &.center { margin-left: auto; margin-right: auto; }
+  &.left { margin-right: auto; }
+  & .text-left { text-align: left; }
+  & .text-center { text-align: center; }
+  & .text-right { text-align: right; }
+  & caption {
+    margin: 0;
+    padding: 3px 0 3px 1em;
+  }
+  & p { margin: 0; }
 }
 
 thead, tbody {
@@ -622,13 +621,6 @@ th {
 :is(tr:nth-child(2n+1), thead+tbody > tr:nth-child(2n)) > td {
   background-color: var(--highlight-color);
 }
-table caption {
-  margin: 0;
-  padding: 3px 0 3px 1em;
-}
-table p {
-  margin: 0;
-}
 
 /* pilcrow */
 a.pilcrow {
@@ -639,18 +631,16 @@ a.pilcrow {
     color: var(--pilcrow-weak);
     &:hover { text-decoration: none; }
   }
-}
-@media not print {
-  :hover > a.pilcrow, a.pilcrow:focus {
-    opacity: 1;
+  @media not print {
+    :hover > &, &:focus {
+      opacity: 1;
+    }
+    &[href]:hover {
+      color: var(--pilcrow-strong);
+      background-color: transparent;
+    }
   }
-  a.pilcrow[href]:hover {
-    color: var(--pilcrow-strong);
-    background-color: transparent;
-  }
-}
-@media print {
-  a.pilcrow {
+  @media print {
     display: none;
   }
 }
@@ -709,9 +699,9 @@ sub, sup {
   font-size: 0.9em;
   font-style: italic;
   margin-top: 2em;
-}
-.docInfo .prepared {
-  float: right;
+  & .prepared {
+    float: right;
+  }
 }
 
 /* table of contents */
@@ -801,23 +791,27 @@ hr.addr {
   max-width: calc(100% - 16px);
 }
 @media (min-width: 500px) {
-  #authors-addresses > section {
-    column-count: 2;
-    column-gap: 20px;
-  }
-  #authors-addresses > section > h2 {
-    column-span: all;
-  }
-  /* hack for break-inside: avoid-column */
-  #authors-addresses address {
-    display: inline-block;
-    break-inside: avoid-column;
+  #authors-addresses {
+    & > section {
+      column-count: 2;
+      column-gap: 20px;
+    }
+    & > section > h2 {
+      column-span: all;
+    }
+    /* hack for break-inside: avoid-column */
+    & address {
+      display: inline-block;
+      break-inside: avoid-column;
+    }
   }
 }
 
 /* Comments */
-.rfcEditorRemove p:first-of-type {
-  font-style: italic;
+.rfcEditorRemove {
+  & p:first-of-type {
+    font-style: italic;
+  }
 }
 .cref {
   background-color: rgba(249, 232, 105, 0.3);
@@ -828,19 +822,21 @@ hr.addr {
 }
 
 @media screen {
-  #toc nav {
-    font-family: var(--font-title);
-    font-weight: 360;
-    & > ul { margin-bottom: 2em; }
-    & ul {
-      margin: 0 0 0 4px;
-      & :is(p, li) {
-        margin: 2px 0;
+  #toc {
+    & nav {
+      font-family: var(--font-title);
+      font-weight: 360;
+      & > ul { margin-bottom: 2em; }
+      & ul {
+        margin: 0 0 0 4px;
+        & :is(p, li) {
+          margin: 2px 0;
+        }
       }
     }
-  }
-  #toc a.toplink {
-    float: right;
+    & a.toplink {
+      float: right;
+    }
   }
 }
 @media not screen {
@@ -861,54 +857,54 @@ hr.addr {
     margin: 0;
     border-bottom: 1px solid #ccc;
     opacity: 0.6;
-  }
-  #toc h2 {
-    margin: 0;
-    padding: 2px 0 2px 6px;
-    padding-right: 1em;
-    font-size: 18px;
-    line-height: 24px;
-    min-width: 190px;
-    text-align: right;
-    background-color: #444;
-    color: white;
-    cursor: pointer;
-    &::before { /* css hamburger */
-      float: right;
-      position: relative;
-      width: 1em;
-      height: 1px;
-      left: -164px;
-      margin: 8px 0 0 0;
-      background: white none repeat scroll 0 0;
-      box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
-      content: "";
+    & h2 {
+      margin: 0;
+      padding: 2px 0 2px 6px;
+      padding-right: 1em;
+      font-size: 18px;
+      line-height: 24px;
+      min-width: 190px;
+      text-align: right;
+      background-color: #444;
+      color: white;
+      cursor: pointer;
+      &::before { /* css hamburger */
+        float: right;
+        position: relative;
+        width: 1em;
+        height: 1px;
+        left: -164px;
+        margin: 8px 0 0 0;
+        background: white none repeat scroll 0 0;
+        box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+        content: "";
+      }
     }
-  }
-  #toc nav {
-    display: none;
-    background-color: var(--background-color);
-    padding: 0.5em 1em 1em;
-    overflow: auto;
-    overscroll-behavior: contain;
-    height: calc(100vh - 48px);
-    border-left: 1px solid #ddd;
-  }
-  #toc.active {
-    opacity: 1;
-    & nav { display: block; }
-  }
-  /* Make the collapsed ToC header render white on gray also when it's a link */
-  #toc h2 a,
-  #toc h2 a:is(:link, :focus, :hover),
-  #toc a.toplink,
-  #toc a.toplink:hover {
-    color: white;
-    background-color: #444;
-    text-decoration: none;
-  }
-  #toc a.toplink {
-    margin: 2px 0.5em 0;
+    & nav {
+      display: none;
+      background-color: var(--background-color);
+      padding: 0.5em 1em 1em;
+      overflow: auto;
+      overscroll-behavior: contain;
+      height: calc(100vh - 48px);
+      border-left: 1px solid #ddd;
+    }
+    &.active {
+      opacity: 1;
+      & nav { display: block; }
+    }
+    /* Make the collapsed ToC header render white on gray also when it's a link */
+    & h2 a,
+    & h2 a:is(:link, :focus, :hover),
+    & a.toplink,
+    & a.toplink:hover {
+      color: white;
+      background-color: #444;
+      text-decoration: none;
+    }
+    & a.toplink {
+      margin: 2px 0.5em 0;
+    }
   }
 }
 
@@ -927,26 +923,26 @@ hr.addr {
     margin: 0;
     padding: 0;
     z-index: 1;
-  }
-  #toc h2 {
-    margin: 0;
-    padding: 0.25em 1em 1em 0;
-  }
-  #toc nav {
-    display: block;
-    height: calc(90vh - 84px);
-    bottom: 0;
-    padding: 0.5em 0 2em;
-    overflow: auto;
-    overscroll-behavior: contain;
-    scrollbar-width: thin;
+    & h2 {
+      margin: 0;
+      padding: 0.25em 1em 1em 0;
+    }
+    & nav {
+      display: block;
+      height: calc(90vh - 84px);
+      bottom: 0;
+      padding: 0.5em 0 2em;
+      overflow: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+    }
+    & a.toplink {
+      margin: 8px 0.5em 0;
+    }
   }
   img { /* future proofing */
     max-width: 100%;
     height: auto;
-  }
-  #toc a.toplink {
-    margin: 8px 0.5em 0;
   }
 }
 
@@ -962,12 +958,13 @@ hr.addr {
   #n-copyright-notice {
     border-bottom: none;
   }
-  #toc, #n-introduction {
-    page-break-before: always;
-  }
   #toc {
+    page-break-before: always;
     border-top: none;
     padding-top: 0;
+  }
+  #n-introduction {
+    page-break-before: always;
   }
   figure, pre, .vcard {
     page-break-inside: avoid;
@@ -1029,17 +1026,19 @@ hr.addr {
 }
 
 /* SVG Trick: a prefix match works because only black and white are allowed */
-svg :is([stroke="black"], [stroke^="#000"]) {
-  stroke: var(--text-color);
-}
-svg :is([stroke="white"], [stroke^="#fff"]) {
-  stroke: var(--background-color);
-}
-svg :is([fill="black"], [fill^="#000"], :not([fill])) {
-  fill: var(--text-color);
-}
-svg :is([fill="white"], [fill^="#fff"]) {
-  fill: var(--background-color);
+svg {
+  & :is([stroke="black"], [stroke^="#000"]) {
+    stroke: var(--text-color);
+  }
+  & :is([stroke="white"], [stroke^="#fff"]) {
+    stroke: var(--background-color);
+  }
+  & :is([fill="black"], [fill^="#000"], :not([fill])) {
+    fill: var(--text-color);
+  }
+  & :is([fill="white"], [fill^="#fff"]) {
+    fill: var(--background-color);
+  }
 }
 </style>
 
@@ -1049,11 +1048,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Key Transparency Architecture</td>
-<td class="right">April 2026</td>
+<td class="right">June 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">McMillion</td>
-<td class="center">Expires 14 October 2026</td>
+<td class="center">Expires 1 January 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1066,12 +1065,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-keytrans-architecture-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-04-12" class="published">12 April 2026</time>
+<time datetime="2026-06-30" class="published">30 June 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-10-14">14 October 2026</time></dd>
+<dd class="expires"><time datetime="2027-01-01">1 January 2027</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1124,7 +1123,7 @@ securely apply Key Transparency to a number of common applications.<a href="#sec
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 14 October 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 1 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1205,13 +1204,13 @@ securely apply Key Transparency to a number of common applications.<a href="#sec
             <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-pruning" class="internal xref">Pruning</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
-            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-security-guarantees" class="internal xref">Security Guarantees</a></p>
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
                 <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-state-loss" class="internal xref">State Loss</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
-                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-privacy-guarantees" class="internal xref">Privacy Guarantees</a></p>
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-privacy-considerations" class="internal xref">Privacy Considerations</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2.2.1">
                     <p id="section-toc.1-1.7.2.2.2.1.1"><a href="#section-7.2.1" class="auto internal xref">7.2.1</a>.  <a href="#name-leakage-to-third-party" class="internal xref">Leakage to Third-Party</a></p>
@@ -1682,9 +1681,7 @@ slightly different requirements and efficiency considerations for both the
 transparency log and the end-user.<a href="#section-4-1" class="pilcrow">¶</a></p>
 <p id="section-4-2"><strong>Third-Party Management</strong> and <strong>Third-Party Auditing</strong> are two deployment modes
 that require the transparency log to delegate part of its operation
-to a third party. Users are able to run more efficiently as
-long as they can assume that the transparency log and the third party won't
-collude to trick them into accepting malicious results.<a href="#section-4-2" class="pilcrow">¶</a></p>
+to a third party.<a href="#section-4-2" class="pilcrow">¶</a></p>
 <p id="section-4-3">With both third-party modes, all requests from end-users are initially routed to
 the transparency log and the log coordinates with the third party
 itself. End-users never contact the third party directly, although they will
@@ -1738,7 +1735,7 @@ they check back later to see that the label-version pair they observed was
 not removed before it could be detected by the label owner.<a href="#section-4.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
-<p id="section-4.1-3">This guarantees that if a malicious value for a label is added to the log, then
+<p id="section-4.1-3">This ensures that if a malicious value for a label is added to the log, then
 either it is detected by the label owner, or if it is removed/obscured from the
 log before the label owner can detect it, then any users that observed it will
 detect its removal.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
@@ -1826,7 +1823,7 @@ users is set in the transparency log's configuration.<a href="#section-4.2-2" cl
                 <path d="M 176,96 L 328,96" fill="none" stroke="black"></path>
                 <path d="M 24,110 L 64,110" fill="none" stroke="black"></path>
                 <path d="M 24,114 L 64,114" fill="none" stroke="black"></path>
-                <path d="M 480,160 L 568,160" fill="none" stroke="black"></path>
+                <path d="M 464,160 L 568,160" fill="none" stroke="black"></path>
                 <path d="M 344,176 L 432,176" fill="none" stroke="black"></path>
                 <polygon class="arrowhead" points="576,160 564,154.4 564,165.6" fill="black" transform="rotate(0,568,160)"></polygon>
                 <polygon class="arrowhead" points="352,176 340,170.4 340,181.6" fill="black" transform="rotate(180,344,176)"></polygon>
@@ -1849,7 +1846,7 @@ users is set in the transparency log's configuration.<a href="#section-4.2-2" cl
                   <text x="156" y="116">Response{AuditorSig:</text>
                   <text x="264" y="116">66bf,</text>
                   <text x="308" y="116">...}</text>
-                  <text x="408" y="164">[AuditorUpdate]</text>
+                  <text x="400" y="164">AuditorUpdate</text>
                   <text x="504" y="180">AuditorTreeHead</text>
                 </g>
               </svg><a href="#section-4.2-3.1.1" class="pilcrow">¶</a>
@@ -1875,10 +1872,10 @@ the query to be secure.<a href="#section-4.2-4" class="pilcrow">¶</a></p>
 <a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-third-party-management" class="section-name selfRef">Third-Party Management</a>
         </h3>
 <p id="section-4.3-1">With the Third-Party Management deployment mode, a third party is responsible
-for the majority of the work of storing and operating the log. The transparency
-log serves mainly to enforce access control and authenticate the addition of new
-entries to the log. All user queries are initially sent by users directly to the
-transparency log, and the transparency log proxies them to the third-party
+for the majority of the work of storing and operating the log. The service operator
+focuses mainly on enforcing access control and authenticating the creation of new
+versions of labels. All user queries are initially sent by users directly to the
+service operator, and the service operator proxies them to the third-party
 manager if they pass access control.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
 <span id="name-third-party-management-vali"></span><div id="manager-fig">
 <figure id="figure-6">
@@ -1910,8 +1907,8 @@ manager if they pass access control.<a href="#section-4.3-1" class="pilcrow">¶<
                 <polygon class="arrowhead" points="24,80 12,74.4 12,85.6" fill="black" transform="rotate(180,16,80)"></polygon>
                 <g class="text">
                   <text x="24" y="36">Alice</text>
-                  <text x="236" y="36">Transparency</text>
-                  <text x="304" y="36">Log</text>
+                  <text x="216" y="36">Service</text>
+                  <text x="284" y="36">Operator</text>
                   <text x="488" y="36">Manager</text>
                   <text x="72" y="68">Search(Alice)</text>
                   <text x="424" y="84">SearchResponse(...)</text>
@@ -1928,20 +1925,20 @@ manager if they pass access control.<a href="#section-4.3-1" class="pilcrow">¶<
 </div>
 </div>
 <figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
-<a href="#name-third-party-management-vali" class="selfRef">Third-Party Management. Valid requests are proxied by the transparency log to the manager. Invalid requests are blocked.</a>
+<a href="#name-third-party-management-vali" class="selfRef">Third-Party Management. Valid requests are proxied by the service operator to the manager. Invalid requests are blocked.</a>
           </figcaption></figure>
 </div>
 <p id="section-4.3-3">The security of the Third-Party Management deployment mode comes from an
-assumption that the transparency log and the third-party manager do not collude
+assumption that the service operator and the third-party manager do not collude
 to behave maliciously. If the third-party manager behaves honestly, then any
 improper modifications to a label's value that were requested by the
-transparency log will be properly published such that the label owner will
-detect them when monitoring. If the transparency log behaves honestly, the
+service operator will be properly published such that the label owner will
+detect them when monitoring. If the service operator behaves honestly, the
 third-party manager will be unable to add any new unauthorized versions of a
 label such that a user will accept them, or remove any authorized version of a
 label without the label owner detecting it.<a href="#section-4.3-3" class="pilcrow">¶</a></p>
-<p id="section-4.3-4">The transparency log <span class="bcp14">MUST</span> implement some mechanism to detect when forks are
-presented by the third-party manager. Additionally, the transparency log <span class="bcp14">MUST</span>
+<p id="section-4.3-4">The service operator <span class="bcp14">MUST</span> implement some mechanism to detect when forks are
+presented by the third-party manager. Additionally, the service operator <span class="bcp14">MUST</span>
 implement some mechanism to prevent the same version of a label from being
 submitted to the third-party manager multiple times with different associated
 values.<a href="#section-4.3-4" class="pilcrow">¶</a></p>
@@ -1958,12 +1955,12 @@ values.<a href="#section-4.3-4" class="pilcrow">¶</a></p>
 transparency log instances, for example:<a href="#section-5-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5-2.1">
-          <p id="section-5-2.1.1">A service provider may wish to gradually migrate to a transparency log that
+          <p id="section-5-2.1.1">A service operator may wish to gradually migrate to a transparency log that
 uses different cryptographic keys, a different cipher suite, or different
 deployment mode.<a href="#section-5-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-5-2.2">
-          <p id="section-5-2.2.1">A service provider may operate multiple logs to improve their ability to scale
+          <p id="section-5-2.2.1">A service operator may operate multiple logs to improve their ability to scale
 or provide higher availability.<a href="#section-5-2.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-5-2.3">
@@ -1977,7 +1974,7 @@ the  generally recommended way to recover from log failure. When multiple
 transparency logs are used as part
 of one application, all users <span class="bcp14">MUST</span> have a consistent policy for executing
 Search, Update, and Monitor queries against the logs in a way that maintains the
-high-level security guarantees of KT:<a href="#section-5-3" class="pilcrow">¶</a></p>
+high-level security model of KT:<a href="#section-5-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5-4.1">
           <p id="section-5-4.1.1">If all transparency logs behave honestly, then users observe a globally
@@ -2029,7 +2026,7 @@ version of a label if the new transparency log is unreachable.<a href="#section-
         <h3 id="name-immediate-migration">
 <a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-immediate-migration" class="section-name selfRef">Immediate Migration</a>
         </h3>
-<p id="section-5.2-1">In some situations, the service provider may instead choose to stop adding new
+<p id="section-5.2-1">In some situations, the service operator may instead choose to stop adding new
 entries to a transparency log immediately and provide a new transparency log
 that is pre-populated with the most recent versions of all labels. In this case,
 the policy may look like:<a href="#section-5.2-1" class="pilcrow">¶</a></p>
@@ -2050,7 +2047,7 @@ From then on, users will monitor only the new transparency log.<a href="#section
 </li>
         </ol>
 <p id="section-5.2-3">The final tree size and root hash of the prior transparency log need to be
-distributed to users in a way that guarantees all users have a globally
+distributed to users in a way that ensures that all users have a globally
 consistent view. This can be done by storing them in a well-known label of the
 new transparency log. Users <span class="bcp14">MUST</span> process this well-known label as if they own
 it, so that they continue to monitor it for unexpected changes for the duration
@@ -2094,7 +2091,7 @@ This presents a problem for general append-only logs, as even moderate usage can
 cause the log to grow to an unmanageable size in that time frame. This issue is
 further compounded by the fact that a substantial portion of the entries added
 to a log may be fake, having been added solely for the purpose of obscuring
-short-term update rates (discussed in <a href="#privacy-guarantees" class="auto internal xref">Section 7.2</a>). Given this,
+short-term update rates (discussed in <a href="#privacy-considerations" class="auto internal xref">Section 7.2</a>). Given this,
 transparency logs need to be able manage their footprint by pruning data which
 is no longer required by the communication service.<a href="#section-6-1" class="pilcrow">¶</a></p>
 <p id="section-6-2">Broadly speaking, a transparency log's database will contain two types of data:<a href="#section-6-2" class="pilcrow">¶</a></p>
@@ -2107,9 +2104,9 @@ is no longer required by the communication service.<a href="#section-6-1" class=
 openings.<a href="#section-6-3.2.1" class="pilcrow">¶</a></p>
 </li>
       </ol>
-<p id="section-6-4">The first type, serialized user data, can be pruned by removing any entries that
-have either expired, or to which the service operator's access control policy
-would never permit access. A version of a label expires when it is no longer
+<p id="section-6-4">The first type, serialized user data, can be pruned by removing entries that
+have either expired or have become permanently inaccessible due to the service operator's
+access control policy. A version of a label expires when it is no longer
 possible to produce a valid search proof for the label-version pair, which
 happens when all of the necessary log entries have passed their <strong>maximum
 lifetime</strong> (as defined in <span>[<a href="#PROTO" class="cite xref">PROTO</a>]</span>).<a href="#section-6-4" class="pilcrow">¶</a></p>
@@ -2134,10 +2131,10 @@ while the pruning of cryptographic data can be done entirely by KT-specific code
 as a subsequent operation.<a href="#section-6-7" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="security-guarantees">
+<div id="security-considerations">
 <section id="section-7">
-      <h2 id="name-security-guarantees">
-<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-security-guarantees" class="section-name selfRef">Security Guarantees</a>
+      <h2 id="name-security-considerations">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
 <p id="section-7-1">A user that correctly verifies a proof from the transparency log and does any
 required monitoring afterwards receives a guarantee that the transparency log
@@ -2167,9 +2164,9 @@ can attempt to prevent a user from learning about more recent states of the log.
 This would allow the log to continue executing queries correctly, but on
 stale versions of data. To prevent this, applications configure an upper
 bound on how stale a query response can be without being rejected.<a href="#section-7-5" class="pilcrow">¶</a></p>
-<p id="section-7-6">The exact caveats of the above guarantees depend naturally on the security of
-the underlying cryptographic primitives and also the deployment mode that the
-transparency log relies on:<a href="#section-7-6" class="pilcrow">¶</a></p>
+<p id="section-7-6">The security of a transparency log depends naturally on the security of the
+cryptographic primitives that it's configured to use, as well as the deployment
+mode that the transparency log relies on:<a href="#section-7-6" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-7-7.1">
           <p id="section-7-7.1.1">Third-Party Management and Third-Party Auditing require an assumption that the
@@ -2193,7 +2190,7 @@ is detected are as follows:<a href="#section-7-8" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-7-9.2">
           <p id="section-7-9.2.1">The configured Reasonable Monitoring Window (described in
-<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-keytrans-protocol-03#section-7.1" class="relref">Section 7.1</a> of [<a href="#PROTO" class="cite xref">PROTO</a>]</span>), weighed against how frequently users execute
+<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-keytrans-protocol-04#section-7.1" class="relref">Section 7.1</a> of [<a href="#PROTO" class="cite xref">PROTO</a>]</span>), weighed against how frequently users execute
 background monitoring in practice.<a href="#section-7-9.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-7-9.3">
@@ -2247,10 +2244,10 @@ maximum acceptable auditor lag in a Third-Party Auditing deployment, the risks
 associated with state loss are often already sufficiently mitigated.<a href="#section-7.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="privacy-guarantees">
+<div id="privacy-considerations">
 <section id="section-7.2">
-        <h3 id="name-privacy-guarantees">
-<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-privacy-guarantees" class="section-name selfRef">Privacy Guarantees</a>
+        <h3 id="name-privacy-considerations">
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-privacy-considerations" class="section-name selfRef">Privacy Considerations</a>
         </h3>
 <p id="section-7.2-1">For applications deploying KT, service operators expect to be able to control
 when sensitive information is revealed. In particular, a service operator can
@@ -2314,8 +2311,8 @@ patterns, such as how often a specific label is looked up.<a href="#section-7.2.
 <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-privacy-law-considerations" class="section-name selfRef">Privacy Law Considerations</a>
       </h2>
 <p id="section-8-1">Consumer privacy laws often provide a <em>right to erasure</em>. This means that when a
-consumer requests that a service provider delete their personal information, the
-service provider is legally obligated to do so. This may seem to be incompatible
+consumer requests that a service operator delete their personal information, the
+service operator is legally obligated to do so. This may seem to be incompatible
 with the description of KT in <a href="#introduction" class="auto internal xref">Section 1</a> as an "append-only log". Once an
 entry is added to a transparency log, it indeed can not be removed. The
 important caveat here is that user data is not directly stored in the
@@ -2417,7 +2414,7 @@ identity in their application with the labels and values they store in KT.<a hre
 <dl class="references">
 <dt id="PROTO">[PROTO]</dt>
         <dd>
-<span class="refAuthor">McMillion, B.</span> and <span class="refAuthor">F. Linker</span>, <span class="refTitle">"Key Transparency Protocol"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-keytrans-protocol-03</span>, <time datetime="2025-10-19" class="refDate">19 October 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-keytrans-protocol-03">https://datatracker.ietf.org/doc/html/draft-ietf-keytrans-protocol-03</a>&gt;</span>. </dd>
+<span class="refAuthor">McMillion, B.</span> and <span class="refAuthor">F. Linker</span>, <span class="refTitle">"Key Transparency Protocol"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-keytrans-protocol-04</span>, <time datetime="2026-04-16" class="refDate">16 April 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-keytrans-protocol-04">https://datatracker.ietf.org/doc/html/draft-ietf-keytrans-protocol-04</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
         <dd>
