@@ -380,7 +380,7 @@ parties, to prevent different subsets from authenticating forked views.
 with no third party. The cost of this is that, when a user looks up a version of
 a label that was inserted very recently, the user may need to retain some
 additional state and monitor the label until it is included in a *distinguished
-log entry* (defined in {{!PROTO=I-D.ietf-keytrans-protocol}}). If a user
+log entry* (defined in {{?PROTO=I-D.ietf-keytrans-protocol}}). If a user
 looks up many label-version pairs that were inserted very recently, monitoring
 may become relatively expensive.
 
