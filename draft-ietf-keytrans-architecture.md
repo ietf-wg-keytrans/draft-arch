@@ -437,7 +437,7 @@ log before the label owner can detect it, then any users that observed it will
 detect its removal.
 
 The transparency log is not trusted to behave honestly in this mode; rather, any
-deviation from the protocol, including the addition of malicious values for a
+deviation from the protocol or the addition of malicious values for a
 label, is detected by users through the monitoring described above. As in all
 deployment modes, the application determines what values may be stored in a
 label (see {{protocol-overview}}).
