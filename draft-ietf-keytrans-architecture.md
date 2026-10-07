@@ -80,7 +80,7 @@ certificate containing a public key, or some other application-defined
 structure. KT does not depend on the format of this data.
 
 The critical improvement of KT over related protocols like Certificate
-Transparency {{RFC6962}} is that KT includes an efficient
+Transparency {{?RFC6962}} is that KT includes an efficient
 protocol to search the log for entries related to a specific participant. This
 means users don't need to download the entire log, which may be substantial, to
 find all entries that are relevant to them. It also means that KT can better
@@ -397,9 +397,13 @@ parties, to prevent different subsets from authenticating forked views.
 with no third party. The cost of this is that, when a user looks up a version of
 a label that was inserted very recently, the user may need to retain some
 additional state and monitor the label until it is included in a *distinguished
-log entry* (defined in {{?PROTO=I-D.ietf-keytrans-protocol}}). If a user
-looks up many label-version pairs that were inserted very recently, monitoring
-may become relatively expensive.
+log entry*. Distinguished log entries are chosen at regular intervals, roughly
+one per **Reasonable Monitoring Window** (RMW), which is a duration configured
+by the transparency log that reflects how frequently label owners are expected
+to perform monitoring. Both are specified in more detail in
+{{?PROTO=I-D.ietf-keytrans-protocol}}. If a user looks up many label-version
+pairs that were inserted very recently, monitoring may become relatively
+expensive.
 
 Additionally, applications that rely on a transparency log deployed in Contact
 Monitoring mode MUST regularly attempt to detect forks through anonymous
@@ -638,25 +642,27 @@ distributed with the application's code distribution mechanism.
 Some applications partition labels across multiple transparency logs, where each
 transparency log is responsible for a disjoint subset of labels. In such
 applications, there MUST be a consistent policy for directing KT requests to the
-correct transparency log. For example:
+correct transparency log. The two primary cases where partitioning is necessary
+are high-traffic applications that require horizontal scaling, and federated
+applications.
 
-- In a federated application, many servers that are owned and operated by
-  different entities will cooperate to provide a single end-to-end encrypted
-  communication service. Each entity provides its own infrastructure (in
-  particular, a transparency log) to serve the users that rely on it. Typically,
-  the end-user identity directly specifies which entity requests should be
-  directed to. For example, with an email end-user identity like
-  `alice@example.com`, the controlling entity is `example.com`, indicating that
-  requests related to this user should be directed to the servers of
-  `example.com`.
+In a high-traffic application, many servers that are owned and operated by a
+single entity may need to cooperate to handle the total load of the
+application. In this case, requests would typically be routed to a
+transparency log based on a consistent hash of the label. Changing the set of
+transparency logs may change which transparency log is responsible for a given
+label; any such labels MUST be moved between transparency logs as described in
+{{gradual-migration}} or {{immediate-migration}}.
 
-- In high-traffic applications, many servers that are owned and operated by a
-  single entity may need to cooperate to handle the total load of the
-  application. In this case, requests would typically be routed to a
-  transparency log based on a consistent hash of the label. Changing the set of
-  transparency logs may change which transparency log is responsible for a given
-  label; any such labels MUST be moved between transparency logs as described in
-  {{gradual-migration}} or {{immediate-migration}}.
+In a federated application, many servers that are owned and operated by
+different entities will cooperate to provide a single end-to-end encrypted
+communication service. Each entity provides its own infrastructure (in
+particular, a transparency log) to serve the users that rely on it. Typically,
+the end-user identity directly specifies which entity requests should be
+directed to. For example, with an email end-user identity like
+`alice@example.com`, the controlling entity is `example.com`, indicating that
+requests related to this user should be directed to the servers of
+`example.com`.
 
 In a federated application, a controlling entity like `example.com` MAY act as
 an anonymizing proxy for its users when they query transparency logs run by
@@ -689,11 +695,14 @@ Broadly speaking, a transparency log's database will contain two types of data:
    openings.
 
 The first type, serialized user data, can be pruned by removing entries that
-have either expired or have become permanently inaccessible due to the service operator's
-access control policy. A version of a label expires when it is no longer
-possible to produce a valid search proof for the label-version pair, which
-happens when all of the necessary log entries have passed their **maximum
-lifetime** (as defined in {{PROTO}}).
+have either expired or have become permanently inaccessible due to the service
+operator's access control policy. A transparency log may be configured with a
+**maximum lifetime** for log entries. Once a log entry is older than the maximum
+lifetime, it is considered expired and users no longer require proofs involving
+it. This is specified in more detail in {{PROTO}}. A version of a label expires
+when it is no longer possible to produce a valid search proof for the
+label-version pair, which happens when all of the necessary log entries have
+expired.
 
 Notably, the most recent version of a label is the only version that never
 expires through the maximum lifetime mechanism. However, service operators may
@@ -712,8 +721,8 @@ label. The exact mechanism for determining
 which data is safe to delete will depend on the protocol and implementation.
 
 The distinction between user data and cryptographic data provides a valuable
-separation of concerns since {{PROTO}} does not provide a way for a service
-operator to convey its access control policy to a transparency log. That is, it
+separation of concerns since KT does not provide a way for a service operator
+to convey its access control policy to a transparency log. That is, it
 allows the pruning of user data to be done entirely by application-defined code,
 while the pruning of cryptographic data can be done entirely by KT-specific code
 as a subsequent operation.
@@ -770,9 +779,9 @@ parameters that determine the maximum amount of time before malicious behavior
 is detected are as follows:
 
 - The configured maximum amount of time by which a query response can be stale.
-- The configured Reasonable Monitoring Window (described in
-  {{Section 7.1 of PROTO}}), weighed against how frequently users execute
-  background monitoring in practice.
+- The configured Reasonable Monitoring Window (see {{deployment-modes}}),
+  weighed against how frequently users execute background monitoring in
+  practice.
 - For logs that use the Contact Monitoring deployment mode: how frequently users
   engage in anonymous communication with the transparency log, or peer-to-peer
   communication with other users.
@@ -821,7 +830,10 @@ Reasonable Monitoring Window in a Contact Monitoring deployment, or beyond the
 maximum acceptable auditor lag in a Third-Party Auditing deployment, the risks
 associated with state loss are often already sufficiently mitigated.
 
-## Privacy Considerations
+
+# Privacy Considerations
+
+## Access Control
 
 For applications deploying KT, service operators expect to be able to control
 when sensitive information is revealed. In particular, a service operator may
@@ -850,6 +862,8 @@ existence. If two users were previously contacts but no longer are, the
 application can prevent the users from searching for each other's labels and
 learning whether there have been any subsequent account updates.
 
+## Population-Level Metrics
+
 Service operators also expect to be able to control sensitive population-level
 metrics about their users. These metrics include the size of their user base, the
 frequency with which new users join, and the frequency with which existing users
@@ -862,7 +876,7 @@ rate at which "real" changes are made to the transparency log by padding "real"
 changes with the insertion of other fake label-version pairs, such that it
 creates the outside appearance of a constant baseline rate of insertions.
 
-### Leakage to Third-Party
+## Leakage to Third Parties
 
 In the event that a third-party auditor or manager is used, there's additional
 information leaked to the third-party that's not visible to outsiders.
@@ -881,8 +895,7 @@ that the service operator would know. This includes the total set of plaintext
 labels and values and their modification history. It also includes traffic
 patterns, such as how often a specific label is looked up.
 
-
-# Privacy Law Considerations
+## Right to Erasure
 
 Consumer privacy laws often provide a *right to erasure*. This means that when a
 consumer requests that a service operator delete their personal information, the
@@ -911,11 +924,10 @@ While all the VRF outputs corresponding to labels affected by an erasure request
 can be deleted from the most recent version of the prefix tree immediately,
 previous versions of the prefix tree will still contain the VRF outputs and will
 still be needed by the protocol for a bounded amount of time. This bound is
-determined by the maximum lifetime of log entries (see {{pruning}}), which is
-defined, for example, in {{PROTO}}. As such, the VRF outputs can only be fully
-purged from the transparency log once all log entries that contain them have
-passed their maximum lifetime. After this point, they are no longer necessary
-for the protocol to operate.
+determined by the maximum lifetime of log entries (see {{pruning}}). As such,
+the VRF outputs can only be fully purged from the transparency log once all log
+entries that contain them have passed their maximum lifetime. After this point,
+they are no longer necessary for the protocol to operate.
 
 
 # Implementation Guidance
