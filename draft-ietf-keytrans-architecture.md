@@ -174,8 +174,8 @@ relying on their existing access control system.
 
 With some small exceptions, applications may enforce arbitrary access control
 rules on top of KT. This may include requiring a user to be logged in to make KT
-requests, only allowing a user to lookup the labels of another user if they're
-"friends", or applying a rate limit. Most applications will likely want to, at
+requests, only allowing a user to look up the labels of their contacts, or
+applying a rate limit. Most applications will likely want to, at
 minimum, prevent users from
 modifying labels they do not own. The exact mechanism for rejecting requests,
 and possibly explaining the reason for rejection, is left to the application.
@@ -695,19 +695,20 @@ possible to produce a valid search proof for the label-version pair, which
 happens when all of the necessary log entries have passed their **maximum
 lifetime** (as defined in {{PROTO}}).
 
-Notably, the greatest version of a label is the only version that never expires
-through the maximum lifetime mechanism. However, service operators may define
-arbitrary access control policies that permanently block access to the greatest
-(or any other versions) of a label. The values corresponding to these
+Notably, the most recent version of a label is the only version that never
+expires through the maximum lifetime mechanism. However, service operators may
+define arbitrary access control policies that permanently block access to the
+most recent version (or any other version) of a label. The values corresponding to these
 label-version pairs may also be deleted without consideration to the rest of the
 protocol.
 
 The second type of data, cryptographic data, can also be pruned, but only after
 considering which parts are no longer required by the protocol for producing
 proofs. For example, even though a particular version of a label may have been
-deleted, the corresponding VRF output and commitment may still need to exist in
-the latest version of the transparency log's prefix tree to produce valid search
-proofs for other versions of the label. The exact mechanism for determining
+deleted, the corresponding Verifiable Random Function (VRF) {{!RFC9381}} output
+and commitment may still need to exist in the latest version of the transparency
+log's prefix tree to produce valid search proofs for other versions of the
+label. The exact mechanism for determining
 which data is safe to delete will depend on the protocol and implementation.
 
 The distinction between user data and cryptographic data provides a valuable
@@ -727,25 +728,29 @@ consistent with what it has shown all other users. That is, when a user searches
 for a label, they're guaranteed that the result they receive represents the same
 result that any other user searching for the same label at roughly the same time
 would've seen. When a user modifies a label, they're guaranteed that other users
-will see the modification within a bounded amount of time, or will
-themselves permanently enter an invalid state as discussed below.
+will see the modification within a bounded amount of time.
 
-If the transparency log does not execute an operation correctly, then either:
+## Transparency Log Misbehavior
 
-1. The user will detect the error immediately and reject the proof, or
-2. The user will permanently enter an invalid state.
+If the transparency log does not execute an operation correctly, then one of the
+following occurs:
 
-Depending on the exact reason that the user enters an invalid state, it will
-either be detected by background monitoring or by the mechanisms described in
-{{detecting-forks}}. Importantly, this means that users must stay online for
-a bounded amount of time after entering an invalid state for it to be
-successfully detected.
-
-Alternatively, instead of executing a lookup incorrectly, the transparency log
-can attempt to prevent a user from learning about more recent states of the log.
-This would allow the log to continue executing queries correctly, but on
-stale versions of data. To prevent this, applications configure an upper
-bound on how stale a query response can be without being rejected.
+1. The user detects the error immediately and rejects the proof.
+2. The user permanently enters an invalid state. That is, the user accepts a
+   result that is inconsistent with what the transparency log has shown other
+   users, such as a forked view of the log or a version of a label that the
+   transparency log later attempts to remove. Since users require all
+   subsequent queries to prove consistency with previous ones, the transparency
+   log is unable to reconcile the user's view with that of other users. This is
+   intentional, as it ensures the misbehavior is eventually detected, either by
+   background monitoring or by the mechanisms described in {{detecting-forks}}.
+   Importantly, this means that users must stay online for a bounded amount of
+   time after entering an invalid state for it to be successfully detected.
+3. Instead of executing a query incorrectly, the transparency log attempts to
+   prevent the user from learning about more recent states of the log. This
+   would allow the log to continue executing queries correctly, but on stale
+   versions of data. To prevent this, applications configure an upper bound on
+   how stale a query response can be without being rejected.
 
 The security of a transparency log depends naturally on the security of the
 cryptographic primitives that it's configured to use, as well as the deployment
@@ -783,14 +788,17 @@ The security of KT often depends on the ability of users to maintain robust
 local state. Users that lose their state in a Contact Monitoring or Third-Party
 Auditing deployment will have a correspondingly reduced ability to detect if
 they were shown a fork, or if the transparency log later obscured data that they
-consumed.
+consumed. State loss can occur, for example, when a user's device is lost,
+replaced, or reset, when the application is reinstalled or its data is cleared,
+or when the user begins using a new device without transferring state from an
+old one.
 
-In a Contact Monitoring deployment mode, this can happen when a user loses their
-state after consuming a version of a label that was created either within the
-Reasonable Monitoring Window, or within a portion of the log that was
-insufficiently gossipped. In a Third-Party Auditing deployment mode, this can
-happen when a user loses their state after consuming a version of a label that
-was created within the auditor's maximum acceptable lag.
+In a Contact Monitoring deployment mode, state loss reduces a user's ability to
+detect misbehavior if it occurs after the user consumes a version of a label
+that was created either within the Reasonable Monitoring Window, or within a
+portion of the log that was insufficiently gossipped. In a Third-Party Auditing
+deployment mode, the same is true for a version of a label that was created
+within the auditor's maximum acceptable lag.
 
 Applications should consider the nature of possible state loss in their clients
 when configuring a transparency log and MUST ensure that the relevant protocol
@@ -804,7 +812,8 @@ minimizes the likelihood that a state loss event could be useful to a
 misbehaving transparency log.
 
 In applications where client state is typically ephemeral (like a web page), or
-where state loss could possibly be triggered adversarially, a Third-Party
+where state loss could possibly be triggered adversarially (for example, by the
+service operator forcing a user to log out and re-register), a Third-Party
 Management deployment mode is RECOMMENDED. Alternatively, applications could
 also consider implementing a policy of not consuming label-version pairs that
 were inserted too recently. Once a label-version pair is outside of the
@@ -815,29 +824,31 @@ associated with state loss are often already sufficiently mitigated.
 ## Privacy Considerations
 
 For applications deploying KT, service operators expect to be able to control
-when sensitive information is revealed. In particular, a service operator can
-often only reveal that a user is a member of their service, and information
-about that user's account, to that user's friends or contacts.
+when sensitive information is revealed. In particular, a service operator may
+wish to restrict who is able to learn that a user is a member of their service,
+or information about that user's account.
 
 KT only allows users to learn whether or not a label exists in the
 transparency log if the user obtains a valid search proof for that label.
 Similarly, KT only allows users to learn about the value of a label if
 the user obtains a valid search proof for that exact version of the label.
 
-When a user was previously allowed to lookup or change a label's value but no
-longer is, KT prevents the user from learning whether or not the label's value
-has changed since the user's access was revoked. This is true even in Contact
+When an application's access control policy previously permitted a user to
+look up or change a label's value but no longer does, KT prevents the user from
+learning whether or not the label's value has changed since the user's access
+was revoked. This is true even in Contact
 Monitoring mode, where users are still permitted to perform monitoring after
 their access to perform other queries has been revoked.
 
-Applications determine the privacy of data in KT by
-relying on these properties when they enforce access control policies on the
-queries issued by users, as discussed in {{protocol-overview}}. For example if
-two users aren't friends, an application can block these users from searching
-for each other's labels. This prevents both users from learning about
-each other's existence. If the users were previously friends but no longer are,
-the application can prevent the users from searching for each other's labels and
-learning the contents of any subsequent account updates.
+Applications determine the privacy of data in KT by relying on these properties
+when they enforce access control policies on the queries issued by users, as
+discussed in {{protocol-overview}}. For example, an application's access control
+policy may only allow users to search for the labels of their contacts, or of
+users they are actively starting a conversation with. This prevents users that
+are not contacts or actively communicating from learning about each other's
+existence. If two users were previously contacts but no longer are, the
+application can prevent the users from searching for each other's labels and
+learning whether there have been any subsequent account updates.
 
 Service operators also expect to be able to control sensitive population-level
 metrics about their users. These metrics include the size of their user base, the
@@ -891,9 +902,8 @@ request can delete the commitment opening and the associated data. This can be
 done immediately and permanently prevents recovery of the associated value.
 
 Labels themselves are typically serialized end-user identifiers, like a username
-or email address. All labels are processed through a Verifiable Random Function,
-or VRF {{?RFC9381}}, which uses a private key to deterministically map each label to a fixed-length
-pseudorandom value. The set of all labels stored in a transparency log is
+or email address. All labels are processed through a VRF, which uses a private
+key to deterministically map each label to a fixed-length pseudorandom value. The set of all labels stored in a transparency log is
 committed to by a prefix tree, and each version of the prefix tree is committed
 to by a log tree.
 
@@ -901,10 +911,11 @@ While all the VRF outputs corresponding to labels affected by an erasure request
 can be deleted from the most recent version of the prefix tree immediately,
 previous versions of the prefix tree will still contain the VRF outputs and will
 still be needed by the protocol for a bounded amount of time. This bound is
-defined by the log entry maximum lifetime discussed in {{PROTO}}. As such, the
-VRF outputs can only be fully purged from the transparency log once all log
-entries that contain them have passed their maximum lifetime. After this point,
-they are no longer necessary for the protocol to operate.
+determined by the maximum lifetime of log entries (see {{pruning}}), which is
+defined, for example, in {{PROTO}}. As such, the VRF outputs can only be fully
+purged from the transparency log once all log entries that contain them have
+passed their maximum lifetime. After this point, they are no longer necessary
+for the protocol to operate.
 
 
 # Implementation Guidance
