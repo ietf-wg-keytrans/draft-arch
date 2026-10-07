@@ -52,19 +52,19 @@ operator with any public keys they wish to use to receive messages. Second, the
 service operator must somehow distribute these public keys amongst the
 participants that wish to communicate with each other.
 
-Typically this is done by having users upload their public keys to a simple
-directory where other users can download them as necessary, or by providing
-public keys in-band with the communication being secured. If the service
-operator is simply trusted to correctly forward public keys between users, this
-means that the underlying encryption protocol can only protect users against
-passive eavesdropping on their messages.
+Typically, users upload their public keys to a simple directory where other
+users can download them as needed, or exchange public keys in-band with the
+communication being secured. If users simply trust the service operator to
+forward public keys correctly, the underlying encryption protocol can only
+protect them against passive eavesdropping.
 
 However, most messaging systems are designed such that all messages are
 exchanged through the service operator's servers, which makes it extremely easy
 for an operator to launch an active attack. That is, the service operator can
-take public keys for which it knows the corresponding private keys, and
-associate those public keys with a user's account without the user's knowledge
-to impersonate or eavesdrop on conversations with that user.
+generate a rogue public key for which it holds the corresponding private key,
+and associate that rogue public key with a user's account without the user's
+knowledge, allowing it to impersonate or eavesdrop on conversations with that
+user.
 
 Key Transparency (KT) solves this problem by requiring the service operator to
 store user public keys in a cryptographically protected append-only log. Any
@@ -73,7 +73,11 @@ the affected user and the user's contacts. This allows users to detect whether
 they are being impersonated by viewing the public keys attached to their
 account. If the service operator attempts to conceal some entries of the log
 from some users but not others, this creates a "forked view" which is permanent
-and easily detectable.
+and easily detectable. The term "public key" is used broadly in this document
+to refer to any public cryptographic material that a user associates with their
+account; depending on the application, this may be a raw public key, a
+certificate containing a public key, or some other application-defined
+structure. KT does not depend on the format of this data.
 
 The critical improvement of KT over related protocols like Certificate
 Transparency {{RFC6962}} is that KT includes an efficient
@@ -94,28 +98,27 @@ genuinely need to see them.
   cryptography to ensure that communications are only accessible to their
   intended recipients.
 
+**Service Operator:**
+: The primary organization that provides the infrastructure for an end-to-end
+  encrypted communication service and the software to participate in it.
+
 **End-User Device:**
 : The device at the final point in a digital communication, which may either
   send or receive encrypted data in an end-to-end encrypted communication
   service.
+
+**User / Account:**
+: A single end-user of an end-to-end encrypted communication service, which may
+  interact with the service on multiple end-user devices (phone, laptop).
 
 **End-User Identity:**
 : A unique and user-visible identity associated with an account (and therefore
   one or more end-user devices) in an end-to-end encrypted communication
   service. In the case where an end-user explicitly requests to communicate with
   (or is informed they are communicating with) an end-user uniquely identified
-  by the name "Alice", the end-user identity is the string "Alice".
-
-**User / Account:**
-: A single end-user of an end-to-end encrypted communication service, which may
-  be represented by several end-user identities and end-user devices. For
-  example, a user may be represented simultaneously by multiple identities
-  (email, phone number, username) and interact with the service on multiple
-  devices (phone, laptop).
-
-**Service Operator:**
-: The primary organization that provides the infrastructure for an end-to-end
-  encrypted communication service and the software to participate in it.
+  by the name "Alice", the end-user identity is the string "Alice". A single
+  account may be represented simultaneously by multiple end-user identities
+  (email, phone number, username).
 
 **Transparency Log:**
 : A specialized service capable of securely attesting to the information (such
@@ -127,6 +130,14 @@ genuinely need to see them.
 : The fixed, public parameters of a Transparency Log such as the log's cipher
   suite and public key. Configuration is pre-distributed to users through a
   trustworthy channel and used for proof verification.
+
+**Label:**
+: A lookup key in the key-value database that a transparency log represents,
+  such as an end-user identity. See {{protocol-overview}}.
+
+**Label Owner:**
+: A user that either initiates all changes to a label's value, or must be
+  informed of all changes to it. See {{protocol-overview}}.
 
 
 # Protocol Overview
@@ -223,15 +234,16 @@ While users are generally understood to interact directly with the transparency
 log, many end-to-end encrypted communication services require the ability to
 provide *credentials* to their users. Credentials convey a binding between an
 end-user identity and public keys or other information, and can be verified with
-minimal network access.
+minimal network access. Traditionally, this binding is provided by a certificate
+(such as an X.509 certificate) signed by a trusted authority. KT credentials are
+instead constructed from the transparency log's own responses.
 
-In particular, credentials that can be verified with minimal network access are
-often desired by applications that support anonymous communication. These
-applications provide end-to-end encryption with a protocol like the Messaging
-Layer Security Protocol {{?RFC9420}} (with the encryption of handshake messages
-required) or Sealed Sender {{sealed-sender}}. When a user sends a message, these
-protocols have the sender provide their own credential in an encrypted portion
-of the message.
+Credentials are especially useful in applications that support anonymous
+communication. These applications provide end-to-end encryption with a protocol
+like the Messaging Layer Security Protocol {{?RFC9420}} (with the encryption of
+handshake messages required) or Sealed Sender {{sealed-sender}}. When a user
+sends a message, these protocols have the sender provide their own credential in
+an encrypted portion of the message.
 
 Encrypting the sender's credential allows the sender to submit messages over an
 anonymous channel by specifying only the recipient's identity. The service
@@ -243,8 +255,11 @@ sender's anonymity.
 At a high level, KT credentials are created by serializing one or more Search
 request-response pairs. These Search operations correspond to the lookups the
 recipient would do to authenticate the relationship between the presented
-end-user identity and their public keys. Recipients can verify the
-request-response pairs themselves without contacting the transparency log.
+end-user identity and their public keys. Recipients verify the
+request-response pairs themselves, using the transparency log's configuration,
+without contacting the transparency log. Because the responses are authenticated
+by the transparency log (and any third-party auditor or manager), a credential
+that has been modified will fail verification.
 
 Any future monitoring that may be required SHOULD be provided to recipients
 proactively by the sender, as this is the most robust way to preserve the
@@ -338,14 +353,16 @@ Alice                      Bob                          Transparency Log
 |<------- DistinguishedHead | DistinguishedHead ~~~~~~~~~~~~~~~~~~~~~> |
 | 6c063bb ----------------->| <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 6c063bb |
 |                           |                                          |
+|                           | (Auth'ed reqs blocked over anon channel) |
+|                           |                                          |
 |                           | Search(Bob) ~~~~~~~~~~~~~~~~~~~> X       |
 |                           |                                          |
 ~~~
 {: #out-of-band-checking title="Users receive tree heads while making
 authenticated requests to a transparency log. Users ensure consistency of tree
 heads by either comparing amongst themselves, or by contacting the transparency
-log over an anonymous channel. Requests that require authentication do not need
-to be available over the anonymous channel." }
+log over an anonymous channel. Requests that require authentication
+(`Search(Bob)` in this example) may be blocked over the anonymous channel." }
 
 # Deployment Modes
 
@@ -402,7 +419,7 @@ colluding with the transparency log.
 
 With the Contact Monitoring deployment mode, the monitoring burden is split
 between both the owner of a label and those that look up the label. Stated as
-simply as possible, the monitoring obligations of each party are:
+simply as possible, the monitoring obligations of each user are:
 
 1. On a regular basis, the label owner verifies that the most recent version of
    their label has not changed unexpectedly.
@@ -414,6 +431,12 @@ This ensures that if a malicious value for a label is added to the log, then
 either it is detected by the label owner, or if it is removed/obscured from the
 log before the label owner can detect it, then any users that observed it will
 detect its removal.
+
+The transparency log is not trusted to behave honestly in this mode; rather, any
+deviation from the protocol, including the addition of malicious values for a
+label, is detected by users through the monitoring described above. As in all
+deployment modes, the application determines what values may be stored in a
+label (see {{protocol-overview}}).
 
 ~~~aasvg
 Alice                        Transparency Log                        Bob
@@ -503,6 +526,9 @@ Alice                  Service Operator                  Manager
 | Search(Alice) ------------->| ------------------------------>|
 |<--------------------------- |<---------- SearchResponse(...) |
 |                             |                                |
+| Search(Bob) --------------->| ------------------------------>|
+|<--------------------------- |<---------- SearchResponse(...) |
+|                             |                                |
 | Update(Alice, ...) -------->| ------------------------------>|
 |<--------------------------- |<---------- UpdateResponse(...) |
 |                             |                                |
@@ -537,17 +563,19 @@ transparency log instances, for example:
 - A service operator may wish to gradually migrate to a transparency log that
   uses different cryptographic keys, a different cipher suite, or different
   deployment mode.
-- A service operator may operate multiple logs to improve their ability to scale
-  or provide higher availability.
+- A service operator may need to immediately migrate to a new transparency log
+  to recover from log failure, such as the compromise of the log's private keys
+  or the loss of its data.
+- A service operator may operate multiple logs to handle the total load of a
+  high-traffic application.
 - A federated system may allow each participant in the federation to operate
   their own transparency log for their own users.
 
 Client implementations SHOULD generally be prepared to interact with multiple
-independent transparency logs, as quickly migrating to a new transparency log is
-the  generally recommended way to recover from log failure. When multiple
-transparency logs are used as part
-of one application, all users MUST have a consistent policy for executing
-Search, Update, and Monitor queries against the logs in a way that maintains the
+independent transparency logs to support these use-cases, particularly recovery
+from log failure. When multiple transparency logs are used as part of one
+application, all users MUST have a consistent policy for executing Search,
+Update, and Monitor queries against the logs in a way that maintains the
 high-level security model of KT:
 
 - If all transparency logs behave honestly, then users observe a globally
@@ -605,25 +633,41 @@ it, so that they continue to monitor it for unexpected changes for the duration
 of the migration period. Alternatively, the final tree size and root hash may be
 distributed with the application's code distribution mechanism.
 
-## Federation
+## Partitioning
 
-In a federated application, many servers that are owned and operated by
-different entities will cooperate to provide a single end-to-end encrypted
-communication service. Each entity in a federated system provides its own
-infrastructure (in particular, a transparency log) to serve the users that rely
-on it. Given this, there MUST be a consistent policy for directing KT requests
-to the correct transparency log. Typically in such a system, the end-user
-identity directly specifies which entity requests should be directed to. For
-example, with an email end-user identity like `alice@example.com`, the
-controlling entity is `example.com`.
+Some applications partition labels across multiple transparency logs, where each
+transparency log is responsible for a disjoint subset of labels. In such
+applications, there MUST be a consistent policy for directing KT requests to the
+correct transparency log. For example:
 
-A controlling entity like `example.com` MAY act as an anonymizing proxy for its
-users when they query transparency logs run by other entities (in the manner of
-{{?RFC9458}}), but SHOULD NOT attempt to 'mirror' or combine other transparency
-logs with its own. This ensures that all transparency logs can consistently
-enforce their access control policies as intended, manage compliance with
-privacy laws, and modify label values quickly and without interference from
-third-party caches.
+- In a federated application, many servers that are owned and operated by
+  different entities will cooperate to provide a single end-to-end encrypted
+  communication service. Each entity provides its own infrastructure (in
+  particular, a transparency log) to serve the users that rely on it. Typically,
+  the end-user identity directly specifies which entity requests should be
+  directed to. For example, with an email end-user identity like
+  `alice@example.com`, the controlling entity is `example.com`, indicating that
+  requests related to this user should be directed to the servers of
+  `example.com`.
+
+- In high-traffic applications, many servers that are owned and operated by a
+  single entity may need to cooperate to handle the total load of the
+  application. In this case, requests would typically be routed to a
+  transparency log based on a consistent hash of the label. Changing the set of
+  transparency logs may change which transparency log is responsible for a given
+  label; any such labels MUST be moved between transparency logs as described in
+  {{gradual-migration}} or {{immediate-migration}}.
+
+In a federated application, a controlling entity like `example.com` MAY act as
+an anonymizing proxy for its users when they query transparency logs run by
+other entities (in the manner of {{?RFC9458}}), but SHOULD NOT attempt to
+'mirror' or combine other transparency logs with its own. Doing so may prevent
+the other transparency logs from consistently enforcing their access control
+policies as intended, managing compliance with privacy laws, or modifying label
+values quickly and without interference from third-party caches. An entity that
+mirrors or combines another transparency log needs to ensure that these problems
+are either resolved, for example by coordinating with the other transparency
+log's operator, or acceptable for the application.
 
 
 # Pruning
