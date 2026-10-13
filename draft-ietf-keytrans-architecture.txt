@@ -3,9 +3,9 @@
 
 
 Key Transparency                                            B. McMillion
-Internet-Draft                                            7 October 2026
+Internet-Draft                                           13 October 2026
 Intended status: Informational                                          
-Expires: 10 April 2027
+Expires: 16 April 2027
 
 
                      Key Transparency Architecture
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 April 2027.
+   This Internet-Draft will expire on 16 April 2027.
 
 Copyright Notice
 
@@ -71,7 +71,7 @@ Copyright Notice
 Table of Contents
 
    1.  Introduction
-   2.  Conventions and Definitions
+   2.  Definitions
    3.  Protocol Overview
      3.1.  User Operations
      3.2.  Credentials
@@ -148,13 +148,7 @@ Table of Contents
    showing entries of the log to participants that genuinely need to see
    them.
 
-2.  Conventions and Definitions
-
-   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
-   "OPTIONAL" in this document are to be interpreted as described in
-   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
-   capitals, as shown here.
+2.  Definitions
 
    *End-to-End Encrypted Communication Service:*  A communication
       service that allows end-users to engage in text, voice, video, or
@@ -294,9 +288,7 @@ Table of Contents
      | Update(Bob, ...) ------------------> X     |
      |                                            |
 
-        Figure 1: Example request and response flow.  Valid requests
-        receive a response while invalid requests are blocked by the
-                              transport layer.
+                Figure 1: Example Request and Response Flow
 
 3.2.  Credentials
 
@@ -336,12 +328,18 @@ Table of Contents
    transparency log (and any third-party auditor or manager), a
    credential that has been modified will fail verification.
 
-   Any future monitoring that may be required SHOULD be provided to
+   Any future monitoring that may be required should be provided to
    recipients proactively by the sender, as this is the most robust way
    to preserve the sender's anonymity.  If required future monitoring
    isn't provided, either accidentally or because the system was
    intentionally designed that way, the recipient will need to perform
    the monitoring themself over an anonymous channel.
+
+   Figure 2 shows an example message flow in an anonymous deployment.
+   Users request their own label from the transparency log and provide
+   the serialized response, functioning as a credential, in encrypted
+   messages to other users.  Required monitoring is provided proactively
+   in the same way.
 
    Transparency Log               Alice           Anonymous Group
    |                                |                           |
@@ -354,11 +352,7 @@ Table of Contents
    |                                |     MonitorResponse) ---->|
    |                                |                           |
 
-     Figure 2: Example message flow in an anonymous deployment.  Users
-     request their own label from the transparency log and provide the
-       serialized response, functioning as a credential, in encrypted
-         messages to other users.  Required monitoring is provided
-                                proactively.
+         Figure 2: Example Message Flow in an Anonymous Deployment
 
 3.3.  Detecting Forks
 
@@ -414,9 +408,22 @@ Table of Contents
    log can attempt to partition users into subsets that do not gossip
    and can present each subset of users with different forks.
 
-   Regardless of approach, in the event that a fork is successfully
-   detected, the user is able to produce non-repudiable proof of log
-   misbehavior which can be published.
+   Applications that do not provide their users with a trusted third
+   party, anonymous communication, or peer-to-peer communication are not
+   secure, as the transparency log can present forked views to different
+   users without detection.
+
+   Regardless of the approach an application chooses, in the event that
+   a fork is successfully detected, the user is able to produce non-
+   repudiable proof of log misbehavior which can be published.
+
+   Figure 3 illustrates fork detection with anonymous and peer-to-peer
+   communication.  Users receive tree heads while making authenticated
+   requests to a transparency log.  Users ensure consistency of tree
+   heads by either comparing amongst themselves, or by contacting the
+   transparency log over an anonymous channel.  Requests that require
+   authentication (Search(Bob) in this example) may be blocked over the
+   anonymous channel.
 
 Alice                      Bob                          Transparency Log
 |                           |                                          |
@@ -438,12 +445,7 @@ Alice                      Bob                          Transparency Log
 |                           | Search(Bob) ~~~~~~~~~~~~~~~~~~~> X       |
 |                           |                                          |
 
-    Figure 3: Users receive tree heads while making authenticated
-  requests to a transparency log.  Users ensure consistency of tree
-    heads by either comparing amongst themselves, or by contacting
-    the transparency log over an anonymous channel.  Requests that
-    require authentication (`Search(Bob)` in this example) may be
-                 blocked over the anonymous channel.
+                 Figure 3: Out-of-Band Fork Detection
 
 4.  Deployment Modes
 
@@ -474,7 +476,7 @@ Alice                      Bob                          Transparency Log
    and the third party, a transparency log can have two or more
    independent third parties coordinate as one and produce threshold
    signatures.  In this scenario, the threshold for a valid signature
-   MUST be at least a majority of the third parties, to prevent
+   needs to be at least a majority of the third parties to prevent
    different subsets from authenticating forked views.
 
    *Contact Monitoring*, on the other hand, supports a single-party
@@ -491,12 +493,12 @@ Alice                      Bob                          Transparency Log
    expensive.
 
    Additionally, applications that rely on a transparency log deployed
-   in Contact Monitoring mode MUST regularly attempt to detect forks
+   in Contact Monitoring mode need to regularly attempt to detect forks
    through anonymous communication with the transparency log or peer-to-
    peer communication, as described in Section 3.3.
 
    Applications that rely on a transparency log deployed in either of
-   the third-party modes MAY allow users to enable a "Contact Monitoring
+   the third-party modes can allow users to enable a "Contact Monitoring
    Mode".  This mode, which affects only the individual client's
    behavior, would cause the client to behave as if its transparency log
    was deployed in Contact Monitoring mode.  As such, it would start
@@ -531,6 +533,12 @@ Alice                      Bob                          Transparency Log
    described above.  As in all deployment modes, the application
    determines what values may be stored in a label (see Section 3).
 
+   In the example shown in Figure 4, Alice searches for Bob's label.
+   One day later, Alice verifies that the label-version pair she
+   observed remained in the transparency log.  Another day later, Bob
+   comes online and monitors his own label.  Note that Alice does not
+   need to wait on Bob to make his Monitor request before making hers.
+
 Alice                        Transparency Log                        Bob
 |                                   |                                  |
 | Search(Bob) --------------------->|                                  |
@@ -547,11 +555,7 @@ Alice                        Transparency Log                        Bob
 |                                   | MonitorResponse(...) ----------->|
 |                                   |                                  |
 
-    Figure 4: Contact Monitoring.  Alice searches for Bob's label.
-  One day later, Alice verifies the label-version pair she observed
-     remained in transparency log.  Another day later, Bob comes
-  online and monitors his own label.  Note that Alice does not need
-    to wait on Bob to make his Monitor request before making hers.
+                     Figure 4: Contact Monitoring
 
    Importantly, Contact Monitoring impacts how the server is able to
    enforce access control on Monitor queries.  While Search and Update
@@ -559,7 +563,7 @@ Alice                        Transparency Log                        Bob
    basis, where a user is allowed to execute the query at one point in
    time but maybe not the next, users are sometimes required by the
    protocol to make Monitor queries based on the Search and Update
-   queries they made in the past.  These Monitor queries MUST be
+   queries they made in the past.  These Monitor queries need to be
    permitted, regardless of whether or not the user is still permitted
    to execute such Search or Update queries.
 
@@ -580,6 +584,10 @@ Alice                        Transparency Log                        Bob
    lag behind the transparency log without its signature being rejected
    by users is set in the transparency log's configuration.
 
+   As shown in Figure 5, the auditor is updated on changes to the tree
+   in the background, and a recent signature from the auditor is
+   provided to users.
+
 Many Users                        Transparency Log               Auditor
 |                                        |                             |
 | Update(Alice, ...) ------------------->|                             |
@@ -592,9 +600,7 @@ Many Users                        Transparency Log               Auditor
 |                                        |<----------- AuditorTreeHead |
 |                                        |                             |
 
-     Figure 5: Third-Party Auditing.  A recent signature from the
-   auditor is provided to users.  The auditor is updated on changes
-                    to the tree in the background.
+                    Figure 5: Third-Party Auditing
 
    Given the long-lived nature of transparency logs and the potentially
    short-lived nature of third-party auditing arrangements, KT allows
@@ -631,9 +637,7 @@ Many Users                        Transparency Log               Auditor
    | Update(Bob, ...) ------> X  |                                |
    |                             |                                |
 
-      Figure 6: Third-Party Management.  Valid requests are proxied by
-         the service operator to the manager.  Invalid requests are
-                                  blocked.
+                      Figure 6: Third-Party Management
 
    The security of the Third-Party Management deployment mode comes from
    an assumption that the service operator and the third-party manager
@@ -646,11 +650,11 @@ Many Users                        Transparency Log               Auditor
    that a user will accept them, or remove any authorized version of a
    label without the label owner detecting it.
 
-   The service operator MUST implement some mechanism to detect when
+   The service operator needs to implement some mechanism to detect when
    forks are presented by the third-party manager.  Additionally, the
-   service operator MUST implement some mechanism to prevent the same
-   version of a label from being submitted to the third-party manager
-   multiple times with different associated values.
+   service operator needs to implement some mechanism to prevent the
+   same version of a label from being submitted to the third-party
+   manager multiple times with different associated values.
 
 5.  Combining Logs
 
@@ -671,10 +675,10 @@ Many Users                        Transparency Log               Auditor
    *  A federated system may allow each participant in the federation to
       operate their own transparency log for their own users.
 
-   Client implementations SHOULD generally be prepared to interact with
+   Client implementations should generally be prepared to interact with
    multiple independent transparency logs to support these use-cases,
    particularly recovery from log failure.  When multiple transparency
-   logs are used as part of one application, all users MUST have a
+   logs are used as part of one application, all users need to have a
    consistent policy for executing Search, Update, and Monitor queries
    against the logs in a way that maintains the high-level security
    model of KT:
@@ -703,10 +707,10 @@ Many Users                        Transparency Log               Auditor
    3.  Both transparency logs are monitored as they would be if they
        were run individually.  Once the migration has completed and the
        old transparency log has stopped accepting modifications, the old
-       transparency log MUST stay operational long enough for all users
-       to complete their monitoring of it, keeping in mind that some
-       users may be offline for a significant amount of time.  If the
-       old transparency log is shut down before a user is able to
+       transparency log needs to stay operational long enough for all
+       users to complete their monitoring of it, keeping in mind that
+       some users may be offline for a significant amount of time.  If
+       the old transparency log is shut down before a user is able to
        complete their monitoring of it, that user will be unable to
        detect some forms of misbehavior by the old transparency log.
 
@@ -738,7 +742,7 @@ Many Users                        Transparency Log               Auditor
    The final tree size and root hash of the prior transparency log need
    to be distributed to users in a way that ensures that all users have
    a globally consistent view.  This can be done by storing them in a
-   well-known label of the new transparency log.  Users MUST process
+   well-known label of the new transparency log.  Users need to process
    this well-known label as if they own it, so that they continue to
    monitor it for unexpected changes for the duration of the migration
    period.  Alternatively, the final tree size and root hash may be
@@ -748,8 +752,8 @@ Many Users                        Transparency Log               Auditor
 
    Some applications partition labels across multiple transparency logs,
    where each transparency log is responsible for a disjoint subset of
-   labels.  In such applications, there MUST be a consistent policy for
-   directing KT requests to the correct transparency log.  The two
+   labels.  In such applications, there needs to be a consistent policy
+   for directing KT requests to the correct transparency log.  The two
    primary cases where partitioning is necessary are high-traffic
    applications that require horizontal scaling, and federated
    applications.
@@ -759,8 +763,9 @@ Many Users                        Transparency Log               Auditor
    load of the application.  In this case, requests would typically be
    routed to a transparency log based on a consistent hash of the label.
    Changing the set of transparency logs may change which transparency
-   log is responsible for a given label; any such labels MUST be moved
-   between transparency logs as described in Section 5.1 or Section 5.2.
+   log is responsible for a given label; any such labels need to be
+   moved between transparency logs as described in Section 5.1 or
+   Section 5.2.
 
    In a federated application, many servers that are owned and operated
    by different entities will cooperate to provide a single end-to-end
@@ -772,10 +777,10 @@ Many Users                        Transparency Log               Auditor
    entity is example.com, indicating that requests related to this user
    should be directed to the servers of example.com.
 
-   In a federated application, a controlling entity like example.com MAY
+   In a federated application, a controlling entity like example.com can
    act as an anonymizing proxy for its users when they query
    transparency logs run by other entities (in the manner of [RFC9458]),
-   but SHOULD NOT attempt to 'mirror' or combine other transparency logs
+   but should not attempt to 'mirror' or combine other transparency logs
    with its own.  Doing so may prevent the other transparency logs from
    consistently enforcing their access control policies as intended,
    managing compliance with privacy laws, or modifying label values
@@ -944,14 +949,14 @@ Many Users                        Transparency Log               Auditor
    auditor's maximum acceptable lag.
 
    Applications should consider the nature of possible state loss in
-   their clients when configuring a transparency log and MUST ensure
+   their clients when configuring a transparency log and need to ensure
    that the relevant protocol parameters are set in a way that
    appropriately mitigates this risk.  For example, in a Contact
    Monitoring deployment, the Reasonable Monitoring Window and the
-   duration between out-of-band communication attempts SHOULD be much
+   duration between out-of-band communication attempts should be much
    less than the typical time between state loss events.  Similarly, in
    a Third-Party Auditing deployment, the maximum acceptable lag for an
-   auditor SHOULD be much less than the typical time between state loss
+   auditor should be much less than the typical time between state loss
    events.  This minimizes the likelihood that a state loss event could
    be useful to a misbehaving transparency log.
 
@@ -959,7 +964,7 @@ Many Users                        Transparency Log               Auditor
    page), or where state loss could possibly be triggered adversarially
    (for example, by the service operator forcing a user to log out and
    re-register), a Third-Party Management deployment mode is
-   RECOMMENDED.  Alternatively, applications could also consider
+   recommended.  Alternatively, applications could also consider
    implementing a policy of not consuming label-version pairs that were
    inserted too recently.  Once a label-version pair is outside of the
    Reasonable Monitoring Window in a Contact Monitoring deployment, or
@@ -1118,7 +1123,7 @@ Many Users                        Transparency Log               Auditor
    and unable to change.  (Or equivalently, if it changes, it appears in
    the application UI as a new conversation with a new user.)  An
    example of this type of identifier would be an email address on an
-   email service.  A primary end-user identity SHOULD always be a label
+   email service.  A primary end-user identity should always be a label
    in KT, with the end-user's public keys and other account information
    as the associated value.
 
@@ -1130,7 +1135,7 @@ Many Users                        Transparency Log               Auditor
    that's used by the application to identify the end-user from then on.
    An example of this type of identity would be a username, since users
    can often change their username without disrupting existing
-   communications.  A secondary end-user identity SHOULD be a label in
+   communications.  A secondary end-user identity should be a label in
    KT with the primary end-user identity as the associated value, such
    that it can be used to authenticate the user discovery process.
 
@@ -1147,15 +1152,6 @@ Many Users                        Transparency Log               Auditor
 11.  References
 
 11.1.  Normative References
-
-   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119,
-              DOI 10.17487/RFC2119, March 1997,
-              <https://www.rfc-editor.org/rfc/rfc2119>.
-
-   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
-              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
-              May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
    [RFC9381]  Goldberg, S., Reyzin, L., Papadopoulos, D., and J. Včelák,
               "Verifiable Random Functions (VRFs)", RFC 9381,

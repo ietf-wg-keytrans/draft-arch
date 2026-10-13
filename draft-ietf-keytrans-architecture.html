@@ -1049,7 +1049,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">McMillion</td>
-<td class="center">Expires 10 April 2027</td>
+<td class="center">Expires 16 April 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1062,12 +1062,12 @@ svg {
 <dd class="internet-draft">draft-ietf-keytrans-architecture-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-10-07" class="published">7 October 2026</time>
+<time datetime="2026-10-13" class="published">13 October 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-04-10">10 April 2027</time></dd>
+<dd class="expires"><time datetime="2027-04-16">16 April 2027</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1120,7 +1120,7 @@ securely apply Key Transparency to a number of common applications.<a href="#sec
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 10 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 16 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1153,7 +1153,7 @@ securely apply Key Transparency to a number of common applications.<a href="#sec
             <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
-            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
+            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-definitions" class="internal xref">Definitions</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
             <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-protocol-overview" class="internal xref">Protocol Overview</a></p>
@@ -1295,79 +1295,75 @@ preserve user privacy by only showing entries of the log to participants that
 genuinely need to see them.<a href="#section-1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="conventions-and-definitions">
+<div id="definitions">
 <section id="section-2">
-      <h2 id="name-conventions-and-definitions">
-<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-conventions-and-definitions" class="section-name selfRef">Conventions and Definitions</a>
+      <h2 id="name-definitions">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-definitions" class="section-name selfRef">Definitions</a>
       </h2>
-<p id="section-2-1">The key words "<span class="bcp14">MUST</span>", "<span class="bcp14">MUST NOT</span>", "<span class="bcp14">REQUIRED</span>", "<span class="bcp14">SHALL</span>", "<span class="bcp14">SHALL NOT</span>", "<span class="bcp14">SHOULD</span>", "<span class="bcp14">SHOULD NOT</span>", "<span class="bcp14">RECOMMENDED</span>", "<span class="bcp14">NOT RECOMMENDED</span>",
-"<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
-described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
-appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-2-2">
-        <dt id="section-2-2.1"><strong>End-to-End Encrypted Communication Service:</strong></dt>
-        <dd style="margin-left: 1.5em" id="section-2-2.2">
-          <p id="section-2-2.2.1">A communication service that allows end-users to engage in text, voice,
+<span class="break"></span><dl class="dlParallel" id="section-2-1">
+        <dt id="section-2-1.1"><strong>End-to-End Encrypted Communication Service:</strong></dt>
+        <dd style="margin-left: 1.5em" id="section-2-1.2">
+          <p id="section-2-1.2.1">A communication service that allows end-users to engage in text, voice,
 video, or other forms of communication over the internet, and uses public key
 cryptography to ensure that communications are only accessible to their
-intended recipients.<a href="#section-2-2.2.1" class="pilcrow">¶</a></p>
+intended recipients.<a href="#section-2-1.2.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-2-2.3"><strong>Service Operator:</strong></dt>
-        <dd style="margin-left: 1.5em" id="section-2-2.4">
-          <p id="section-2-2.4.1">The primary organization that provides the infrastructure for an end-to-end
-encrypted communication service and the software to participate in it.<a href="#section-2-2.4.1" class="pilcrow">¶</a></p>
+<dt id="section-2-1.3"><strong>Service Operator:</strong></dt>
+        <dd style="margin-left: 1.5em" id="section-2-1.4">
+          <p id="section-2-1.4.1">The primary organization that provides the infrastructure for an end-to-end
+encrypted communication service and the software to participate in it.<a href="#section-2-1.4.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-2-2.5"><strong>End-User Device:</strong></dt>
-        <dd style="margin-left: 1.5em" id="section-2-2.6">
-          <p id="section-2-2.6.1">The device at the final point in a digital communication, which may either
+<dt id="section-2-1.5"><strong>End-User Device:</strong></dt>
+        <dd style="margin-left: 1.5em" id="section-2-1.6">
+          <p id="section-2-1.6.1">The device at the final point in a digital communication, which may either
 send or receive encrypted data in an end-to-end encrypted communication
-service.<a href="#section-2-2.6.1" class="pilcrow">¶</a></p>
+service.<a href="#section-2-1.6.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-2-2.7"><strong>User / Account:</strong></dt>
-        <dd style="margin-left: 1.5em" id="section-2-2.8">
-          <p id="section-2-2.8.1">A single end-user of an end-to-end encrypted communication service, which may
-interact with the service on multiple end-user devices (phone, laptop).<a href="#section-2-2.8.1" class="pilcrow">¶</a></p>
+<dt id="section-2-1.7"><strong>User / Account:</strong></dt>
+        <dd style="margin-left: 1.5em" id="section-2-1.8">
+          <p id="section-2-1.8.1">A single end-user of an end-to-end encrypted communication service, which may
+interact with the service on multiple end-user devices (phone, laptop).<a href="#section-2-1.8.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-2-2.9"><strong>End-User Identity:</strong></dt>
-        <dd style="margin-left: 1.5em" id="section-2-2.10">
-          <p id="section-2-2.10.1">A unique and user-visible identity associated with an account (and therefore
+<dt id="section-2-1.9"><strong>End-User Identity:</strong></dt>
+        <dd style="margin-left: 1.5em" id="section-2-1.10">
+          <p id="section-2-1.10.1">A unique and user-visible identity associated with an account (and therefore
 one or more end-user devices) in an end-to-end encrypted communication
 service. In the case where an end-user explicitly requests to communicate with
 (or is informed they are communicating with) an end-user uniquely identified
 by the name "Alice", the end-user identity is the string "Alice". A single
 account may be represented simultaneously by multiple end-user identities
-(email, phone number, username).<a href="#section-2-2.10.1" class="pilcrow">¶</a></p>
+(email, phone number, username).<a href="#section-2-1.10.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-2-2.11"><strong>Transparency Log:</strong></dt>
-        <dd style="margin-left: 1.5em" id="section-2-2.12">
-          <p id="section-2-2.12.1">A specialized service capable of securely attesting to the information (such
+<dt id="section-2-1.11"><strong>Transparency Log:</strong></dt>
+        <dd style="margin-left: 1.5em" id="section-2-1.12">
+          <p id="section-2-1.12.1">A specialized service capable of securely attesting to the information (such
 as public keys) associated with a given end-user identity. A transparency
 log is usually run either entirely or partially by the service operator, but
-could also be operated externally.<a href="#section-2-2.12.1" class="pilcrow">¶</a></p>
+could also be operated externally.<a href="#section-2-1.12.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-2-2.13"><strong>Transparency Log Configuration:</strong></dt>
-        <dd style="margin-left: 1.5em" id="section-2-2.14">
-          <p id="section-2-2.14.1">The fixed, public parameters of a Transparency Log such as the log's cipher
+<dt id="section-2-1.13"><strong>Transparency Log Configuration:</strong></dt>
+        <dd style="margin-left: 1.5em" id="section-2-1.14">
+          <p id="section-2-1.14.1">The fixed, public parameters of a Transparency Log such as the log's cipher
 suite and public key. Configuration is pre-distributed to users through a
-trustworthy channel and used for proof verification.<a href="#section-2-2.14.1" class="pilcrow">¶</a></p>
+trustworthy channel and used for proof verification.<a href="#section-2-1.14.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-2-2.15"><strong>Label:</strong></dt>
-        <dd style="margin-left: 1.5em" id="section-2-2.16">
-          <p id="section-2-2.16.1">A lookup key in the key-value database that a transparency log represents,
-such as an end-user identity. See <a href="#protocol-overview" class="auto internal xref">Section 3</a>.<a href="#section-2-2.16.1" class="pilcrow">¶</a></p>
+<dt id="section-2-1.15"><strong>Label:</strong></dt>
+        <dd style="margin-left: 1.5em" id="section-2-1.16">
+          <p id="section-2-1.16.1">A lookup key in the key-value database that a transparency log represents,
+such as an end-user identity. See <a href="#protocol-overview" class="auto internal xref">Section 3</a>.<a href="#section-2-1.16.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-2-2.17"><strong>Label Owner:</strong></dt>
-        <dd style="margin-left: 1.5em" id="section-2-2.18">
-          <p id="section-2-2.18.1">A user that either initiates all changes to a label's value, or must be
-informed of all changes to it. See <a href="#protocol-overview" class="auto internal xref">Section 3</a>.<a href="#section-2-2.18.1" class="pilcrow">¶</a></p>
+<dt id="section-2-1.17"><strong>Label Owner:</strong></dt>
+        <dd style="margin-left: 1.5em" id="section-2-1.18">
+          <p id="section-2-1.18.1">A user that either initiates all changes to a label's value, or must be
+informed of all changes to it. See <a href="#protocol-overview" class="auto internal xref">Section 3</a>.<a href="#section-2-1.18.1" class="pilcrow">¶</a></p>
 </dd>
       <dd class="break"></dd>
 </dl>
@@ -1494,7 +1490,7 @@ not allowed:<a href="#section-3.1-3" class="pilcrow">¶</a></p>
 </div>
 </div>
 <figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
-<a href="#name-example-request-and-respons" class="selfRef">Example request and response flow. Valid requests receive a response while invalid requests are blocked by the transport layer.</a>
+<a href="#name-example-request-and-respons" class="selfRef">Example Request and Response Flow</a>
           </figcaption></figure>
 </div>
 </section>
@@ -1531,16 +1527,20 @@ request-response pairs themselves, using the transparency log's configuration,
 without contacting the transparency log. Because the responses are authenticated
 by the transparency log (and any third-party auditor or manager), a credential
 that has been modified will fail verification.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
-<p id="section-3.2-5">Any future monitoring that may be required <span class="bcp14">SHOULD</span> be provided to recipients
+<p id="section-3.2-5">Any future monitoring that may be required should be provided to recipients
 proactively by the sender, as this is the most robust way to preserve the
 sender's anonymity. If required future monitoring isn't provided, either
 accidentally or because the system was intentionally designed that way, the
 recipient will need to perform the monitoring themself over an anonymous
 channel.<a href="#section-3.2-5" class="pilcrow">¶</a></p>
+<p id="section-3.2-6"><a href="#anonymous" class="auto internal xref">Figure 2</a> shows an example message flow in an anonymous deployment. Users
+request their own label from the transparency log and provide the serialized
+response, functioning as a credential, in encrypted messages to other users.
+Required monitoring is provided proactively in the same way.<a href="#section-3.2-6" class="pilcrow">¶</a></p>
 <span id="name-example-message-flow-in-an-"></span><div id="anonymous">
 <figure id="figure-2">
-          <div id="section-3.2-6.1">
-            <div class="alignLeft art-svg artwork" id="section-3.2-6.1.1">
+          <div id="section-3.2-7.1">
+            <div class="alignLeft art-svg artwork" id="section-3.2-7.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="192" width="504" viewBox="0 0 504 192" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
                 <path d="M 8,48 L 8,176" fill="none" stroke="black"></path>
                 <path d="M 272,48 L 272,176" fill="none" stroke="black"></path>
@@ -1575,11 +1575,11 @@ channel.<a href="#section-3.2-5" class="pilcrow">¶</a></p>
                   <text x="412" y="148">Group,</text>
                   <text x="380" y="164">MonitorResponse)</text>
                 </g>
-              </svg><a href="#section-3.2-6.1.1" class="pilcrow">¶</a>
+              </svg><a href="#section-3.2-7.1.1" class="pilcrow">¶</a>
 </div>
 </div>
 <figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
-<a href="#name-example-message-flow-in-an-" class="selfRef">Example message flow in an anonymous deployment. Users request their own label from the transparency log and provide the serialized response, functioning as a credential, in encrypted messages to other users. Required monitoring is provided proactively.</a>
+<a href="#name-example-message-flow-in-an-" class="selfRef">Example Message Flow in an Anonymous Deployment</a>
           </figcaption></figure>
 </div>
 </section>
@@ -1629,13 +1629,22 @@ only secure if gossip can be implemented such that gossipping users are
 reasonably expected to form a connected graph of all users. If not, then the
 transparency log can attempt to partition users into subsets that do not gossip
 and can present each subset of users with different forks.<a href="#section-3.3-6" class="pilcrow">¶</a></p>
-<p id="section-3.3-7">Regardless of approach, in the event that a fork is successfully detected, the
-user is able to produce non-repudiable proof of log misbehavior which can be
-published.<a href="#section-3.3-7" class="pilcrow">¶</a></p>
-<span id="name-users-receive-tree-heads-wh"></span><div id="out-of-band-checking">
+<p id="section-3.3-7">Applications that do not provide their users with a trusted third party,
+anonymous communication, or peer-to-peer communication are not secure, as the
+transparency log can present forked views to different users without detection.<a href="#section-3.3-7" class="pilcrow">¶</a></p>
+<p id="section-3.3-8">Regardless of the approach an application chooses, in the event that a fork is
+successfully detected, the user is able to produce non-repudiable proof of log
+misbehavior which can be published.<a href="#section-3.3-8" class="pilcrow">¶</a></p>
+<p id="section-3.3-9"><a href="#out-of-band-checking" class="auto internal xref">Figure 3</a> illustrates fork detection with anonymous and
+peer-to-peer communication. Users receive tree heads while making authenticated
+requests to a transparency log. Users ensure consistency of tree heads by either
+comparing amongst themselves, or by contacting the transparency log over an
+anonymous channel. Requests that require authentication (<code>Search(Bob)</code> in this
+example) may be blocked over the anonymous channel.<a href="#section-3.3-9" class="pilcrow">¶</a></p>
+<span id="name-out-of-band-fork-detection"></span><div id="out-of-band-checking">
 <figure id="figure-3">
-          <div id="section-3.3-8.1">
-            <div class="alignLeft art-svg artwork" id="section-3.3-8.1.1">
+          <div id="section-3.3-10.1">
+            <div class="alignLeft art-svg artwork" id="section-3.3-10.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="336" width="584" viewBox="0 0 584 336" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
                 <path d="M 8,48 L 8,320" fill="none" stroke="black"></path>
                 <path d="M 232,48 L 232,320" fill="none" stroke="black"></path>
@@ -1690,11 +1699,11 @@ published.<a href="#section-3.3-7" class="pilcrow">¶</a></p>
                   <text x="288" y="308">Search(Bob)</text>
                   <text x="512" y="308">X</text>
                 </g>
-              </svg><a href="#section-3.3-8.1.1" class="pilcrow">¶</a>
+              </svg><a href="#section-3.3-10.1.1" class="pilcrow">¶</a>
 </div>
 </div>
 <figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
-<a href="#name-users-receive-tree-heads-wh" class="selfRef">Users receive tree heads while making authenticated requests to a transparency log. Users ensure consistency of tree heads by either comparing amongst themselves, or by contacting the transparency log over an anonymous channel. Requests that require authentication (`Search(Bob)` in this example) may be blocked over the anonymous channel.</a>
+<a href="#name-out-of-band-fork-detection" class="selfRef">Out-of-Band Fork Detection</a>
           </figcaption></figure>
 </div>
 </section>
@@ -1726,8 +1735,8 @@ asserting that the tree has been constructed correctly.<a href="#section-4-4" cl
 <p id="section-4-5">To reduce the probability of collusion between the transparency log and the
 third party, a transparency log can have two or more independent third parties
 coordinate as one and produce threshold signatures. In this scenario, the
-threshold for a valid signature <span class="bcp14">MUST</span> be at least a majority of the third
-parties, to prevent different subsets from authenticating forked views.<a href="#section-4-5" class="pilcrow">¶</a></p>
+threshold for a valid signature needs to be at least a majority of the third
+parties to prevent different subsets from authenticating forked views.<a href="#section-4-5" class="pilcrow">¶</a></p>
 <p id="section-4-6"><strong>Contact Monitoring</strong>, on the other hand, supports a single-party deployment
 with no third party. The cost of this is that, when a user looks up a version of
 a label that was inserted very recently, the user may need to retain some
@@ -1740,11 +1749,11 @@ to perform monitoring. Both are specified in more detail in
 pairs that were inserted very recently, monitoring may become relatively
 expensive.<a href="#section-4-6" class="pilcrow">¶</a></p>
 <p id="section-4-7">Additionally, applications that rely on a transparency log deployed in Contact
-Monitoring mode <span class="bcp14">MUST</span> regularly attempt to detect forks through anonymous
+Monitoring mode need to regularly attempt to detect forks through anonymous
 communication with the transparency log or peer-to-peer communication, as
 described in <a href="#detecting-forks" class="auto internal xref">Section 3.3</a>.<a href="#section-4-7" class="pilcrow">¶</a></p>
 <p id="section-4-8">Applications that rely on a transparency log deployed in either of the
-third-party modes <span class="bcp14">MAY</span> allow users to enable a "Contact Monitoring Mode". This
+third-party modes can allow users to enable a "Contact Monitoring Mode". This
 mode, which affects only the individual client's behavior, would cause the
 client to behave as if its transparency log was deployed in Contact Monitoring
 mode. As such, it would start retaining state about previously looked-up labels
@@ -1779,10 +1788,15 @@ deviation from the protocol or the addition of malicious values for a
 label, is detected by users through the monitoring described above. As in all
 deployment modes, the application determines what values may be stored in a
 label (see <a href="#protocol-overview" class="auto internal xref">Section 3</a>).<a href="#section-4.1-4" class="pilcrow">¶</a></p>
-<span id="name-contact-monitoring-alice-se"></span><div id="contact-monitoring-fig">
+<p id="section-4.1-5">In the example shown in <a href="#contact-monitoring-fig" class="auto internal xref">Figure 4</a>, Alice searches for Bob's
+label. One day later, Alice verifies that the label-version pair she observed
+remained in the transparency log. Another day later, Bob comes online and
+monitors his own label. Note that Alice does not need to wait on Bob to make his
+Monitor request before making hers.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
+<span id="name-contact-monitoring-2"></span><div id="contact-monitoring-fig">
 <figure id="figure-4">
-          <div id="section-4.1-5.1">
-            <div class="alignLeft art-svg artwork" id="section-4.1-5.1.1">
+          <div id="section-4.1-6.1">
+            <div class="alignLeft art-svg artwork" id="section-4.1-6.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="272" width="584" viewBox="0 0 584 272" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
                 <path d="M 8,48 L 8,256" fill="none" stroke="black"></path>
                 <path d="M 296,48 L 296,256" fill="none" stroke="black"></path>
@@ -1817,21 +1831,21 @@ label (see <a href="#protocol-overview" class="auto internal xref">Section 3</a>
                   <text x="516" y="228">Monitor(Bob)</text>
                   <text x="388" y="244">MonitorResponse(...)</text>
                 </g>
-              </svg><a href="#section-4.1-5.1.1" class="pilcrow">¶</a>
+              </svg><a href="#section-4.1-6.1.1" class="pilcrow">¶</a>
 </div>
 </div>
 <figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
-<a href="#name-contact-monitoring-alice-se" class="selfRef">Contact Monitoring. Alice searches for Bob's label. One day later, Alice verifies the label-version pair she observed remained in transparency log. Another day later, Bob comes online and monitors his own label. Note that Alice does not need to wait on Bob to make his Monitor request before making hers.</a>
+<a href="#name-contact-monitoring-2" class="selfRef">Contact Monitoring</a>
           </figcaption></figure>
 </div>
-<p id="section-4.1-6">Importantly, Contact Monitoring impacts how the server is able to enforce access
+<p id="section-4.1-7">Importantly, Contact Monitoring impacts how the server is able to enforce access
 control on Monitor queries. While Search and Update queries can enforce access
 control on an arbitrary "point in time" basis, where a user is allowed to
 execute the query at one point in time but maybe not the next, users are
 sometimes required by the protocol to make Monitor queries based on the Search
-and Update queries they made in the past. These Monitor queries <span class="bcp14">MUST</span> be
-permitted, regardless of whether or not the user is still permitted to execute
-such Search or Update queries.<a href="#section-4.1-6" class="pilcrow">¶</a></p>
+and Update queries they made in the past. These Monitor queries need to
+be permitted, regardless of whether or not the user is still permitted to execute
+such Search or Update queries.<a href="#section-4.1-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="third-party-auditing">
@@ -1850,10 +1864,12 @@ background. As a result, signatures from the auditor may lag behind the view
 presented by the transparency log. The maximum amount of time that the auditor
 may lag behind the transparency log without its signature being rejected by
 users is set in the transparency log's configuration.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
-<span id="name-third-party-auditing-a-rece"></span><div id="auditing-fig">
+<p id="section-4.2-3">As shown in <a href="#auditing-fig" class="auto internal xref">Figure 5</a>, the auditor is updated on changes to the tree in
+the background, and a recent signature from the auditor is provided to users.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
+<span id="name-third-party-auditing-2"></span><div id="auditing-fig">
 <figure id="figure-5">
-          <div id="section-4.2-3.1">
-            <div class="alignLeft art-svg artwork" id="section-4.2-3.1.1">
+          <div id="section-4.2-4.1">
+            <div class="alignLeft art-svg artwork" id="section-4.2-4.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="208" width="584" viewBox="0 0 584 208" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
                 <path d="M 8,48 L 8,192" fill="none" stroke="black"></path>
                 <path d="M 336,48 L 336,192" fill="none" stroke="black"></path>
@@ -1889,21 +1905,21 @@ users is set in the transparency log's configuration.<a href="#section-4.2-2" cl
                   <text x="400" y="164">AuditorUpdate</text>
                   <text x="504" y="180">AuditorTreeHead</text>
                 </g>
-              </svg><a href="#section-4.2-3.1.1" class="pilcrow">¶</a>
+              </svg><a href="#section-4.2-4.1.1" class="pilcrow">¶</a>
 </div>
 </div>
 <figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
-<a href="#name-third-party-auditing-a-rece" class="selfRef">Third-Party Auditing. A recent signature from the auditor is provided to users. The auditor is updated on changes to the tree in the background.</a>
+<a href="#name-third-party-auditing-2" class="selfRef">Third-Party Auditing</a>
           </figcaption></figure>
 </div>
-<p id="section-4.2-4">Given the long-lived nature of transparency logs and the potentially short-lived
+<p id="section-4.2-5">Given the long-lived nature of transparency logs and the potentially short-lived
 nature of third-party auditing arrangements, KT allows third-party auditors to
 start auditing a log at any arbitrary point. This allows a new third-party
 auditor to start up without ingesting the transparency log's entire
 history. The point at which an auditor started auditing is provided to users in
 the transparency log's configuration. When verifying query responses, users
 verify that the auditor started auditing at or before the point necessary for
-the query to be secure.<a href="#section-4.2-4" class="pilcrow">¶</a></p>
+the query to be secure.<a href="#section-4.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="third-party-management">
@@ -1917,7 +1933,7 @@ focuses mainly on enforcing access control and authenticating the creation of ne
 versions of labels. All user queries are initially sent by users directly to the
 service operator, and the service operator proxies them to the third-party
 manager if they pass access control.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
-<span id="name-third-party-management-vali"></span><div id="manager-fig">
+<span id="name-third-party-management-2"></span><div id="manager-fig">
 <figure id="figure-6">
           <div id="section-4.3-2.1">
             <div class="alignLeft art-svg artwork" id="section-4.3-2.1.1">
@@ -1975,7 +1991,7 @@ manager if they pass access control.<a href="#section-4.3-1" class="pilcrow">¶<
 </div>
 </div>
 <figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
-<a href="#name-third-party-management-vali" class="selfRef">Third-Party Management. Valid requests are proxied by the service operator to the manager. Invalid requests are blocked.</a>
+<a href="#name-third-party-management-2" class="selfRef">Third-Party Management</a>
           </figcaption></figure>
 </div>
 <p id="section-4.3-3">The security of the Third-Party Management deployment mode comes from an
@@ -1987,9 +2003,9 @@ detect them when monitoring. If the service operator behaves honestly, the
 third-party manager will be unable to add any new unauthorized versions of a
 label such that a user will accept them, or remove any authorized version of a
 label without the label owner detecting it.<a href="#section-4.3-3" class="pilcrow">¶</a></p>
-<p id="section-4.3-4">The service operator <span class="bcp14">MUST</span> implement some mechanism to detect when forks are
-presented by the third-party manager. Additionally, the service operator <span class="bcp14">MUST</span>
-implement some mechanism to prevent the same version of a label from being
+<p id="section-4.3-4">The service operator needs to implement some mechanism to detect when forks are
+presented by the third-party manager. Additionally, the service operator needs
+to implement some mechanism to prevent the same version of a label from being
 submitted to the third-party manager multiple times with different associated
 values.<a href="#section-4.3-4" class="pilcrow">¶</a></p>
 </section>
@@ -2023,10 +2039,10 @@ high-traffic application.<a href="#section-5-2.3.1" class="pilcrow">¶</a></p>
 their own transparency log for their own users.<a href="#section-5-2.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-5-3">Client implementations <span class="bcp14">SHOULD</span> generally be prepared to interact with multiple
+<p id="section-5-3">Client implementations should generally be prepared to interact with multiple
 independent transparency logs to support these use-cases, particularly recovery
 from log failure. When multiple transparency logs are used as part of one
-application, all users <span class="bcp14">MUST</span> have a consistent policy for executing Search,
+application, all users need to have a consistent policy for executing Search,
 Update, and Monitor queries against the logs in a way that maintains the
 high-level security model of KT:<a href="#section-5-3" class="pilcrow">¶</a></p>
 <ul class="normal">
@@ -2061,8 +2077,8 @@ transparency log if one hasn't been added already.<a href="#section-5.1-2.2.1" c
           <li id="section-5.1-2.3">
             <p id="section-5.1-2.3.1">Both transparency logs are monitored as they would be if they were run
 individually. Once the migration has completed and the old transparency log
-has stopped accepting modifications, the old transparency log <span class="bcp14">MUST</span> stay
-operational long enough for all users to complete their monitoring of it,
+has stopped accepting modifications, the old transparency log needs to
+stay operational long enough for all users to complete their monitoring of it,
 keeping in mind that some users may be offline for a significant amount of
 time. If the old transparency log is shut down before a user is able to
 complete their monitoring of it, that user will be unable to detect some
@@ -2103,7 +2119,7 @@ From then on, users will monitor only the new transparency log.<a href="#section
 <p id="section-5.2-3">The final tree size and root hash of the prior transparency log need to be
 distributed to users in a way that ensures that all users have a globally
 consistent view. This can be done by storing them in a well-known label of the
-new transparency log. Users <span class="bcp14">MUST</span> process this well-known label as if they own
+new transparency log. Users need to process this well-known label as if they own
 it, so that they continue to monitor it for unexpected changes for the duration
 of the migration period. Alternatively, the final tree size and root hash may be
 distributed with the application's code distribution mechanism.<a href="#section-5.2-3" class="pilcrow">¶</a></p>
@@ -2116,7 +2132,7 @@ distributed with the application's code distribution mechanism.<a href="#section
         </h3>
 <p id="section-5.3-1">Some applications partition labels across multiple transparency logs, where each
 transparency log is responsible for a disjoint subset of labels. In such
-applications, there <span class="bcp14">MUST</span> be a consistent policy for directing KT requests to the
+applications, there needs to be a consistent policy for directing KT requests to the
 correct transparency log. The two primary cases where partitioning is necessary
 are high-traffic applications that require horizontal scaling, and federated
 applications.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
@@ -2125,7 +2141,7 @@ single entity may need to cooperate to handle the total load of the
 application. In this case, requests would typically be routed to a
 transparency log based on a consistent hash of the label. Changing the set of
 transparency logs may change which transparency log is responsible for a given
-label; any such labels <span class="bcp14">MUST</span> be moved between transparency logs as described in
+label; any such labels need to be moved between transparency logs as described in
 <a href="#gradual-migration" class="auto internal xref">Section 5.1</a> or <a href="#immediate-migration" class="auto internal xref">Section 5.2</a>.<a href="#section-5.3-2" class="pilcrow">¶</a></p>
 <p id="section-5.3-3">In a federated application, many servers that are owned and operated by
 different entities will cooperate to provide a single end-to-end encrypted
@@ -2136,9 +2152,9 @@ directed to. For example, with an email end-user identity like
 <code>alice@example.com</code>, the controlling entity is <code>example.com</code>, indicating that
 requests related to this user should be directed to the servers of
 <code>example.com</code>.<a href="#section-5.3-3" class="pilcrow">¶</a></p>
-<p id="section-5.3-4">In a federated application, a controlling entity like <code>example.com</code> <span class="bcp14">MAY</span> act as
+<p id="section-5.3-4">In a federated application, a controlling entity like <code>example.com</code> can act as
 an anonymizing proxy for its users when they query transparency logs run by
-other entities (in the manner of <span>[<a href="#RFC9458" class="cite xref">RFC9458</a>]</span>), but <span class="bcp14">SHOULD NOT</span> attempt to
+other entities (in the manner of <span>[<a href="#RFC9458" class="cite xref">RFC9458</a>]</span>), but should not attempt to
 'mirror' or combine other transparency logs with its own. Doing so may prevent
 the other transparency logs from consistently enforcing their access control
 policies as intended, managing compliance with privacy laws, or modifying label
@@ -2315,19 +2331,19 @@ portion of the log that was insufficiently gossipped. In a Third-Party Auditing
 deployment mode, the same is true for a version of a label that was created
 within the auditor's maximum acceptable lag.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
 <p id="section-7.2-3">Applications should consider the nature of possible state loss in their clients
-when configuring a transparency log and <span class="bcp14">MUST</span> ensure that the relevant protocol
-parameters are set in a way that appropriately mitigates this risk.
+when configuring a transparency log and need to ensure that the relevant
+protocol parameters are set in a way that appropriately mitigates this risk.
 For example, in a Contact Monitoring deployment, the Reasonable Monitoring
-Window and the duration between out-of-band communication attempts <span class="bcp14">SHOULD</span> be
+Window and the duration between out-of-band communication attempts should be
 much less than the typical time between state loss events. Similarly, in a
 Third-Party Auditing deployment, the maximum acceptable lag for an auditor
-<span class="bcp14">SHOULD</span> be much less than the typical time between state loss events. This
+should be much less than the typical time between state loss events. This
 minimizes the likelihood that a state loss event could be useful to a
 misbehaving transparency log.<a href="#section-7.2-3" class="pilcrow">¶</a></p>
 <p id="section-7.2-4">In applications where client state is typically ephemeral (like a web page), or
 where state loss could possibly be triggered adversarially (for example, by the
 service operator forcing a user to log out and re-register), a Third-Party
-Management deployment mode is <span class="bcp14">RECOMMENDED</span>. Alternatively, applications could
+Management deployment mode is recommended. Alternatively, applications could
 also consider implementing a policy of not consuming label-version pairs that
 were inserted too recently. Once a label-version pair is outside of the
 Reasonable Monitoring Window in a Contact Monitoring deployment, or beyond the
@@ -2480,7 +2496,7 @@ would be Slack.<a href="#section-9-3" class="pilcrow">¶</a></p>
 <p id="section-9-4">A <strong>primary end-user identity</strong> is one that is unique, user-visible, and unable
 to change. (Or equivalently, if it changes, it appears in the application UI as
 a new conversation with a new user.) An example of this type of identifier would
-be an email address on an email service. A primary end-user identity <span class="bcp14">SHOULD</span>
+be an email address on an email service. A primary end-user identity should
 always be a label in KT, with the end-user's public keys and other account
 information as the associated value.<a href="#section-9-4" class="pilcrow">¶</a></p>
 <p id="section-9-5">A <strong>secondary end-user identity</strong> is one that is unique, user-visible, and able
@@ -2490,7 +2506,7 @@ for initial user discovery, during which they're converted into a primary
 end-user identity (like a UUID) that's used by the application to identify the
 end-user from then on. An example of this type of identity would be a username,
 since users can often change their username without disrupting existing
-communications. A secondary end-user identity <span class="bcp14">SHOULD</span> be a label in KT with the
+communications. A secondary end-user identity should be a label in KT with the
 primary end-user identity as the associated value, such that it can be used to
 authenticate the user discovery process.<a href="#section-9-5" class="pilcrow">¶</a></p>
 <p id="section-9-6">While likely helpful to most common applications, the distinction between
@@ -2518,14 +2534,6 @@ identity in their application with the labels and values they store in KT.<a hre
 <a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
-<dt id="RFC2119">[RFC2119]</dt>
-        <dd>
-<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC8174">[RFC8174]</dt>
-        <dd>
-<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="RFC9381">[RFC9381]</dt>
       <dd>
 <span class="refAuthor">Goldberg, S.</span>, <span class="refAuthor">Reyzin, L.</span>, <span class="refAuthor">Papadopoulos, D.</span>, and <span class="refAuthor">J. Včelák</span>, <span class="refTitle">"Verifiable Random Functions (VRFs)"</span>, <span class="seriesInfo">RFC 9381</span>, <span class="seriesInfo">DOI 10.17487/RFC9381</span>, <time datetime="2023-08" class="refDate">August 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9381">https://www.rfc-editor.org/rfc/rfc9381</a>&gt;</span>. </dd>
