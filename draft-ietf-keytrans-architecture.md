@@ -137,6 +137,19 @@ genuinely need to see them.
 : A user that either initiates all changes to a label's value, or must be
   informed of all changes to it. See {{protocol-overview}}.
 
+**Prefix Tree:**
+: A hash tree that commits to the set of all labels stored in a transparency
+  log, and every version of each label's value, at a given point in time.
+
+**Log Tree:**
+: A hash tree with one leaf for each change to the transparency log. Each leaf
+  commits to a snapshot of the prefix tree, so the log tree as a whole commits
+  to the history of all label modifications.
+
+**Tree Head:**
+: The root hash and size of the log tree at a given point in time, signed by
+  the transparency log (and possibly by a third party).
+
 
 # Protocol Overview
 
@@ -195,7 +208,7 @@ The operations that can be executed by a user are as follows:
 3. **Monitor:** While Search and Update are run by the user as necessary,
    monitoring is done in the background on a recurring basis. It can both check
    that the log is continuing to behave honestly (all previously returned labels
-   remain in the tree) and that no changes have been made to labels owned by the
+   remain in the log) and that no changes have been made to labels owned by the
    user without the user's knowledge.
 
 These operations are executed over an application-provided transport layer.
@@ -255,8 +268,9 @@ recipient would do to authenticate the relationship between the presented
 end-user identity and their public keys. Recipients verify the
 request-response pairs themselves, using the transparency log's configuration,
 without contacting the transparency log. Because the responses are authenticated
-by the transparency log (and any third-party auditor or manager), a credential
-that has been modified will fail verification.
+by the transparency log (and any third-party auditor or manager, as described
+in {{deployment-modes}}), a credential that has been modified will fail
+verification.
 
 Any future monitoring that may be required should be provided to recipients
 proactively by the sender, as this is the most robust way to preserve the
@@ -295,15 +309,16 @@ shown other users. As such, the log may be able to change a label's value
 without the label's owner becoming aware.
 
 The protocol is designed such that users always require subsequent queries to
-prove consistency with previous queries. As such, users always stay on a
-linearizable view of the log. If a user is ever presented with a forked view,
-they hold on to this forked view forever and reject the output of any subsequent
-queries that are inconsistent with it.
+prove consistency with previous queries. As such, each user's view of the log
+always forms a single, consistent history. If a user is ever presented with a
+forked view, they hold on to this forked view forever and reject the output of
+any subsequent queries that are inconsistent with it.
 
 This provides ample opportunity for users to detect when a fork has been
 presented but isn't in itself sufficient for detection. To detect forks, users
 require either a **trusted third party**, **anonymous communication** with the
-transparency log, or **peer-to-peer communication**.
+transparency log, or **peer-to-peer communication**. Anonymous and peer-to-peer
+communication are collectively referred to as *out-of-band communication*.
 
 With a trusted third party, such as a Third-Party Auditor or Manager as
 described in {{third-party-auditing}} and {{third-party-management}}, an outside
@@ -345,7 +360,9 @@ peer-to-peer communication. Users receive tree heads while making authenticated
 requests to a transparency log. Users ensure consistency of tree heads by either
 comparing amongst themselves, or by contacting the transparency log over an
 anonymous channel. Requests that require authentication (`Search(Bob)` in this
-example) may be blocked over the anonymous channel.
+example) may be blocked over the anonymous channel. The tree heads that users
+compare out-of-band (`DistinguishedHead` in this example) correspond to
+*distinguished log entries*, which are described in {{deployment-modes}}.
 
 ~~~aasvg
 Alice                      Bob                          Transparency Log
@@ -375,26 +392,26 @@ Alice                      Bob                          Transparency Log
 In the interest of satisfying the widest range of use-cases possible, three
 different modes for deploying a transparency log are supported. Each mode has
 slightly different requirements and efficiency considerations for both the
-transparency log and the end-user.
+service operator and the end-user.
 
 **Third-Party Management** and **Third-Party Auditing** are two deployment modes
-that require the transparency log to delegate part of its operation
+that require the service operator to delegate part of its transparency log operations
 to a third party.
 
 With both third-party modes, all requests from end-users are initially routed to
-the transparency log and the log coordinates with the third party
+the service operator, and the operator coordinates with the third party
 itself. End-users never contact the third party directly, although they will
 need a signature public key from the third party to verify its assertions.
 
 With Third-Party Management, the third party performs the majority of the work
-of actually storing and operating the service, and the transparency log only
-signs new entries as they're added. With Third-Party Auditing, the transparency
-log performs the majority of the work of storing and operating the service, only
+of actually storing and operating the service, and the service operator only
+signs new entries as they're added. With Third-Party Auditing, the service
+operator performs the majority of the work of storing and operating the service, only
 obtaining signatures from a third-party auditor at regular intervals
 asserting that the tree has been constructed correctly.
 
-To reduce the probability of collusion between the transparency log and the
-third party, a transparency log can have two or more independent third parties
+To reduce the probability of collusion between the service operator and the
+third party, a service operator can have two or more independent third parties
 coordinate as one and produce threshold signatures. In this scenario, the
 threshold for a valid signature needs to be at least a majority of the third
 parties to prevent different subsets from authenticating forked views.
@@ -484,7 +501,7 @@ such Search or Update queries.
 
 ## Third-Party Auditing
 
-With the Third-Party Auditing deployment mode, the transparency log obtains
+With the Third-Party Auditing deployment mode, the service operator obtains
 signatures from a third-party auditor attesting (at minimum) to the fact that
 the tree has been constructed correctly. These signatures are provided to users
 as part of the responses for their queries.
@@ -493,8 +510,8 @@ When running synchronously, the auditor can easily become a bottleneck for the
 transparency log. It's generally expected that third-party auditors run
 asynchronously, downloading and authenticating a log's contents in the
 background. As a result, signatures from the auditor may lag behind the view
-presented by the transparency log. The maximum amount of time that the auditor
-may lag behind the transparency log without its signature being rejected by
+presented by the service operator. The maximum amount of time that the auditor
+may lag behind the service operator without its signature being rejected by
 users is set in the transparency log's configuration.
 
 As shown in {{auditing-fig}}, the auditor is updated on changes to the tree in
@@ -531,7 +548,10 @@ for the majority of the work of storing and operating the log. The service opera
 focuses mainly on enforcing access control and authenticating the creation of new
 versions of labels. All user queries are initially sent by users directly to the
 service operator, and the service operator proxies them to the third-party
-manager if they pass access control.
+manager if they pass access control. As such, the role of the transparency log
+is split between two parties in this mode: the service operator, which receives
+user queries and signs new entries, and the third-party manager, which stores the
+log and responds to the queries that are proxied to it.
 
 ~~~aasvg
 Alice                  Service Operator                  Manager
@@ -700,7 +720,8 @@ Broadly speaking, a transparency log's database will contain two types of data:
 
 1. Serialized user data (the values corresponding to labels in the log), and
 2. Cryptographic data, such as pre-computed portions of hash trees or commitment
-   openings.
+   openings. Values are stored in the log as cryptographic commitments, which
+   hide the value until the transparency log reveals the corresponding opening.
 
 The first type, serialized user data, can be pruned by removing entries that
 have either expired or have become permanently inaccessible due to the service
@@ -722,11 +743,10 @@ protocol.
 The second type of data, cryptographic data, can also be pruned, but only after
 considering which parts are no longer required by the protocol for producing
 proofs. For example, even though a particular version of a label may have been
-deleted, the corresponding Verifiable Random Function (VRF) {{!RFC9381}} output
-and commitment may still need to exist in the latest version of the transparency
-log's prefix tree to produce valid search proofs for other versions of the
-label. The exact mechanism for determining
-which data is safe to delete will depend on the protocol and implementation.
+deleted, data corresponding to it may still need to exist in the latest version
+of the transparency log's prefix tree to produce valid search proofs for other
+versions of the label. The exact mechanism for determining which data is safe to
+delete will depend on the protocol and implementation.
 
 The distinction between user data and cryptographic data provides a valuable
 separation of concerns since KT does not provide a way for a service operator
@@ -893,7 +913,8 @@ In the case of a third-party auditor, the auditor is able to learn the total
 number of distinct changes to the log. It is also able to learn the order and
 approximate timing with which each change was made. However, auditors are not
 able to learn the plaintext of any labels or values. This is because labels
-are masked with a VRF, and values are only provided to auditors as commitments.
+are masked with a Verifiable Random Function (VRF) {{!RFC9381}}, and values are
+only provided to auditors as commitments.
 They are also not able to distinguish between whether a change represents a label
 being created for the first time or being updated, or whether a change
 represents a "real" change from an end-user or a "fake" padding change.
