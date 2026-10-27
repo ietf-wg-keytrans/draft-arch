@@ -127,7 +127,8 @@ genuinely need to see them.
 **Transparency Log Configuration:**
 : The fixed, public parameters of a Transparency Log such as the log's cipher
   suite and public key. Configuration is pre-distributed to users through a
-  trustworthy channel and used for proof verification.
+  trustworthy channel, typically as part of the communication service's client
+  software, and used for proof verification.
 
 **Label:**
 : A lookup key in the key-value database that a transparency log represents,
@@ -857,6 +858,41 @@ were inserted too recently. Once a label-version pair is outside of the
 Reasonable Monitoring Window in a Contact Monitoring deployment, or beyond the
 maximum acceptable auditor lag in a Third-Party Auditing deployment, the risks
 associated with state loss are often already sufficiently mitigated.
+
+## Client Integrity
+
+The security of KT depends on several assumptions about the clients that users
+run:
+
+1. Clients are able to execute code securely. That is, the device and operating
+   system that a client runs on do not allow an attacker to tamper with the
+   client's execution or local state.
+2. Clients are executing a secure implementation of the protocol.
+3. Clients have an authentic copy of the transparency log's configuration.
+
+In practice, client software and the transparency log's configuration are
+usually distributed by the service operator, which is the same party that KT is
+intended to protect against. A service operator that is able to distribute
+modified client software or configuration to a user can defeat KT entirely for
+that user. For example, it could disable proof verification or monitoring, or
+replace the public key of the transparency log or a third party with one that
+it controls.
+
+KT does not prevent this, and applications need to rely on other mechanisms to
+address it. Binary Transparency systems require each released version of a
+piece of software to be published in a public, append-only log before clients
+will install it. This ensures that a modified version of the software can not
+be distributed to specific users without also being visible to everyone else.
+Making client software open source and reproducibly built additionally allows
+outside parties to inspect each published version and verify that it
+implements the protocol correctly and contains the correct configuration.
+
+Finally, clients must have an accurate local clock. A client with an inaccurate
+clock may accept a stale view of the log that would otherwise be rejected.
+Applications can ensure that clients have an accurate clock with a protocol like
+Roughtime {{?I-D.ietf-ntp-roughtime}}, which provides authenticated time from
+multiple independent servers and allows clients to detect servers that provide
+incorrect time.
 
 
 # Privacy Considerations
