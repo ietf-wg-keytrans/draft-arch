@@ -342,9 +342,11 @@ tree head over the anonymous channel as it does over an authenticated channel.
 The security of this approach relies on the idea that, if the transparency log
 doesn't know which user is making the request, it will show the user the wrong
 fork with high probability. As such, requests over the anonymous channel must
-not contain user data or be made at predictable time intervals. Repeating this
-check over time makes it overwhelmingly likely that any fork presented to any
-user will be detected.
+not contain any user-specific data or state, such as cookies, authentication
+tokens, or the tree size last observed by the user, and must not be correlated
+in time with the user's authenticated requests, such as by being sent
+immediately before or after them. Repeating this check over time makes it
+overwhelmingly likely that any fork presented to any user will be detected.
 
 With peer-to-peer communication, two users gossip with each other to establish
 that they both have the same view of the transparency log. This gossip is able
@@ -670,7 +672,9 @@ consistent view. This can be done by storing them in a well-known label of the
 new transparency log. Users need to process this well-known label as if they own
 it, so that they continue to monitor it for unexpected changes for the duration
 of the migration period. Alternatively, the final tree size and root hash may be
-distributed with the application's code distribution mechanism.
+distributed with the application's code distribution mechanism. Regardless, if a
+migration is the result of one or more private key compromises, the final tree
+size and root hash must not be authenticated by a compromised private key.
 
 ## Partitioning
 
@@ -771,8 +775,21 @@ operator executed the operation correctly, and in a way that's globally
 consistent with what it has shown all other users. That is, when a user searches
 for a label, they're guaranteed that the result they receive represents the same
 result that any other user searching for the same label at roughly the same time
-would've seen. When a user modifies a label, they're guaranteed that other users
+would have seen. When a user modifies a label, they're guaranteed that other users
 will see the modification within a bounded amount of time.
+
+Note that KT does not itself determine whether a new version of a label was
+authorized by the label's owner. Instead, it guarantees that any version shown
+to other users is also visible to the label's owner, who decides whether the
+change is authorized when monitoring their label. As such, detecting
+unauthorized changes depends on the label owner performing regular monitoring.
+If the owner is offline for an extended period, such as because their account is
+dormant or abandoned, or if they lose their local state (see {{state-loss}}), an
+unauthorized change may not be detected until the owner returns, or may not be
+detected at all. In particular, if the owner is offline for longer than the
+maximum lifetime of log entries, an unauthorized version that was inserted and
+then replaced while the owner was offline may expire before the owner is able to
+see it.
 
 ## Transparency Log Misbehavior
 
@@ -808,10 +825,11 @@ mode that the transparency log relies on:
 
 In short, assuming that the underlying cryptographic primitives used are secure,
 any deployment-specific assumptions hold (such as non-collusion), and that user
-devices don't go permanently offline, then malicious behavior by the
-transparency log is always detected within a bounded amount of time. The
-parameters that determine the maximum amount of time before malicious behavior
-is detected are as follows:
+devices don't go offline for longer than the maximum lifetime of log entries
+(see {{pruning}}), then any attempt by the transparency log to present
+inconsistent views to different users is always detected within a bounded
+amount of time. The parameters that determine the maximum amount of time
+before such misbehavior is detected are as follows:
 
 - The configured maximum amount of time by which a query response can be stale.
 - The configured Reasonable Monitoring Window (see {{deployment-modes}}),
@@ -825,6 +843,13 @@ is detected are as follows:
 - For logs that use the Third-Party Management deployment mode: the amount of
   lag, or potential inefficacy, of the service operator's approach to detecting
   forks.
+
+Ultimately, a transparency log can always refuse to answer requests that would
+reveal its own misbehavior. This includes refusing direct requests, requests
+made over an anonymous channel, and requests for the specific tree heads users
+need to efficiently gossip peer-to-peer. A user's persistent inability to
+perform monitoring, or engage in OOB communication, is indistinguishable from
+transparency log misbehavior and should be reported to the user as such.
 
 ## State Loss
 
@@ -845,7 +870,7 @@ deployment mode, the same is true for a version of a label that was created
 within the auditor's maximum acceptable lag.
 
 Applications should consider the nature of possible state loss in their clients
-when configuring a transparency log and need to ensure that the relevant
+when configuring a transparency log and ensure that the relevant
 protocol parameters are set in a way that appropriately mitigates this risk.
 For example, in a Contact Monitoring deployment, the Reasonable Monitoring
 Window and the duration between out-of-band communication attempts should be
