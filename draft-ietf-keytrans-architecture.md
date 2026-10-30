@@ -187,7 +187,7 @@ relying on their existing access control system.
 With some small exceptions, applications may enforce arbitrary access control
 rules on top of KT. This may include requiring a user to be logged in to make KT
 requests, only allowing a user to look up the labels of their contacts, or
-applying a rate limit. Most applications will likely want to, at
+applying a rate limit. Most applications will likely need to, at
 minimum, prevent users from
 modifying labels they do not own. The exact mechanism for rejecting requests,
 and possibly explaining the reason for rejection, is left to the application.
@@ -273,6 +273,11 @@ by the transparency log (and any third-party auditor or manager, as described
 in {{deployment-modes}}), a credential that has been modified will fail
 verification.
 
+To prevent stale credentials from being accepted, recipients only accept
+credentials that are based on a recent distinguished log entry (see
+{{deployment-modes}}), where the application defines what is considered recent.
+Senders therefore need to periodically refresh their credentials.
+
 Any future monitoring that may be required should be provided to recipients
 proactively by the sender, as this is the most robust way to preserve the
 sender's anonymity. If required future monitoring isn't provided, either
@@ -334,10 +339,12 @@ is trusted not to collude with the transparency log to sign a fork.
 With anonymous communication, a single user accesses the transparency log over
 an anonymous channel and checks that the transparency log is presenting the same
 tree head over the anonymous channel as it does over an authenticated channel.
-The security of this approach relies on the fact that, if the transparency log
+The security of this approach relies on the idea that, if the transparency log
 doesn't know which user is making the request, it will show the user the wrong
-fork with high probability. Repeating this check over time makes it
-overwhelmingly likely that any fork presented to any user will be detected.
+fork with high probability. As such, requests over the anonymous channel must
+not contain user data or be made at predictable time intervals. Repeating this
+check over time makes it overwhelmingly likely that any fork presented to any
+user will be detected.
 
 With peer-to-peer communication, two users gossip with each other to establish
 that they both have the same view of the transparency log. This gossip is able
@@ -545,14 +552,13 @@ the query to be secure.
 ## Third-Party Management
 
 With the Third-Party Management deployment mode, a third party is responsible
-for the majority of the work of storing and operating the log. The service operator
-focuses mainly on enforcing access control and authenticating the creation of new
-versions of labels. All user queries are initially sent by users directly to the
-service operator, and the service operator proxies them to the third-party
-manager if they pass access control. As such, the role of the transparency log
-is split between two parties in this mode: the service operator, which receives
-user queries and signs new entries, and the third-party manager, which stores the
-log and responds to the queries that are proxied to it.
+for the majority of the work of storing and operating the log. The service
+operator focuses mainly on enforcing access control and authenticating the
+creation of new versions of labels. All user queries are initially sent by users
+directly to the service operator, and the service operator proxies them to the
+third-party manager if they pass access control. New versions of a label, if
+allowed by the service operator, are signed by the service operator before being
+sent to the third-party manager to be inserted into the tree.
 
 ~~~aasvg
 Alice                  Service Operator                  Manager
