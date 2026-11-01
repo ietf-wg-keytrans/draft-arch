@@ -280,7 +280,7 @@ recipient would do to authenticate the relationship between the presented
 end-user identity and their public keys. Recipients verify the
 request-response pairs themselves, using the transparency log's configuration,
 without contacting the transparency log. Because the responses are authenticated
-by the transparency log (and any third-party auditor or manager, as described
+by the transparency log (and any third-party manager or auditor, as described
 in {{deployment-modes}}), a credential that has been modified will fail
 verification.
 
@@ -338,8 +338,8 @@ transparency log, or **peer-to-peer communication**. Anonymous and peer-to-peer
 communication are collectively referred to as *out-of-band (OOB)
 communication*.
 
-With a trusted third party, such as a Third-Party Auditor or Manager as
-described in {{third-party-auditing}} and {{third-party-management}}, an outside
+With a trusted third party, such as a Third-Party Manager or Auditor as
+described in {{third-party-management}} and {{third-party-auditing}}, an outside
 organization monitors the operation of the transparency log. This third party
 verifies, among other things, that the transparency log is growing in an
 append-only manner. If verification is successful, the third party produces
@@ -834,12 +834,12 @@ mode that the transparency log relies on:
   complete any necessary monitoring afterwards.
 
 In short, assuming that the underlying cryptographic primitives used are secure,
-any deployment-specific assumptions hold (such as non-collusion), and that a label owner's
-devices don't go offline for longer than the maximum lifetime of log entries
-(see {{pruning}}), then any attempt by the transparency log to present
-inconsistent views of a label to different users is always detected within a bounded
-amount of time. The parameters that determine the maximum amount of time
-before such misbehavior is detected are as follows:
+any deployment-specific assumptions hold (such as non-collusion), and that a
+label owner's devices don't go offline for longer than the maximum lifetime of
+log entries, then any attempt by the transparency log to present inconsistent
+views of a label to different users is always detected within a bounded amount
+of time. The parameters that determine the maximum amount of time before such
+misbehavior is detected are as follows:
 
 - The configured maximum amount of time by which a query response can be stale.
 - The configured Reasonable Monitoring Window (see {{deployment-modes}}),
@@ -992,7 +992,7 @@ creates the outside appearance of a constant baseline rate of insertions.
 
 ## Leakage to Third Parties
 
-In the event that a third-party auditor or manager is used, there's additional
+In the event that a third-party manager or auditor is used, there's additional
 information leaked to the third party that's not visible to outsiders.
 
 In the case of a third-party auditor, the auditor is able to learn the total
@@ -1106,7 +1106,7 @@ Relatedly, while KT authenticates the mapping from a label to its value, it does
 not help users distinguish between labels that appear similar. For example, two
 usernames that differ only in visually similar characters are distinct labels to
 KT, but may not be distinct to a user. Applications should take care to prevent
-visually confusing identifiers from being registered.
+confusable identifiers from being registered.
 
 
 # IANA Considerations
