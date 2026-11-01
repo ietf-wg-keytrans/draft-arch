@@ -220,9 +220,9 @@ The operations that can be executed by a user are as follows:
    executed correctly.
 2. **Update:** Adds a new version of a label, with its associated value, to the
    log. The server returns a proof that the new version was added correctly.
-   Note that this means that new values are added to the log immediately and no
-   provisional proof, such as a Signed Certificate Timestamp (SCT) as defined in
-   {{Section 3 of ?RFC6962}}, is provided.
+   Note that this means that new values are added to the log immediately,
+   rather than the server returning a promise of future inclusion such as a
+   Signed Certificate Timestamp (SCT) as defined in {{Section 3 of ?RFC6962}}.
 3. **Monitor:** While Search and Update are run by the user as necessary,
    monitoring is done in the background on a recurring basis. It checks both
    that the log is continuing to behave honestly (all previously returned
@@ -397,9 +397,12 @@ Applications that do not provide their users with a trusted third party,
 anonymous communication, or peer-to-peer communication are not secure, as the
 transparency log can present forked views to different users without detection.
 
-Regardless of the approach an application chooses, in the event that a fork is
-successfully detected, the user is able to produce non-repudiable proof of log
-misbehavior which can be published.
+In the event that a fork is successfully detected, the user is generally able to
+produce non-repudiable proof of log misbehavior which can be published. This
+requires that the conflicting views be authenticated by the transparency log
+(or third party). For example, users gossiping peer-to-peer can exchange signed
+query responses rather than bare root hashes, at the cost of additional
+bandwidth.
 
 {{out-of-band-checking}} illustrates fork detection with anonymous and
 peer-to-peer communication. Users receive tree heads while making authenticated
@@ -548,7 +551,8 @@ creation of new versions of labels. All user queries are initially sent by users
 directly to the service operator, and the service operator proxies them to the
 third-party manager if they pass access control. New versions of a label, if
 allowed by the service operator, are signed by the service operator before being
-sent to the third-party manager to be inserted into the tree.
+sent to the third-party manager to be inserted into the tree. Users verify the
+service operator's signature on each version of a label before accepting it.
 
 As part of authenticating the creation of new versions of labels, the service
 operator must implement some mechanism to prevent the same version of a label
@@ -1068,10 +1072,12 @@ key to deterministically map each label to a fixed-length pseudorandom value.
 The set of all labels stored in a transparency log is committed to by a prefix
 tree, and each version of the prefix tree is committed to by a log tree.
 
-While all the VRF outputs corresponding to labels affected by an erasure request
-can be deleted from the most recent version of the prefix tree immediately,
-previous versions of the prefix tree will still contain the VRF outputs and may
-still be needed by the protocol. If the transparency log is configured with a
+The VRF outputs corresponding to labels affected by an erasure request can be
+deleted from the most recent version of the prefix tree once they have been
+included in at least one distinguished log entry, which happens within roughly
+one Reasonable Monitoring Window of their insertion. However, previous versions
+of the prefix tree will still contain the VRF outputs and may still be needed by
+the protocol. If the transparency log is configured with a
 maximum lifetime for log entries (see {{pruning}}), the VRF outputs can be fully
 purged from the transparency log once all log entries that contain them have
 passed their maximum lifetime. Otherwise, the VRF outputs can never be fully
