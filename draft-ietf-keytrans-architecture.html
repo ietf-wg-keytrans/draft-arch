@@ -1557,7 +1557,7 @@ recipient would do to authenticate the relationship between the presented
 end-user identity and their public keys. Recipients verify the
 request-response pairs themselves, using the transparency log's configuration,
 without contacting the transparency log. Because the responses are authenticated
-by the transparency log (and any third-party auditor or manager, as described
+by the transparency log (and any third-party manager or auditor, as described
 in <a href="#deployment-modes" class="auto internal xref">Section 4</a>), a credential that has been modified will fail
 verification.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
 <p id="section-3.2-5">To prevent stale credentials from being accepted, recipients only accept
@@ -1643,8 +1643,8 @@ require either a <strong>trusted third party</strong>, <strong>anonymous communi
 transparency log, or <strong>peer-to-peer communication</strong>. Anonymous and peer-to-peer
 communication are collectively referred to as <em>out-of-band (OOB)
 communication</em>.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
-<p id="section-3.3-4">With a trusted third party, such as a Third-Party Auditor or Manager as
-described in <a href="#third-party-auditing" class="auto internal xref">Section 4.3</a> and <a href="#third-party-management" class="auto internal xref">Section 4.2</a>, an outside
+<p id="section-3.3-4">With a trusted third party, such as a Third-Party Manager or Auditor as
+described in <a href="#third-party-management" class="auto internal xref">Section 4.2</a> and <a href="#third-party-auditing" class="auto internal xref">Section 4.3</a>, an outside
 organization monitors the operation of the transparency log. This third party
 verifies, among other things, that the transparency log is growing in an
 append-only manner. If verification is successful, the third party produces
@@ -2338,12 +2338,12 @@ complete any necessary monitoring afterwards.<a href="#section-7.1-4.2.1" class=
 </li>
         </ul>
 <p id="section-7.1-5">In short, assuming that the underlying cryptographic primitives used are secure,
-any deployment-specific assumptions hold (such as non-collusion), and that a label owner's
-devices don't go offline for longer than the maximum lifetime of log entries
-(see <a href="#pruning" class="auto internal xref">Section 6</a>), then any attempt by the transparency log to present
-inconsistent views of a label to different users is always detected within a bounded
-amount of time. The parameters that determine the maximum amount of time
-before such misbehavior is detected are as follows:<a href="#section-7.1-5" class="pilcrow">¶</a></p>
+any deployment-specific assumptions hold (such as non-collusion), and that a
+label owner's devices don't go offline for longer than the maximum lifetime of
+log entries, then any attempt by the transparency log to present inconsistent
+views of a label to different users is always detected within a bounded amount
+of time. The parameters that determine the maximum amount of time before such
+misbehavior is detected are as follows:<a href="#section-7.1-5" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-7.1-6.1">
             <p id="section-7.1-6.1.1">The configured maximum amount of time by which a query response can be stale.<a href="#section-7.1-6.1.1" class="pilcrow">¶</a></p>
@@ -2528,7 +2528,7 @@ creates the outside appearance of a constant baseline rate of insertions.<a href
         <h3 id="name-leakage-to-third-parties">
 <a href="#section-8.3" class="section-number selfRef">8.3. </a><a href="#name-leakage-to-third-parties" class="section-name selfRef">Leakage to Third Parties</a>
         </h3>
-<p id="section-8.3-1">In the event that a third-party auditor or manager is used, there's additional
+<p id="section-8.3-1">In the event that a third-party manager or auditor is used, there's additional
 information leaked to the third party that's not visible to outsiders.<a href="#section-8.3-1" class="pilcrow">¶</a></p>
 <p id="section-8.3-2">In the case of a third-party auditor, the auditor is able to learn the total
 number of distinct changes to the log. It is also able to learn the order and
@@ -2640,7 +2640,7 @@ identity in their application with the labels and values they store in KT.<a hre
 not help users distinguish between labels that appear similar. For example, two
 usernames that differ only in visually similar characters are distinct labels to
 KT, but may not be distinct to a user. Applications should take care to prevent
-visually confusing identifiers from being registered.<a href="#section-9-7" class="pilcrow">¶</a></p>
+confusable identifiers from being registered.<a href="#section-9-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">
