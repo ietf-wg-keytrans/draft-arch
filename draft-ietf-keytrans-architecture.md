@@ -38,10 +38,10 @@ informative:
 --- abstract
 
 This document defines the terminology and interaction patterns involved in the
-deployment of Key Transparency in end-to-end encrypted communication services,
-and specifies the security properties that KT
-provides. It also gives more general, non-prescriptive guidance on how to
-securely apply Key Transparency to a number of common applications.
+deployment of Key Transparency (KT) in end-to-end encrypted communication
+services, and specifies the security properties that KT provides. It also gives
+more general, non-prescriptive guidance on how to securely apply KT to a number
+of common applications.
 
 --- middle
 
@@ -128,7 +128,7 @@ genuinely need to see them.
   could also be operated externally.
 
 **Transparency Log Configuration:**
-: The fixed, public parameters of a Transparency Log such as the log's cipher
+: The fixed, public parameters of a transparency log such as the log's cipher
   suite and public key. Configuration is pre-distributed to users through a
   trustworthy channel, typically as part of the communication service's client
   software, and used for proof verification.
@@ -223,11 +223,11 @@ The operations that can be executed by a user are as follows:
    Note that this means that new values are added to the log immediately,
    rather than the server returning a promise of future inclusion such as a
    Signed Certificate Timestamp (SCT) as defined in {{Section 3 of ?RFC6962}}.
-3. **Monitor:** While Search and Update are run by the user as necessary,
-   monitoring is done in the background on a recurring basis. It checks both
-   that the log is continuing to behave honestly (all previously returned
-   label-version pairs remain in the log) and that no changes have been made to
-   labels owned by the user without the user's knowledge.
+3. **Monitor:** Checks both that the log is continuing to behave honestly (all
+   previously returned label-version pairs remain in the log) and that no
+   changes have been made to labels owned by the user without the user's
+   knowledge. While Search and Update are run by the user as necessary,
+   monitoring is done in the background on a recurring basis.
 
 These operations are executed over an application-provided transport layer.
 The application enforces access control at the transport layer by blocking
@@ -289,8 +289,8 @@ Encrypting the sender's credential allows the sender to submit messages over an
 anonymous channel by specifying only the recipient's identity. The service
 operator can deliver the message to the intended recipient, who can decrypt it
 and validate the credential inside to be assured of the sender's identity. Note
-that the recipient does not need access to an anonymous channel to verify the
-credential while preserving the sender's anonymity.
+that the recipient does not need access to an anonymous channel to initially
+verify the credential while preserving the sender's anonymity.
 
 At a high level, KT credentials are created by serializing one or more Search
 request-response pairs. These Search operations correspond to the lookups the
@@ -361,15 +361,17 @@ transparency log, or **peer-to-peer communication**. Anonymous and peer-to-peer
 communication are collectively referred to as *out-of-band (OOB)
 communication*.
 
-With a trusted third party, such as a Third-Party Manager or Auditor as
-described in {{third-party-management}} and {{third-party-auditing}}, an outside
-organization either operates the transparency log or audits its operation. This
-third party ensures, among other things, that the transparency log is growing in
-an append-only manner, and produces a signature on a recent tree head.
-The transparency log provides this signature to users inline with their query
-responses as proof that they are not being shown a fork. This approach relies on
-an assumption that the third party is trusted not to collude with the service
-operator to trick users into accepting malicious results.
+With a trusted third party, an outside organization either operates the
+transparency log or audits its operation. A third-party auditor, as described in
+{{third-party-auditing}}, ensures among other things that the transparency log
+is growing in an append-only manner, and produces a signature on a recent tree
+head. The transparency log provides this signature to users inline with their
+query responses as proof that they are not being shown a fork. A third-party
+manager, as described in {{third-party-management}}, operates the transparency
+log itself; in this case, the service operator is responsible for detecting
+whether the manager presents forked views to different users. Either way, this
+approach relies on an assumption that the third party is trusted not to collude
+with the service operator to trick users into accepting malicious results.
 
 With anonymous communication, a single user accesses the transparency log over
 an anonymous channel and checks that the transparency log is presenting the same
@@ -661,8 +663,8 @@ high-level security model of KT:
 - If all transparency logs behave honestly, then users observe a globally
   consistent view of the data associated with each label.
 - If any transparency log behaves dishonestly, this will be detected in a timely
-  manner by background monitoring, out-of-band communication, or a third-party
-  manager or auditor.
+  manner by background monitoring or by the fork detection mechanisms described
+  in {{detecting-forks}}.
 
 ## Gradual Migration
 
@@ -867,12 +869,13 @@ mode that the transparency log relies on:
 
 In short, assuming that the underlying cryptographic primitives used are secure,
 that any deployment-specific assumptions hold (such as non-collusion, or the
-completion of monitoring and out-of-band communication), and that a
-label owner's devices don't go offline for longer than the maximum lifetime of
-log entries, any attempt by the transparency log to present inconsistent
-views of a label to different users is always detected within a bounded amount
-of time. The parameters that determine the maximum amount of time before such
-misbehavior is detected are as follows:
+completion of monitoring and out-of-band communication), that clients do not
+lose their local state (see {{state-loss}}) and satisfy the assumptions
+described in {{client-integrity}}, and that a label owner's devices don't go
+offline for longer than the maximum lifetime of log entries, any attempt by the
+transparency log to present inconsistent views of a label to different users is
+always detected within a bounded amount of time. The parameters that determine
+the maximum amount of time before such misbehavior is detected are as follows:
 
 - The configured maximum amount of time by which a query response can be stale.
 - The configured Reasonable Monitoring Window (see
@@ -969,10 +972,10 @@ the one described in {{?I-D.ietf-scitt-architecture}}. Binary Transparency
 systems require each released version of a piece of software to be published in
 a public, append-only log before clients will install it. This ensures that a
 modified version of the software cannot be distributed to specific users without
-also being visible to everyone else.
-Making client software open source and reproducibly built additionally allows
-outside parties to inspect each published version and verify that it implements
-the protocol correctly and contains the correct configuration.
+also being visible to everyone else. Making client software open source and
+reproducibly built additionally allows outside parties to inspect each published
+version and verify that it implements the protocol correctly and contains the
+correct configuration.
 
 Finally, a client with an inaccurate clock may accept a stale view of the log
 that would otherwise be rejected. Applications can ensure that clients have an
@@ -987,7 +990,7 @@ to detect servers that provide incorrect time.
 
 For applications deploying KT, service operators expect to be able to control
 when sensitive information is revealed. In particular, a service operator may
-need to restrict who is able to learn that a user is a member of their service,
+need to restrict who is able to learn that a user is a member of its service,
 or information about that user's account.
 
 KT only allows a user to learn whether or not a label exists in the
@@ -1032,14 +1035,20 @@ In the event that a third-party manager or auditor is used, there's additional
 information leaked to the third party that's not visible to outsiders.
 
 In the case of a third-party auditor, the auditor is able to learn the total
-number of distinct changes to the log. It is also able to learn the order and
+number of distinct changes to the log. They are also able to learn the order and
 approximate timing with which each change was made. However, auditors are not
-able to learn the plaintext of any labels or values. This is because labels
-are masked with a Verifiable Random Function (VRF) {{!RFC9381}}, and values are
-only provided to auditors as commitments.
-Auditors are also not able to distinguish whether a change represents a label
-being created for the first time or being updated, or whether a change
-represents a "real" change from an end-user or a "fake" padding change.
+able to distinguish whether a change represents a label being created for the
+first time or being updated, or whether a change represents a "real" change from
+an end-user or a "fake" padding change. Correspondingly, auditors are not able
+to learn the plaintext of any labels or values. This is because labels are
+masked with a Verifiable Random Function (VRF) {{?RFC9381}}, and values are only
+provided to auditors as cryptographic commitments. A VRF uses a private key to
+deterministically map each label to a fixed-length pseudorandom output. Without
+the private key, a label's VRF output cannot be computed and is
+indistinguishable from random. However, for actual proof generation, the
+transparency log can provide users with a proof that an output was computed
+correctly from a given label, which users verify with the corresponding public
+key.
 
 In the case of a third-party manager, the manager generally learns everything
 that the service operator would know. This includes the total set of plaintext
@@ -1067,9 +1076,9 @@ done immediately, and doing so permanently prevents recovery of the associated
 value.
 
 Labels themselves are typically serialized end-user identifiers, like a username
-or email address. All labels are processed through a VRF, which uses a private
-key to deterministically map each label to a fixed-length pseudorandom value.
-The set of all labels stored in a transparency log is committed to by a prefix
+or email address. All labels are processed through a VRF, as described in
+{{leakage-to-third-parties}}, before being stored in the transparency log. The
+set of all labels stored in a transparency log is committed to by a prefix
 tree, and each version of the prefix tree is committed to by a log tree.
 
 The VRF outputs corresponding to labels affected by an erasure request can be
@@ -1111,9 +1120,7 @@ identifier, like a username, and instead rely on their UI (underpinned
 internally by a user's ID) to indicate to users whether a conversation is with a
 new person or someone they've previously contacted. The fact that the UI behaves
 this way makes the user's ID a user-visible identifier even if a user may not be
-able to actually see it written out. An example of an application with these
-identifier semantics, although not one that provides end-to-end encryption,
-would be Slack.
+able to actually see it written out.
 
 A **primary end-user identity** is one that is unique, user-visible, and unable
 to change. (Or equivalently, if it changes, it appears in the application UI as
