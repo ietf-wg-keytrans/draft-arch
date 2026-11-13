@@ -501,7 +501,8 @@ To reduce the probability of collusion between the service operator and the
 third party, a service operator can have two or more independent third parties
 coordinate as one and produce threshold signatures. In this scenario, the
 threshold for a valid signature needs to be at least a majority of the third
-parties to prevent different subsets from authenticating forked views.
+parties, assuming each third party acts consistently, to prevent different
+subsets from authenticating forked views.
 
 **Contact Monitoring**, on the other hand, supports a single-party deployment
 with no third party. The cost of this is that, when a user looks up a version of
