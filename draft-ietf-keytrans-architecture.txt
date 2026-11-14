@@ -4,8 +4,8 @@
 
 Key Transparency                                            B. McMillion
 Internet-Draft                                               Independent
-Intended status: Informational                          13 November 2026
-Expires: 17 May 2027
+Intended status: Informational                          14 November 2026
+Expires: 18 May 2027
 
 
                      Key Transparency Architecture
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 May 2027.
+   This Internet-Draft will expire on 18 May 2027.
 
 Copyright Notice
 
@@ -196,10 +196,10 @@ Table of Contents
       or audits its operation (a third-party auditor).  See Section 4.
 
    *Label:*  A lookup key in the key-value database that a transparency
-      log represents, such as an end-user identity.  See Section 3.
+      log represents, such as an end-user identity.
 
    *Label Owner:*  A user that either initiates all changes to a label's
-      value, or must be informed of all changes to it.  See Section 3.
+      value, or must be informed of all changes to it.
 
    *Label-Version Pair:*  A label together with one of its version
       numbers, which identifies a single value of that label.
@@ -219,7 +219,7 @@ Table of Contents
 
    *Reasonable Monitoring Window (RMW):*  A duration configured by the
       transparency log that reflects how frequently label owners are
-      expected to perform monitoring.  See Section 3.2.
+      expected to perform monitoring.
 
    *Tree Head:*  The root value and size of the log tree at a given
       point in time, signed by the transparency log (and possibly by a
@@ -406,13 +406,13 @@ Table of Contents
    that has been modified will fail verification.
 
    To prevent stale credentials from being accepted, recipients only
-   accept credentials that are based on a recent distinguished log entry
-   (see Section 3.2), where the application defines what is considered
-   recent.  Senders therefore need to periodically refresh their
-   credentials, and recipients need to periodically refresh their view
-   of the transparency log's recent distinguished log entries.  These
-   refreshes do not reveal anything about the credentials that a
-   recipient has received.
+   accept credentials that are based on a recent distinguished log
+   entry, where the application defines what is considered recent.
+   Senders therefore need to periodically refresh their credentials, and
+   recipients need to periodically refresh their view of the
+   transparency log's recent distinguished log entries.  These refreshes
+   do not reveal anything about the credentials that a recipient has
+   received.
 
    Any future monitoring that may be required should be provided to
    recipients proactively by the sender, as this is the most robust way
@@ -527,7 +527,7 @@ Table of Contents
    channel.  Requests that require authentication (Search(Bob) in this
    example) may be blocked over the anonymous channel.  The root values
    that users compare out of band (6c063bb in this example) correspond
-   to distinguished log entries, which are described in Section 3.2.
+   to distinguished log entries.
 
    Alice                   Bob                          Transparency Log
    |                        |                                          |
@@ -590,9 +590,9 @@ Table of Contents
    deployment with no third party.  The cost of this is that, when a
    user looks up a version of a label that was inserted very recently,
    the user may need to retain some additional state and monitor the
-   label until it is included in a distinguished log entry (see
-   Section 3.2).  If a user looks up many label-version pairs that were
-   inserted very recently, monitoring may become relatively expensive.
+   label until it is included in a distinguished log entry.  If a user
+   looks up many label-version pairs that were inserted very recently,
+   monitoring may become relatively expensive.
 
    Additionally, applications that rely on a transparency log deployed
    in Contact Monitoring mode need to regularly attempt to detect forks
@@ -637,7 +637,7 @@ Table of Contents
    One day later, Alice verifies that the label-version pair from the
    search remained in the transparency log.  Another day later, Bob
    comes online and monitors the label.  Note that Alice does not need
-   to wait for Bob's Monitor request before making a Monitor request.
+   to wait for Bob's Monitor request before making her Monitor request.
 
    Alice                        Transparency Log                     Bob
    |                                   |                               |
@@ -790,16 +790,14 @@ Table of Contents
    multiple independent transparency logs to support these use cases,
    particularly recovery from log failure.  When multiple transparency
    logs are used as part of one application, all users need to have a
-   consistent policy for executing Search, Update, and Monitor queries
-   against the logs in a way that maintains the high-level security
-   model of KT:
+   consistent policy for executing queries against the logs in a way
+   that maintains the high-level security model of KT:
 
    *  If all transparency logs behave honestly, then users observe a
       globally consistent view of the data associated with each label.
 
    *  If any transparency log behaves dishonestly, this will be detected
-      in a timely manner by background monitoring or by the fork
-      detection mechanisms described in Section 3.4.
+      in a timely manner by background monitoring or fork detection.
 
 5.1.  Gradual Migration
 
@@ -965,22 +963,18 @@ Table of Contents
    that has either expired or become permanently inaccessible due to the
    service operator's access control policy.
 
-   A transparency log may be configured with a *maximum lifetime* for
-   log entries.  Once a log entry has reached the maximum lifetime, it
-   is considered expired and searches skip over it, so most of the data
-   associated with it is no longer needed.  A version of a label expires
-   when it is no longer possible to produce a valid search proof for the
-   label-version pair, which happens when all of the necessary log
-   entries have expired.  This is specified in more detail in [PROTO].
-   Notably, the most recent version of a label is the only version that
-   never expires through the maximum lifetime mechanism.
+   A version of a label expires when it is no longer possible to produce
+   a valid search proof for the label-version pair, which happens when
+   all of the log entries necessary to produce the proof have expired.
+   A log entry is considered expired once it is older than the log's
+   configured *maximum lifetime*, if any.  This is specified in more
+   detail in [PROTO].
 
-   In addition to this, service operators may define access control
-   policies (subject to the constraints discussed in Section 3) that
-   permanently block access to the most recent version, or any other
-   version, of a label.  The values corresponding to these label-version
-   pairs may be deleted without affecting proofs for other label-version
-   pairs.
+   Notably, the most recent version of a label is the only version that
+   never expires through the maximum lifetime mechanism.  However,
+   service operators can define access control policies that permanently
+   block access to any version of a label, including the most recent
+   one, subject to the constraints discussed in Section 3.
 
    The second type of data, cryptographic data, can also be pruned, but
    only after considering which parts are no longer required by the
@@ -1043,10 +1037,10 @@ Table of Contents
        consistency with previous ones, the transparency log is unable to
        reconcile the user's view with that of other users.  This is
        intentional, as it ensures the misbehavior is eventually
-       detected, either by background monitoring or by the mechanisms
-       described in Section 3.4.  Importantly, this means that users
-       must stay online for a bounded amount of time after entering an
-       invalid state for it to be successfully detected.
+       detected, either by background monitoring or fork detection.
+       Importantly, this means that users must stay online for a bounded
+       amount of time after entering an invalid state for it to be
+       successfully detected.
 
    Instead of executing a query incorrectly, the transparency log can
    attempt to prevent the user from learning about more recent states of
@@ -1072,21 +1066,20 @@ Table of Contents
    In short, assuming that the underlying cryptographic primitives used
    are secure, that any deployment-specific assumptions hold (such as
    non-collusion, or the completion of monitoring and out-of-band
-   communication), that clients do not lose their local state (see
-   Section 7.2) and satisfy the assumptions described in Section 7.3,
-   and that a label owner's devices do not go offline for longer than
-   the maximum lifetime of log entries (if one is configured), any
-   attempt by the transparency log to present inconsistent views of a
-   label to different users is always detected within a bounded amount
-   of time.  The parameters that determine the maximum amount of time
-   before such misbehavior is detected are as follows:
+   communication), that clients do not lose their local state and
+   satisfy the assumptions described in Section 7.3, and that a label
+   owner's devices do not go offline for longer than the maximum
+   lifetime of log entries (if one is configured), any attempt by the
+   transparency log to present inconsistent views of a label to
+   different users is always detected within a bounded amount of time.
+   The parameters that determine the maximum amount of time before such
+   misbehavior is detected are as follows:
 
    *  The configured maximum amount of time by which a query response
       can be stale.
 
-   *  The configured Reasonable Monitoring Window (see Section 3.2),
-      weighed against how frequently users execute background monitoring
-      in practice.
+   *  The configured Reasonable Monitoring Window, weighed against how
+      frequently users execute background monitoring in practice.
 
    *  For logs that use the Contact Monitoring deployment mode: how
       frequently users engage in out-of-band communication.
@@ -1237,20 +1230,18 @@ Table of Contents
    prevents the user from learning whether or not the label's value has
    changed since the user's access was revoked.  This is true even
    though users are still permitted to complete their monitoring of the
-   label after their access to perform other queries has been revoked
-   (see Section 3).
+   label after their access to perform other queries has been revoked.
 
    Applications determine the privacy of data in KT by relying on these
    properties when they enforce access control policies on the queries
-   issued by users, as discussed in Section 3.  For example, an
-   application's access control policy may only allow users to search
-   for the labels of their contacts, or of users they are actively
-   starting a conversation with.  This prevents users that are not
-   contacts or actively communicating from learning about each other's
-   existence.  If two users were previously contacts but no longer are,
-   the application can prevent the users from searching for each other's
-   labels and learning whether there have been any subsequent account
-   updates.
+   issued by users.  For example, an application's access control policy
+   may only allow users to search for the labels of their contacts, or
+   of users they are actively starting a conversation with.  This
+   prevents users that are not contacts or actively communicating from
+   learning about each other's existence.  If two users were previously
+   contacts but no longer are, the application can prevent the users
+   from searching for each other's labels and learning whether there
+   have been any subsequent account updates.
 
 8.2.  Population-Level Metrics
 
@@ -1344,10 +1335,10 @@ Table of Contents
    Monitoring Window of their insertion.  However, previous versions of
    the prefix tree will still contain the VRF outputs and may still be
    needed by the protocol.  If the transparency log is configured with a
-   maximum lifetime for log entries (see Section 6), the VRF outputs can
-   be fully purged from the transparency log once all log entries that
-   contain them have passed their maximum lifetime.  Otherwise, the VRF
-   outputs can never be fully purged.
+   maximum lifetime for log entries, the VRF outputs can be fully purged
+   from the transparency log once all log entries that contain them have
+   passed their maximum lifetime.  Otherwise, the VRF outputs can never
+   be fully purged.
 
 9.  Implementation Guidance
 
