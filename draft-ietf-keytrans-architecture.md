@@ -142,11 +142,11 @@ to see them.
 
 **Label:**
 : A lookup key in the key-value database that a transparency log represents,
-  such as an end-user identity. See {{protocol-overview}}.
+  such as an end-user identity.
 
 **Label Owner:**
 : A user that either initiates all changes to a label's value, or must be
-  informed of all changes to it. See {{protocol-overview}}.
+  informed of all changes to it.
 
 **Label-Version Pair:**
 : A label together with one of its version numbers, which identifies a single
@@ -168,8 +168,7 @@ to see them.
 
 **Reasonable Monitoring Window (RMW):**
 : A duration configured by the transparency log that reflects how frequently
-  label owners are expected to perform monitoring. See
-  {{distinguished-log-entries}}.
+  label owners are expected to perform monitoring.
 
 **Tree Head:**
 : The root value and size of the log tree at a given point in time, signed by
@@ -336,9 +335,8 @@ cases, a signature from the transparency log, so a credential that has been
 modified will fail verification.
 
 To prevent stale credentials from being accepted, recipients only accept
-credentials that are based on a recent distinguished log entry (see
-{{distinguished-log-entries}}), where the application defines what is considered
-recent. Senders therefore need to periodically refresh their credentials, and
+credentials that are based on a recent distinguished log entry, where the
+application defines what is considered recent. Senders therefore need to periodically refresh their credentials, and
 recipients need to periodically refresh their view of the transparency log's
 recent distinguished log entries. These refreshes do not reveal anything about
 the credentials that a recipient has received.
@@ -446,8 +444,7 @@ consistent by comparing log tree root values, either among themselves or by
 contacting the transparency log over an anonymous channel. Requests that require
 authentication (`Search(Bob)` in this example) may be blocked over the anonymous
 channel. The root values that users compare out of band (`6c063bb` in this
-example) correspond to distinguished log entries, which are described in
-{{distinguished-log-entries}}.
+example) correspond to distinguished log entries.
 
 ~~~aasvg
 Alice                   Bob                          Transparency Log
@@ -508,7 +505,7 @@ subsets from authenticating forked views.
 with no third party. The cost of this is that, when a user looks up a version of
 a label that was inserted very recently, the user may need to retain some
 additional state and monitor the label until it is included in a distinguished
-log entry (see {{distinguished-log-entries}}). If a user looks up many
+log entry. If a user looks up many
 label-version pairs that were inserted very recently, monitoring may become
 relatively expensive.
 
@@ -551,7 +548,7 @@ In the example shown in {{contact-monitoring-fig}}, Alice searches for Bob's
 label. One day later, Alice verifies that the label-version pair from the search
 remained in the transparency log. Another day later, Bob comes online and
 monitors the label. Note that Alice does not need to wait for Bob's Monitor
-request before making a Monitor request.
+request before making her Monitor request.
 
 ~~~aasvg
 Alice                        Transparency Log                     Bob
@@ -695,15 +692,13 @@ transparency log instances, for example:
 Client implementations should generally be prepared to interact with multiple
 independent transparency logs to support these use cases, particularly recovery
 from log failure. When multiple transparency logs are used as part of one
-application, all users need to have a consistent policy for executing Search,
-Update, and Monitor queries against the logs in a way that maintains the
-high-level security model of KT:
+application, all users need to have a consistent policy for executing queries
+against the logs in a way that maintains the high-level security model of KT:
 
 - If all transparency logs behave honestly, then users observe a globally
   consistent view of the data associated with each label.
 - If any transparency log behaves dishonestly, this will be detected in a timely
-  manner by background monitoring or by the fork detection mechanisms described
-  in {{detecting-forks}}.
+  manner by background monitoring or fork detection.
 
 ## Gradual Migration
 
@@ -850,20 +845,17 @@ The first type, serialized user data, can be pruned by removing data that has
 either expired or become permanently inaccessible due to the service
 operator's access control policy.
 
-A transparency log may be configured with a **maximum lifetime** for log
-entries. Once a log entry has reached the maximum lifetime, it is considered
-expired and searches skip over it, so most of the data associated with it is no
-longer needed. A version of a label expires when it is no longer possible to
-produce a valid search proof for the label-version pair, which happens when all
-of the necessary log entries have expired. This is specified in more detail in
-{{PROTO}}. Notably, the most recent version of a label is the only version that
-never expires through the maximum lifetime mechanism.
+A version of a label expires when it is no longer possible to produce a valid
+search proof for the label-version pair, which happens when all of the log
+entries necessary to produce the proof have expired. A log entry is considered
+expired once it is older than the log's configured **maximum lifetime**, if any.
+This is specified in more detail in {{PROTO}}.
 
-In addition to this, service operators may define access control policies
-(subject to the constraints discussed in {{protocol-overview}}) that permanently
-block access to the most recent version, or any other version, of a label. The
-values corresponding to these label-version pairs may be deleted without
-affecting proofs for other label-version pairs.
+Notably, the most recent version of a label is the only version that never
+expires through the maximum lifetime mechanism. However, service operators can
+define access control policies that permanently block access to any version of a
+label, including the most recent one, subject to the constraints discussed in
+{{protocol-overview}}.
 
 The second type of data, cryptographic data, can also be pruned, but only after
 considering which parts are no longer required by the protocol for producing
@@ -920,7 +912,7 @@ following occurs:
    subsequent queries to prove consistency with previous ones, the transparency
    log is unable to reconcile the user's view with that of other users. This is
    intentional, as it ensures the misbehavior is eventually detected, either by
-   background monitoring or by the mechanisms described in {{detecting-forks}}.
+   background monitoring or fork detection.
    Importantly, this means that users must stay online for a bounded amount of
    time after entering an invalid state for it to be successfully detected.
 
@@ -944,7 +936,7 @@ mode that the transparency log relies on:
 In short, assuming that the underlying cryptographic primitives used are secure,
 that any deployment-specific assumptions hold (such as non-collusion, or the
 completion of monitoring and out-of-band communication), that clients do not
-lose their local state (see {{state-loss}}) and satisfy the assumptions
+lose their local state and satisfy the assumptions
 described in {{client-integrity}}, and that a label owner's devices do not go
 offline for longer than the maximum lifetime of log entries (if one is
 configured), any attempt by the transparency log to present inconsistent views
@@ -953,9 +945,8 @@ time. The parameters that determine the maximum amount of time before such
 misbehavior is detected are as follows:
 
 - The configured maximum amount of time by which a query response can be stale.
-- The configured Reasonable Monitoring Window (see
-  {{distinguished-log-entries}}), weighed against how frequently users execute
-  background monitoring in practice.
+- The configured Reasonable Monitoring Window, weighed against how frequently
+  users execute background monitoring in practice.
 - For logs that use the Contact Monitoring deployment mode: how frequently users
   engage in out-of-band communication.
 - For logs that use the Third-Party Auditing deployment mode: the configured
@@ -1085,11 +1076,11 @@ up or change a label's value but no longer does, KT prevents the user from
 learning whether or not the label's value has changed since the user's access
 was revoked. This is true even though users are still permitted to complete
 their monitoring of the label after their access to perform other queries has
-been revoked (see {{protocol-overview}}).
+been revoked.
 
 Applications determine the privacy of data in KT by relying on these properties
-when they enforce access control policies on the queries issued by users, as
-discussed in {{protocol-overview}}. For example, an application's access control
+when they enforce access control policies on the queries issued by users. For
+example, an application's access control
 policy may only allow users to search for the labels of their contacts, or of
 users they are actively starting a conversation with. This prevents users that
 are not contacts or actively communicating from learning about each other's
@@ -1180,7 +1171,7 @@ once they have been included in at least one distinguished log entry, which
 happens within roughly one Reasonable Monitoring Window of their insertion.
 However, previous versions of the prefix tree will still contain the VRF outputs
 and may still be needed by the protocol. If the transparency log is configured
-with a maximum lifetime for log entries (see {{pruning}}), the VRF outputs can
+with a maximum lifetime for log entries, the VRF outputs can
 be fully purged from the transparency log once all log entries that contain them
 have passed their maximum lifetime. Otherwise, the VRF outputs can never be
 fully purged.
