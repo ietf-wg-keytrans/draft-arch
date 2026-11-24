@@ -4,8 +4,8 @@
 
 Key Transparency                                            B. McMillion
 Internet-Draft                                               Independent
-Intended status: Informational                          14 November 2026
-Expires: 18 May 2027
+Intended status: Informational                          24 November 2026
+Expires: 28 May 2027
 
 
                      Key Transparency Architecture
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 May 2027.
+   This Internet-Draft will expire on 28 May 2027.
 
 Copyright Notice
 
@@ -113,9 +113,10 @@ Table of Contents
    Typically, users upload their public keys to a simple directory where
    other users can download them as needed, or exchange public keys in-
    band with the communication being secured.  If users simply trust the
-   service operator to forward public keys correctly, the underlying
-   encryption protocol can only protect them against passive
-   eavesdropping.
+   service operator to forward public keys correctly, then the
+   underlying encryption protocol protects them against passive
+   eavesdropping, but not against active attacks in which the service
+   operator itself provides incorrect public keys.
 
    However, most messaging systems are designed such that all messages
    are exchanged through the service operator's servers, which makes it
