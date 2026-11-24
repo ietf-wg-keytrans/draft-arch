@@ -58,8 +58,8 @@ participants that wish to communicate with each other.
 Typically, users upload their public keys to a simple directory where other
 users can download them as needed, or exchange public keys in-band with the
 communication being secured. If users simply trust the service operator to
-forward public keys correctly, the underlying encryption protocol can only
-protect them against passive eavesdropping.
+forward public keys correctly, the underlying encryption protocol is only able
+to protect them against passive eavesdropping.
 
 However, most messaging systems are designed such that all messages are
 exchanged through the service operator's servers, which makes it extremely easy
