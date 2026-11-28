@@ -49,19 +49,20 @@ of common applications.
 
 # Introduction
 
-Before any information can be exchanged in an end-to-end encrypted system, two
-things must happen: First, participants in the system must provide the service
-operator with any public keys they wish to use to receive messages. Second, the
-service operator must somehow distribute these public keys among the
-participants that wish to communicate with each other.
+Before any information can be exchanged in an end-to-end encrypted
+communication service, at least two things must happen: First, participants in
+the system must provide the service operator (the organization that runs the
+communication service) with any public keys they wish to use to receive
+messages. Second, the service operator must somehow distribute these public keys
+among the participants that wish to communicate with each other.
 
 Typically, users upload their public keys to a simple directory where other
 users can download them as needed, or exchange public keys in-band with the
 communication being secured. If users simply trust the service operator to
 forward public keys correctly, the underlying encryption protocol is only able
-to protect them against passive eavesdropping.
+to protect them against passive eavesdropping {{?RFC4949}}.
 
-However, most messaging systems are designed such that all messages are
+However, most messaging systems are centralized, meaning that all messages are
 exchanged through the service operator's servers, which makes it extremely easy
 for an operator to launch an active attack. That is, the service operator can
 generate a rogue public key for which it holds the corresponding private key,
@@ -103,7 +104,8 @@ to see them.
 
 **Service Operator:**
 : The primary organization that provides the infrastructure for an end-to-end
-  encrypted communication service and the software to participate in it.
+  encrypted communication service and, typically, the software used to
+  participate in it. Client software may also be provided by other parties.
 
 **End-User Device:**
 : The device at the final point in a digital communication, which may either
@@ -249,7 +251,9 @@ The main operations that can be executed by a user are as follows:
    correctly. Note that this means that new values are added to the log
    immediately, rather than the transparency log returning a promise of future
    inclusion such as a Signed Certificate Timestamp (SCT) as defined in
-   {{Section 3.2 of ?RFC6962}}.
+   {{Section 3.2 of ?RFC6962}}. The application is responsible for ensuring that
+   only the label's owner, or another party authorized by the application, is
+   able to update a label (see the discussion of access control above).
 3. **Monitor:** Checks both that the log is continuing to behave honestly (all
    previously returned label-version pairs remain in the log) and that no
    changes have been made to labels owned by the user without the user's
@@ -295,8 +299,10 @@ transparency log that reflects how frequently label owners are expected to
 perform monitoring. Label owners are required to check that each distinguished
 log entry correctly represents their labels, which allows distinguished log
 entries to act as common reference points for all users of the transparency log,
-regardless of deployment mode. Distinguished log entries and the RMW are both
-specified in more detail in {{PROTO}}.
+regardless of deployment mode. The RMW is part of the transparency log's
+configuration, so it is known to all users in advance, and allows clients to
+schedule their monitoring accordingly. Distinguished log entries and the RMW are
+both specified in more detail in {{PROTO}}.
 
 ## Credentials
 
