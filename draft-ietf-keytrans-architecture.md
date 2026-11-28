@@ -798,7 +798,10 @@ the processes described in {{gradual-migration}} or {{immediate-migration}},
 replacing one transparency log in the set with two or more. That is, labels that
 were previously assigned to a single transparency log can be migrated and split
 between two or more new transparency logs, with the previous transparency log
-eventually shut down.
+eventually shut down. When the application distributes the configurations for
+the new transparency logs, it also distributes the updated partitioning rule,
+allowing users to correctly identify the transparency log responsible for a
+label.
 
 In a federated application, many servers that are owned and operated by
 different entities cooperate to provide a single end-to-end encrypted
@@ -939,10 +942,13 @@ completion of monitoring and out-of-band communication), that clients do not
 lose their local state and satisfy the assumptions
 described in {{client-integrity}}, and that a label owner's devices do not go
 offline for longer than the maximum lifetime of log entries (if one is
-configured), any attempt by the transparency log to present inconsistent views
-of a label to different users is always detected within a bounded amount of
-time. The parameters that determine the maximum amount of time before such
-misbehavior is detected are as follows:
+configured), users are able to detect any attempt by the transparency log to
+present inconsistent views of a label to different users. When fork detection
+relies on anonymous communication, each check only has some probability of
+exposing a fork, so detection is probabilistic rather than guaranteed within a
+fixed amount of time; repeated checks make it increasingly likely that a fork
+is detected. The parameters that affect how long it takes for such misbehavior
+to be detected are as follows:
 
 - The configured maximum amount of time by which a query response can be stale.
 - The configured Reasonable Monitoring Window, weighed against how frequently
