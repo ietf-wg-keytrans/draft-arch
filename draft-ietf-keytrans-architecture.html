@@ -1259,17 +1259,18 @@ of common applications.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">Before any information can be exchanged in an end-to-end encrypted system, two
-things must happen: First, participants in the system must provide the service
-operator with any public keys they wish to use to receive messages. Second, the
-service operator must somehow distribute these public keys among the
-participants that wish to communicate with each other.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-1">Before any information can be exchanged in an end-to-end encrypted
+communication service, at least two things must happen: First, participants in
+the system must provide the service operator (the organization that runs the
+communication service) with any public keys they wish to use to receive
+messages. Second, the service operator must somehow distribute these public keys
+among the participants that wish to communicate with each other.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">Typically, users upload their public keys to a simple directory where other
 users can download them as needed, or exchange public keys in-band with the
 communication being secured. If users simply trust the service operator to
 forward public keys correctly, the underlying encryption protocol is only able
-to protect them against passive eavesdropping.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">However, most messaging systems are designed such that all messages are
+to protect them against passive eavesdropping <span>[<a href="#RFC4949" class="cite xref">RFC4949</a>]</span>.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">However, most messaging systems are centralized, meaning that all messages are
 exchanged through the service operator's servers, which makes it extremely easy
 for an operator to launch an active attack. That is, the service operator can
 generate a rogue public key for which it holds the corresponding private key,
@@ -1315,7 +1316,8 @@ intended recipients.<a href="#section-2-1.2.1" class="pilcrow">¶</a></p>
 <dt id="section-2-1.3"><strong>Service Operator:</strong></dt>
         <dd style="margin-left: 1.5em" id="section-2-1.4">
           <p id="section-2-1.4.1">The primary organization that provides the infrastructure for an end-to-end
-encrypted communication service and the software to participate in it.<a href="#section-2-1.4.1" class="pilcrow">¶</a></p>
+encrypted communication service and, typically, the software used to
+participate in it. Client software may also be provided by other parties.<a href="#section-2-1.4.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="section-2-1.5"><strong>End-User Device:</strong></dt>
@@ -1505,7 +1507,9 @@ log. The transparency log returns a proof that the new version was added
 correctly. Note that this means that new values are added to the log
 immediately, rather than the transparency log returning a promise of future
 inclusion such as a Signed Certificate Timestamp (SCT) as defined in
-<span><a href="https://rfc-editor.org/rfc/rfc6962#section-3.2" class="relref">Section 3.2</a> of [<a href="#RFC6962" class="cite xref">RFC6962</a>]</span>.<a href="#section-3.1-2.2.1" class="pilcrow">¶</a></p>
+<span><a href="https://rfc-editor.org/rfc/rfc6962#section-3.2" class="relref">Section 3.2</a> of [<a href="#RFC6962" class="cite xref">RFC6962</a>]</span>. The application is responsible for ensuring that
+only the label's owner, or another party authorized by the application, is
+able to update a label (see the discussion of access control above).<a href="#section-3.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-3.1-2.3">
             <p id="section-3.1-2.3.1"><strong>Monitor:</strong> Checks both that the log is continuing to behave honestly (all
@@ -1589,8 +1593,10 @@ transparency log that reflects how frequently label owners are expected to
 perform monitoring. Label owners are required to check that each distinguished
 log entry correctly represents their labels, which allows distinguished log
 entries to act as common reference points for all users of the transparency log,
-regardless of deployment mode. Distinguished log entries and the RMW are both
-specified in more detail in <span>[<a href="#PROTO" class="cite xref">PROTO</a>]</span>.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+regardless of deployment mode. The RMW is part of the transparency log's
+configuration, so it is known to all users in advance, and allows clients to
+schedule their monitoring accordingly. Distinguished log entries and the RMW are
+both specified in more detail in <span>[<a href="#PROTO" class="cite xref">PROTO</a>]</span>.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="credentials">
@@ -2808,6 +2814,10 @@ confusable identifiers from being registered.<a href="#section-9-7" class="pilcr
 <dt id="PROTO">[PROTO]</dt>
       <dd>
 <span class="refAuthor">McMillion, B.</span> and <span class="refAuthor">F. Linker</span>, <span class="refTitle">"Key Transparency Protocol"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-keytrans-protocol-06</span>, <time datetime="2026-11-02" class="refDate">2 November 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-keytrans-protocol-06">https://datatracker.ietf.org/doc/html/draft-ietf-keytrans-protocol-06</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC4949">[RFC4949]</dt>
+      <dd>
+<span class="refAuthor">Shirey, R.</span>, <span class="refTitle">"Internet Security Glossary, Version 2"</span>, <span class="seriesInfo">FYI 36</span>, <span class="seriesInfo">RFC 4949</span>, <span class="seriesInfo">DOI 10.17487/RFC4949</span>, <time datetime="2007-08" class="refDate">August 2007</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4949">https://www.rfc-editor.org/rfc/rfc4949</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC6962">[RFC6962]</dt>
       <dd>
